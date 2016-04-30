@@ -5,12 +5,14 @@ import net.minecraft.client.gui.GuiEnchantment;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.village.MerchantRecipeList;
 import sidben.visiblearmorslots.ModVisibleArmorSlots;
 import sidben.visiblearmorslots.client.gui.GuiEnchantmentCustom;
 import sidben.visiblearmorslots.helper.LogHelper;
+import sidben.visiblearmorslots.helper.VanillaGuiRedirect;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
@@ -20,6 +22,13 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class PlayerEventHandler
 {
+	
+	private static final VanillaGuiRedirect[] guiRedirectArray = new VanillaGuiRedirect[] {
+			new VanillaGuiRedirect(Blocks.enchanting_table, ModVisibleArmorSlots.GUI_ENCHANTMENT_TABLE),
+			new VanillaGuiRedirect(Blocks.anvil, ModVisibleArmorSlots.GUI_ANVIL)
+		};
+	
+	
 
 
     @SubscribeEvent
@@ -44,59 +53,26 @@ public class PlayerEventHandler
     	LogHelper.info("onRightClickBlock() " + event.getHand() + " on " + (event.getWorld().isRemote ? "Client" : "Server") + " -> " + blockName);
     	
 
+    	// Check blocks that should have the GUI redirected
+    	for (VanillaGuiRedirect item : guiRedirectArray) {
+    		
+    		if (item.compareBlock(targetBlock.getBlock())) {
+        		// First deny the vanilla GUI
+                event.setCanceled(true);
+    			
+                // Display the custom GUI
+    	    	if (!event.getWorld().isRemote && event.getHand().equals(EnumHand.MAIN_HAND))
+    	    	{
+                	event.getEntityPlayer().openGui(ModVisibleArmorSlots.instance, item.getRedirectGuiId(), event.getWorld(), event.getPos().getX(), event.getPos().getY(), event.getPos().getZ());
+    	    	}
 
-    	// --- Enchantment Table --- //
-    	if (targetBlock.getBlock().equals(Blocks.enchanting_table)) {
-
-    		// First deny the vanilla GUI
-            event.setCanceled(true);
-
-            // Display the custom GUI
-	    	if (!event.getWorld().isRemote && event.getHand().equals(EnumHand.MAIN_HAND))
-	    	{
-            	event.getEntityPlayer().openGui(ModVisibleArmorSlots.instance, ModVisibleArmorSlots.GUI_ENCHANTMENT_TABLE, event.getWorld(), event.getPos().getX(), event.getPos().getY(), event.getPos().getZ());
-	    	}
-
+    	    	break;
+    		}
+    		
     	}
-
-    	// --- Anvil --- //
-    	else if (targetBlock.getBlock().equals(Blocks.anvil)) {
-
-    		// First deny the vanilla GUI
-            event.setCanceled(true);
-
-            // Display the custom GUI
-	    	if (!event.getWorld().isRemote && event.getHand().equals(EnumHand.MAIN_HAND))
-	    	{
-            	event.getEntityPlayer().openGui(ModVisibleArmorSlots.instance, ModVisibleArmorSlots.GUI_ANVIL, event.getWorld(), event.getPos().getX(), event.getPos().getY(), event.getPos().getZ());
-	    	}
-
-    	}
-
+    	
     	
     }
     
-    
-    
-    
-    /*
-    @SubscribeEvent
-    public void onGuiOpen(GuiOpenEvent event)
-    {
-    	LogHelper.info("onGuiOpen()");
-    	
-    	if (event.getGui() == null) {
-        	LogHelper.info("    NULL (closes window)");
-    	} else {
-        	LogHelper.info("    " + event.getGui());
-    	}
-    	
-    	if (event.getGui() instanceof GuiEnchantment && !(event.getGui() instanceof GuiEnchantmentCustom)) {
-    		// LogHelper.info("    Nullifying vanilla enchant screen");
-    		// event.setCanceled(true);
-    		// event.setGui(new GuiEnchantmentCustom());
-    	}
-    }
-    */
     
 }
