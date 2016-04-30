@@ -1,0 +1,17 @@
+[
+{
+"modid": "visiblearmorslots",
+"name": "Visible Armor Slots",
+"description": "Makes armor slots acessible on some inventories.",
+"version": "${version}",
+"mcversion": "${mcversion}",
+"url": "",
+"updateUrl": "",
+"authorList": [ "sidben" ],
+"credits": "",
+"logoFile": "",
+"screenshots": [ ],
+"parent": "",
+"dependencies": [ ]
+}
+]
