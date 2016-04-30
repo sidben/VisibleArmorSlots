@@ -58,14 +58,28 @@ public class PlayerEventHandler
 	    	}
 
     	}
-    	
+
+    	// --- Anvil --- //
+    	else if (targetBlock.getBlock().equals(Blocks.anvil)) {
+
+    		// First deny the vanilla GUI
+            event.setCanceled(true);
+
+            // Display the custom GUI
+	    	if (!event.getWorld().isRemote && event.getHand().equals(EnumHand.MAIN_HAND))
+	    	{
+            	event.getEntityPlayer().openGui(ModVisibleArmorSlots.instance, ModVisibleArmorSlots.GUI_ANVIL, event.getWorld(), event.getPos().getX(), event.getPos().getY(), event.getPos().getZ());
+	    	}
+
+    	}
+
     	
     }
     
     
     
     
-    
+    /*
     @SubscribeEvent
     public void onGuiOpen(GuiOpenEvent event)
     {
@@ -83,5 +97,6 @@ public class PlayerEventHandler
     		// event.setGui(new GuiEnchantmentCustom());
     	}
     }
+    */
     
 }

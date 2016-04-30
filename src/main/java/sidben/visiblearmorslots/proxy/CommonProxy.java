@@ -11,6 +11,7 @@ import sidben.visiblearmorslots.ModVisibleArmorSlots;
 import sidben.visiblearmorslots.handler.PlayerEventHandler;
 import sidben.visiblearmorslots.helper.LogHelper;
 import sidben.visiblearmorslots.inventory.ContainerEnchantmentCustom;
+import sidben.visiblearmorslots.inventory.ContainerRepairCustom;
 import sidben.visiblearmorslots.reference.Reference;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -48,22 +49,20 @@ public abstract class CommonProxy implements IProxy
     @Override
     public Object getServerGuiElement(int guiID, EntityPlayer player, World world, int x, int y, int z)
     {
-    	LogHelper.info("getServerGuiElement() - " + guiID);
-
     	if (guiID == ModVisibleArmorSlots.GUI_ENCHANTMENT_TABLE) {
-            // final TileEntityEnchantmentTable tile = (TileEntityEnchantmentTable) world.getTileEntity(new BlockPos(x, y, z));
             return new ContainerEnchantmentCustom(player.inventory, world, new BlockPos(x, y, z));
     	}
+    	else if (guiID == ModVisibleArmorSlots.GUI_ANVIL) {
+            return new ContainerRepairCustom(player.inventory, world, new BlockPos(x, y, z), player);
+    	}
 
-        return null;
+    	return null;
     }
 
 
     @Override
     public Object getClientGuiElement(int guiID, EntityPlayer player, World world, int x, int y, int z)
     {
-    	LogHelper.info("getClientGuiElement() - " + guiID);
-
     	return null;
     }
 
