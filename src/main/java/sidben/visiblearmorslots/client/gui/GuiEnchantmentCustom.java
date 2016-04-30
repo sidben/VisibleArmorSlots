@@ -1,7 +1,11 @@
 package sidben.visiblearmorslots.client.gui;
 
+import sidben.visiblearmorslots.ModVisibleArmorSlots;
+import sidben.visiblearmorslots.helper.ExtraSlotsHelper;
 import sidben.visiblearmorslots.helper.LogHelper;
 import sidben.visiblearmorslots.inventory.ContainerEnchantmentCustom;
+import sidben.visiblearmorslots.proxy.ClientProxy;
+
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.List;
@@ -110,11 +114,19 @@ public class GuiEnchantmentCustom extends GuiContainer {
      */
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
     {
+    	// Draws the extra slots
+    	ExtraSlotsHelper.drawExtraSlotsOnGui(this, this.xSize, this.ySize);
+        
+        
+        // Draws the background
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(ENCHANTMENT_TABLE_GUI_TEXTURE);
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
+
+
+        // Draws the book
         GlStateManager.pushMatrix();
         GlStateManager.matrixMode(5889);
         GlStateManager.pushMatrix();
@@ -123,6 +135,7 @@ public class GuiEnchantmentCustom extends GuiContainer {
         GlStateManager.viewport((scaledresolution.getScaledWidth() - 320) / 2 * scaledresolution.getScaleFactor(), (scaledresolution.getScaledHeight() - 240) / 2 * scaledresolution.getScaleFactor(), 320 * scaledresolution.getScaleFactor(), 240 * scaledresolution.getScaleFactor());
         GlStateManager.translate(-0.34F, 0.23F, 0.0F);
         Project.gluPerspective(90.0F, 1.3333334F, 9.0F, 80.0F);
+
         float f = 1.0F;
         GlStateManager.matrixMode(5888);
         GlStateManager.loadIdentity();
@@ -132,12 +145,14 @@ public class GuiEnchantmentCustom extends GuiContainer {
         float f1 = 5.0F;
         GlStateManager.scale(f1, f1, f1);
         GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+
         this.mc.getTextureManager().bindTexture(ENCHANTMENT_TABLE_BOOK_TEXTURE);
         GlStateManager.rotate(20.0F, 1.0F, 0.0F, 0.0F);
         float f2 = this.field_147076_A + (this.field_147080_z - this.field_147076_A) * partialTicks;
         GlStateManager.translate((1.0F - f2) * 0.2F, (1.0F - f2) * 0.1F, (1.0F - f2) * 0.25F);
         GlStateManager.rotate(-(1.0F - f2) * 90.0F - 90.0F, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(180.0F, 1.0F, 0.0F, 0.0F);
+        
         float f3 = this.field_147069_w + (this.field_147071_v - this.field_147069_w) * partialTicks + 0.25F;
         float f4 = this.field_147069_w + (this.field_147071_v - this.field_147069_w) * partialTicks + 0.75F;
         f3 = (f3 - (float)MathHelper.truncateDoubleToInt((double)f3)) * 1.6F - 0.3F;
@@ -172,6 +187,11 @@ public class GuiEnchantmentCustom extends GuiContainer {
         GlStateManager.popMatrix();
         GlStateManager.matrixMode(5888);
         GlStateManager.popMatrix();
+
+        
+        
+
+        // Draws the enchantments
         RenderHelper.disableStandardItemLighting();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         EnchantmentNameParts.getInstance().reseedRandomGenerator((long)this.container.xpSeed);
@@ -229,6 +249,8 @@ public class GuiEnchantmentCustom extends GuiContainer {
                 fontrenderer.drawStringWithShadow(s, (float)(j1 + 86 - fontrenderer.getStringWidth(s)), (float)(j + 16 + 19 * l + 7), i2);
             }
         }
+
+    
     }
 
     /**

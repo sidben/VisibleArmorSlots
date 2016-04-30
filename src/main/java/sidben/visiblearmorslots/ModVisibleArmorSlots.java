@@ -38,7 +38,9 @@ public class ModVisibleArmorSlots
 
     public static final int GUI_ENCHANTMENT_TABLE = 99;
     
+    
 
+    
 
 
     @Mod.EventHandler

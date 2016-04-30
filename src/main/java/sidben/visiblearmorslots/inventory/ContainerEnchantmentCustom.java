@@ -1,5 +1,7 @@
 package sidben.visiblearmorslots.inventory;
 
+import sidben.visiblearmorslots.ModVisibleArmorSlots;
+import sidben.visiblearmorslots.helper.ExtraSlotsHelper;
 import sidben.visiblearmorslots.helper.LogHelper;
 import java.util.List;
 import java.util.Random;
@@ -123,6 +125,12 @@ public class ContainerEnchantmentCustom extends Container {
         {
             this.addSlotToContainer(new Slot(playerInv, k, 8 + k * 18, 142));
         }
+        
+        
+        
+        // Adds the extra slots
+    	ExtraSlotsHelper.addExtraSlotsToContainer(this, playerInv);
+
     }
 
     protected void func_185000_c(ICrafting p_185000_1_)
