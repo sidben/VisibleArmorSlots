@@ -11,8 +11,10 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import sidben.visiblearmorslots.ModVisibleArmorSlots;
 import sidben.visiblearmorslots.client.gui.GuiEnchantmentCustom;
+import sidben.visiblearmorslots.client.gui.GuiRepairCustom;
 import sidben.visiblearmorslots.handler.PlayerEventHandler;
 import sidben.visiblearmorslots.helper.LogHelper;
+import sidben.visiblearmorslots.inventory.ContainerRepairCustom;
 import sidben.visiblearmorslots.reference.Reference;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -53,13 +55,13 @@ public class ClientProxy extends CommonProxy
     @Override
     public Object getClientGuiElement(int guiID, EntityPlayer player, World world, int x, int y, int z)
     {
-    	LogHelper.info("getClientGuiElement() - " + guiID);
-    	
-    	
     	if (guiID == ModVisibleArmorSlots.GUI_ENCHANTMENT_TABLE) {
-            // final TileEntityEnchantmentTable tile = (TileEntityEnchantmentTable) world.getTileEntity(new BlockPos(x, y, z));
-            return new GuiEnchantmentCustom(player.inventory, world);
+            final TileEntityEnchantmentTable tile = (TileEntityEnchantmentTable) world.getTileEntity(new BlockPos(x, y, z));
+            return new GuiEnchantmentCustom(player.inventory, world, tile);
         }
+    	else if (guiID == ModVisibleArmorSlots.GUI_ANVIL) {
+            return new GuiRepairCustom(player.inventory, world);
+    	}
 
         return null;
     }
