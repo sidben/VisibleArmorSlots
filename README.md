@@ -3,6 +3,8 @@ Visible Armor Slots Mod
 
 Minecraft mod that makes the armor and off-hand slots visible on many GUIs.
 
+http://minecraft.curseforge.com/projects/visible-armor-slots
+
 
 Planned features 
 --------------
@@ -24,7 +26,7 @@ Blocks:
 - [x] Dispenser;
 - [x] Hopper;
 - [x] Brewing Stand;
-- [ ] Beacon;
+- [x] Beacon;
 
 Entities:
 

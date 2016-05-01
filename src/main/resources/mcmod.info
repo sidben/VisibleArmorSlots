@@ -2,7 +2,7 @@
 {
 "modid": "visiblearmorslots",
 "name": "Visible Armor Slots",
-"description": "Makes the armor and off-hand slots visible on many GUIs.",
+"description": "Makes the armor and off-hand slots accessible on many inventories.",
 "version": "${version}",
 "mcversion": "${mcversion}",
 "url": "",
