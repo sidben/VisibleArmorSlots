@@ -4,7 +4,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ContainerWorkbench;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import sidben.visiblearmorslots.helper.ExtraSlotsHelper;
+import sidben.visiblearmorslots.ModVisibleArmorSlots;
 
 
 public class ContainerCraftingCustom extends ContainerWorkbench
@@ -15,7 +15,7 @@ public class ContainerCraftingCustom extends ContainerWorkbench
         super(playerInventory, worldIn, posIn);
 
         // Adds the extra slots
-        ExtraSlotsHelper.addExtraSlotsToContainer(this, playerInventory);
+        ModVisibleArmorSlots.extraSlotsHelper.addExtraSlotsToContainer(this, playerInventory);
     }
 
 

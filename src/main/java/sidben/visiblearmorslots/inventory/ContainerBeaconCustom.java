@@ -1,11 +1,9 @@
 package sidben.visiblearmorslots.inventory;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ContainerBeacon;
-import net.minecraft.inventory.ContainerHopper;
 import net.minecraft.inventory.IInventory;
-import sidben.visiblearmorslots.helper.ExtraSlotsHelper;
+import sidben.visiblearmorslots.ModVisibleArmorSlots;
 
 
 public class ContainerBeaconCustom extends ContainerBeacon
@@ -16,7 +14,7 @@ public class ContainerBeaconCustom extends ContainerBeacon
         super(playerInventory, tileBeaconIn);
 
         // Adds the extra slots
-        ExtraSlotsHelper.addExtraSlotsToContainer(this, playerInventory);
+        ModVisibleArmorSlots.extraSlotsHelper.addExtraSlotsToContainer(this, playerInventory);
     }
 
 

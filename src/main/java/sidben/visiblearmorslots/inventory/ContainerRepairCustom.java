@@ -7,7 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import sidben.visiblearmorslots.helper.ExtraSlotsHelper;
+import sidben.visiblearmorslots.ModVisibleArmorSlots;
 
 
 public class ContainerRepairCustom extends ContainerRepair
@@ -24,7 +24,7 @@ public class ContainerRepairCustom extends ContainerRepair
         super(playerInventory, worldIn, pos, player);
 
         // Adds the extra slots
-        ExtraSlotsHelper.addExtraSlotsToContainer(this, playerInventory);
+        ModVisibleArmorSlots.extraSlotsHelper.addExtraSlotsToContainer(this, playerInventory);
     }
 
 

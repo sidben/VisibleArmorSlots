@@ -51,7 +51,7 @@ public class PlayerEventHandler
          * LogHelper.info("onRightClickBlock() " + event.getHand() + " on " + (event.getWorld().isRemote ? "Client" : "Server") + " -> " + blockName);
          */
 
-
+        
         // Check blocks that should have the GUI redirected
         for (final VanillaGuiRedirect item : guiRedirectArray) {
 
@@ -59,6 +59,7 @@ public class PlayerEventHandler
                 // First deny the vanilla GUI
                 event.setCanceled(true);
 
+                
                 // Display the custom GUI (only on server)
                 if (!event.getWorld().isRemote && event.getHand().equals(EnumHand.MAIN_HAND)) {
                     event.getEntityPlayer().openGui(ModVisibleArmorSlots.instance, item.getRedirectGuiId(), event.getWorld(), event.getPos().getX(), event.getPos().getY(), event.getPos().getZ());

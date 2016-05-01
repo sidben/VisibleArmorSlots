@@ -6,7 +6,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import sidben.visiblearmorslots.helper.ExtraSlotsHelper;
+import sidben.visiblearmorslots.ModVisibleArmorSlots;
 
 
 public class ContainerEnchantmentCustom extends ContainerEnchantment
@@ -23,7 +23,7 @@ public class ContainerEnchantmentCustom extends ContainerEnchantment
         super(playerInv, worldIn, pos);
 
         // Adds the extra slots
-        ExtraSlotsHelper.addExtraSlotsToContainer(this, playerInv);
+        ModVisibleArmorSlots.extraSlotsHelper.addExtraSlotsToContainer(this, playerInv);
     }
 
 

@@ -31,18 +31,10 @@ public class ClientProxy extends CommonProxy
 {
 
 
-    // GUI textures and paths
-    public static String guiTextureExtraSlots;
-
-
 
     @Override
     public void pre_initialize()
     {
-        // GUI
-        ClientProxy.guiTextureExtraSlots = Reference.ModID + ":textures/gui/extra-slots.png";
-
-
         super.pre_initialize();
     }
 

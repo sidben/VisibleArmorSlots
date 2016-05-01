@@ -3,7 +3,7 @@ package sidben.visiblearmorslots.inventory;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ContainerBrewingStand;
 import net.minecraft.inventory.IInventory;
-import sidben.visiblearmorslots.helper.ExtraSlotsHelper;
+import sidben.visiblearmorslots.ModVisibleArmorSlots;
 
 
 public class ContainerBrewingStandCustom extends ContainerBrewingStand
@@ -14,7 +14,7 @@ public class ContainerBrewingStandCustom extends ContainerBrewingStand
         super(playerInventory, tileBrewingStandIn);
 
         // Adds the extra slots
-        ExtraSlotsHelper.addExtraSlotsToContainer(this, playerInventory);
+        ModVisibleArmorSlots.extraSlotsHelper.addExtraSlotsToContainer(this, playerInventory);
     }
 
 

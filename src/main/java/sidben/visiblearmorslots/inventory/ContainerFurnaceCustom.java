@@ -3,7 +3,7 @@ package sidben.visiblearmorslots.inventory;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ContainerFurnace;
 import net.minecraft.inventory.IInventory;
-import sidben.visiblearmorslots.helper.ExtraSlotsHelper;
+import sidben.visiblearmorslots.ModVisibleArmorSlots;
 
 
 public class ContainerFurnaceCustom extends ContainerFurnace
@@ -14,7 +14,7 @@ public class ContainerFurnaceCustom extends ContainerFurnace
         super(playerInventory, furnaceInventory);
 
         // Adds the extra slots
-        ExtraSlotsHelper.addExtraSlotsToContainer(this, playerInventory);
+        ModVisibleArmorSlots.extraSlotsHelper.addExtraSlotsToContainer(this, playerInventory);
     }
 
 

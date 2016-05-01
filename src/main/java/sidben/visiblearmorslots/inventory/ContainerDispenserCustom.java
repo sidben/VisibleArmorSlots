@@ -2,7 +2,7 @@ package sidben.visiblearmorslots.inventory;
 
 import net.minecraft.inventory.ContainerDispenser;
 import net.minecraft.inventory.IInventory;
-import sidben.visiblearmorslots.helper.ExtraSlotsHelper;
+import sidben.visiblearmorslots.ModVisibleArmorSlots;
 
 
 public class ContainerDispenserCustom extends ContainerDispenser
@@ -13,7 +13,7 @@ public class ContainerDispenserCustom extends ContainerDispenser
         super(playerInventory, dispenserInventoryIn);
 
         // Adds the extra slots
-        ExtraSlotsHelper.addExtraSlotsToContainer(this, playerInventory);
+        ModVisibleArmorSlots.extraSlotsHelper.addExtraSlotsToContainer(this, playerInventory);
     }
 
 

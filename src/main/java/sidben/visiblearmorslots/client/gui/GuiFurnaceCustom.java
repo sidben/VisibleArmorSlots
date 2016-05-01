@@ -6,7 +6,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import sidben.visiblearmorslots.helper.ExtraSlotsHelper;
+import sidben.visiblearmorslots.ModVisibleArmorSlots;
 import sidben.visiblearmorslots.inventory.ContainerFurnaceCustom;
 
 
@@ -30,7 +30,7 @@ public class GuiFurnaceCustom extends GuiFurnace
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
     {
         // Draws the extra slots
-        ExtraSlotsHelper.drawExtraSlotsOnGui(this, this.xSize, this.ySize);
+        ModVisibleArmorSlots.extraSlotsHelper.drawExtraSlotsOnGui(this, this.xSize, this.ySize);
 
         super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
     }
