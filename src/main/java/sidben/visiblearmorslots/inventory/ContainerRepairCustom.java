@@ -14,18 +14,18 @@ public class ContainerRepairCustom extends ContainerRepair
 {
 
 
-	@SideOnly(Side.CLIENT)
-	public ContainerRepairCustom(InventoryPlayer playerInventory, World worldIn, EntityPlayer player) {
-		this(playerInventory, worldIn, BlockPos.ORIGIN, player);
-	}
+    @SideOnly(Side.CLIENT)
+    public ContainerRepairCustom(InventoryPlayer playerInventory, World worldIn, EntityPlayer player) {
+        this(playerInventory, worldIn, BlockPos.ORIGIN, player);
+    }
 
 
-	public ContainerRepairCustom(InventoryPlayer playerInventory, World worldIn, BlockPos pos, EntityPlayer player) {
-		super(playerInventory, worldIn, pos, player);
+    public ContainerRepairCustom(InventoryPlayer playerInventory, World worldIn, BlockPos pos, EntityPlayer player) {
+        super(playerInventory, worldIn, pos, player);
 
-		// Adds the extra slots
-		ExtraSlotsHelper.addExtraSlotsToContainer(this, playerInventory);
-	}
+        // Adds the extra slots
+        ExtraSlotsHelper.addExtraSlotsToContainer(this, playerInventory);
+    }
 
 
 }

@@ -1,6 +1,5 @@
 package sidben.visiblearmorslots.proxy;
 
-import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
 

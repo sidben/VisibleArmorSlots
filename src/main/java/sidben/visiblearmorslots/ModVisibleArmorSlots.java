@@ -17,50 +17,50 @@ public class ModVisibleArmorSlots
 {
 
 
-	// The instance of your mod that Forge uses.
-	@Mod.Instance(Reference.ModID)
-	public static ModVisibleArmorSlots	instance;
+    // The instance of your mod that Forge uses.
+    @Mod.Instance(Reference.ModID)
+    public static ModVisibleArmorSlots instance;
 
 
-	@SidedProxy(clientSide = Reference.ClientProxyClass, serverSide = Reference.ServerProxyClass)
-	public static IProxy	           proxy;
-
-
-
-	public static final int	           GUI_ENCHANTMENT_TABLE	= 50;
-	public static final int	           GUI_ANVIL	            = 51;
+    @SidedProxy(clientSide = Reference.ClientProxyClass, serverSide = Reference.ServerProxyClass)
+    public static IProxy               proxy;
 
 
 
-	@Mod.EventHandler
-	public void preInit(FMLPreInitializationEvent event)
-	{
-		// Loads config
-		ConfigurationHandler.init(event.getSuggestedConfigurationFile());
-		MinecraftForge.EVENT_BUS.register(new ConfigurationHandler());
-
-		// Sided pre-initialization
-		proxy.pre_initialize();
-	}
+    public static final int            GUI_ENCHANTMENT_TABLE = 50;
+    public static final int            GUI_ANVIL             = 51;
 
 
-	@Mod.EventHandler
-	public void load(FMLInitializationEvent event)
-	{
-		// GUIs
-		NetworkRegistry.INSTANCE.registerGuiHandler(this, ModVisibleArmorSlots.proxy);
 
-		// Sided initializations
-		proxy.initialize();
-	}
+    @Mod.EventHandler
+    public void preInit(FMLPreInitializationEvent event)
+    {
+        // Loads config
+        ConfigurationHandler.init(event.getSuggestedConfigurationFile());
+        MinecraftForge.EVENT_BUS.register(new ConfigurationHandler());
+
+        // Sided pre-initialization
+        proxy.pre_initialize();
+    }
 
 
-	@Mod.EventHandler
-	public void postInit(FMLPostInitializationEvent event)
-	{
-		// Sided post-initialization
-		proxy.post_initialize();
-	}
+    @Mod.EventHandler
+    public void load(FMLInitializationEvent event)
+    {
+        // GUIs
+        NetworkRegistry.INSTANCE.registerGuiHandler(this, ModVisibleArmorSlots.proxy);
+
+        // Sided initializations
+        proxy.initialize();
+    }
+
+
+    @Mod.EventHandler
+    public void postInit(FMLPostInitializationEvent event)
+    {
+        // Sided post-initialization
+        proxy.post_initialize();
+    }
 
 
 

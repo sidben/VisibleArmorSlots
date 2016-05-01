@@ -16,6 +16,7 @@ Armor slots and off-hand slot visible on:
 - [ ] Double Chest;
 - [ ] Trapped Double Chest;
 - [ ] Ender Chest;
+- [ ] Crafting Table;
 - [ ] Dropper;
 - [ ] Dispenser;
 - [ ] Hopper;

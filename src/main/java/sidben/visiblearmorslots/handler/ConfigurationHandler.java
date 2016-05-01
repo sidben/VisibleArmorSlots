@@ -2,17 +2,17 @@ package sidben.visiblearmorslots.handler;
 
 import java.io.File;
 import net.minecraftforge.common.config.Configuration;
-import sidben.visiblearmorslots.reference.Reference;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import sidben.visiblearmorslots.reference.Reference;
 
 
 public class ConfigurationHandler
 {
-    public static final String  CATEGORY_DEBUG             = "debug";
+    public static final String  CATEGORY_DEBUG       = "debug";
 
-    public static boolean       overrideEnchantTable       = true;
-    public static boolean       overrideAnvil       	   = true;
+    public static boolean       overrideEnchantTable = true;
+    public static boolean       overrideAnvil        = true;
 
     // Instance
     public static Configuration config;
@@ -36,8 +36,8 @@ public class ConfigurationHandler
     {
 
         // Load properties - debug
-    	overrideEnchantTable = config.getBoolean("enabled_on_enchanting", Configuration.CATEGORY_GENERAL, true, "");
-    	overrideAnvil = config.getBoolean("enabled_on_anvil", Configuration.CATEGORY_GENERAL, true, "");
+        overrideEnchantTable = config.getBoolean("enabled_on_enchanting", Configuration.CATEGORY_GENERAL, true, "");
+        overrideAnvil = config.getBoolean("enabled_on_anvil", Configuration.CATEGORY_GENERAL, true, "");
 
         // saving the configuration to its file
         if (config.hasChanged()) {
