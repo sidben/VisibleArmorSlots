@@ -4,6 +4,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -37,15 +38,15 @@ public class ExtraSlotsHelper
 
 
 
-    public static void addExtraSlotsToContainer(Container originalContainer, InventoryPlayer playerInv)
+    public static void addExtraSlotsToContainer(Container originalContainer, IInventory playerInventory)
     {
 
         // Adds the armor slots
-        addSlotToContainer(originalContainer, new SlotArmor(playerInv, 39, GUI_SLOTS_YOFFSET, 66));				// head
-        addSlotToContainer(originalContainer, new SlotArmor(playerInv, 38, GUI_SLOTS_YOFFSET, 84));				// chest
-        addSlotToContainer(originalContainer, new SlotArmor(playerInv, 37, GUI_SLOTS_YOFFSET, 102));			// legs
-        addSlotToContainer(originalContainer, new SlotArmor(playerInv, 36, GUI_SLOTS_YOFFSET, 120));			// boots
-        addSlotToContainer(originalContainer, new SlotOffHand(playerInv, 40, GUI_SLOTS_YOFFSET, 142));			// off-hand
+        addSlotToContainer(originalContainer, new SlotArmor(playerInventory, 39, GUI_SLOTS_YOFFSET, 66));				// head
+        addSlotToContainer(originalContainer, new SlotArmor(playerInventory, 38, GUI_SLOTS_YOFFSET, 84));				// chest
+        addSlotToContainer(originalContainer, new SlotArmor(playerInventory, 37, GUI_SLOTS_YOFFSET, 102));			// legs
+        addSlotToContainer(originalContainer, new SlotArmor(playerInventory, 36, GUI_SLOTS_YOFFSET, 120));			// boots
+        addSlotToContainer(originalContainer, new SlotOffHand(playerInventory, 40, GUI_SLOTS_YOFFSET, 142));			// off-hand
 
     }
 

@@ -11,18 +11,20 @@ Armor slots and off-hand slot visible on:
 
 - [x] Enchantment Table;
 - [x] Anvil;
-- [ ] Chest;
-- [ ] Trapped Chest;
-- [ ] Double Chest;
-- [ ] Trapped Double Chest;
-- [ ] Ender Chest;
+- [x] Chest;
+- [x] Trapped Chest;
+- [x] Double Chest;
+- [x] Trapped Double Chest;
+- [x] Ender Chest;
+- [ ] Furnace;
 - [ ] Crafting Table;
 - [ ] Dropper;
 - [ ] Dispenser;
 - [ ] Hopper;
-- [ ] Furnace;
-- [ ] Beacon;
 - [ ] Brewing Stand;
+
+- [ ] Beacon;
+
 - [ ] Minecart Chest;
 - [ ] Minecart Hopper;
 - [ ] Donkey;

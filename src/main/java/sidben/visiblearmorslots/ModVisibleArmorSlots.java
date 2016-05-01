@@ -29,6 +29,8 @@ public class ModVisibleArmorSlots
 
     public static final int            GUI_ENCHANTMENT_TABLE = 50;
     public static final int            GUI_ANVIL             = 51;
+    public static final int            GUI_CHEST             = 52;
+    public static final int            GUI_ENDER_CHEST       = 53;
 
 
 

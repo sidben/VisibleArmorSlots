@@ -13,9 +13,12 @@ import sidben.visiblearmorslots.helper.VanillaGuiRedirect;
 public class PlayerEventHandler
 {
 
-    private static final VanillaGuiRedirect[] guiRedirectArray = new VanillaGuiRedirect[] { 
+    private static final VanillaGuiRedirect[] guiRedirectArray = new VanillaGuiRedirect[] {
             new VanillaGuiRedirect(Blocks.enchanting_table, ModVisibleArmorSlots.GUI_ENCHANTMENT_TABLE),
-            new VanillaGuiRedirect(Blocks.anvil, ModVisibleArmorSlots.GUI_ANVIL) };
+            new VanillaGuiRedirect(Blocks.anvil, ModVisibleArmorSlots.GUI_ANVIL),
+            new VanillaGuiRedirect(Blocks.chest, ModVisibleArmorSlots.GUI_CHEST),
+            new VanillaGuiRedirect(Blocks.trapped_chest, ModVisibleArmorSlots.GUI_CHEST),
+            new VanillaGuiRedirect(Blocks.ender_chest, ModVisibleArmorSlots.GUI_ENDER_CHEST) };
 
 
 
@@ -36,9 +39,11 @@ public class PlayerEventHandler
          */
 
         final IBlockState targetBlock = event.getWorld().getBlockState(event.getPos());
+        
+        /*
         final String blockName = targetBlock.getBlock().getUnlocalizedName();
-
         LogHelper.info("onRightClickBlock() " + event.getHand() + " on " + (event.getWorld().isRemote ? "Client" : "Server") + " -> " + blockName);
+        */
 
 
         // Check blocks that should have the GUI redirected
