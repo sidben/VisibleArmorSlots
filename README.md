@@ -9,6 +9,8 @@ Planned features
 
 Armor slots and off-hand slot visible on:
 
+Blocks:
+
 - [x] Enchantment Table;
 - [x] Anvil;
 - [x] Chest;
@@ -16,14 +18,15 @@ Armor slots and off-hand slot visible on:
 - [x] Double Chest;
 - [x] Trapped Double Chest;
 - [x] Ender Chest;
-- [ ] Furnace;
-- [ ] Crafting Table;
-- [ ] Dropper;
-- [ ] Dispenser;
-- [ ] Hopper;
-- [ ] Brewing Stand;
-
+- [x] Furnace;
+- [x] Crafting Table;
+- [x] Dropper;
+- [x] Dispenser;
+- [x] Hopper;
+- [x] Brewing Stand;
 - [ ] Beacon;
+
+Entities:
 
 - [ ] Minecart Chest;
 - [ ] Minecart Hopper;
