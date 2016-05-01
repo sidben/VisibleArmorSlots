@@ -23,7 +23,8 @@ public class PlayerEventHandler
             new VanillaGuiRedirect(Blocks.dispenser, ModVisibleArmorSlots.GUI_DISPENSER), 
             new VanillaGuiRedirect(Blocks.dropper, ModVisibleArmorSlots.GUI_DISPENSER),
             new VanillaGuiRedirect(Blocks.hopper, ModVisibleArmorSlots.GUI_HOPPER), 
-            new VanillaGuiRedirect(Blocks.brewing_stand, ModVisibleArmorSlots.GUI_BREWING_STAND) };
+            new VanillaGuiRedirect(Blocks.brewing_stand, ModVisibleArmorSlots.GUI_BREWING_STAND),
+            new VanillaGuiRedirect(Blocks.beacon, ModVisibleArmorSlots.GUI_BEACON) };
 
 
 

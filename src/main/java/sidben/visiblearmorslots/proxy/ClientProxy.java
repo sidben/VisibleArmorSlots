@@ -3,6 +3,7 @@ package sidben.visiblearmorslots.proxy;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryEnderChest;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityBeacon;
 import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityDispenser;
@@ -13,6 +14,7 @@ import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import sidben.visiblearmorslots.ModVisibleArmorSlots;
+import sidben.visiblearmorslots.client.gui.GuiBeaconCustom;
 import sidben.visiblearmorslots.client.gui.GuiBrewingStandCustom;
 import sidben.visiblearmorslots.client.gui.GuiChestCustom;
 import sidben.visiblearmorslots.client.gui.GuiCraftingCustom;
@@ -113,6 +115,11 @@ public class ClientProxy extends CommonProxy
         else if (guiID == ModVisibleArmorSlots.GUI_BREWING_STAND) {
             final TileEntityBrewingStand tile = (TileEntityBrewingStand) targetTile;
             return new GuiBrewingStandCustom(player.inventory, tile);
+        }
+
+        else if (guiID == ModVisibleArmorSlots.GUI_BEACON) {
+            final TileEntityBeacon tile = (TileEntityBeacon) targetTile;
+            return new GuiBeaconCustom(player.inventory, tile);
         }
 
         return null;

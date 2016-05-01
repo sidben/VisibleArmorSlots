@@ -4,12 +4,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryEnderChest;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityBeacon;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import sidben.visiblearmorslots.ModVisibleArmorSlots;
 import sidben.visiblearmorslots.handler.PlayerEventHandler;
+import sidben.visiblearmorslots.inventory.ContainerBeaconCustom;
 import sidben.visiblearmorslots.inventory.ContainerBrewingStandCustom;
 import sidben.visiblearmorslots.inventory.ContainerChestCustom;
 import sidben.visiblearmorslots.inventory.ContainerCraftingCustom;
@@ -91,6 +93,11 @@ public abstract class CommonProxy implements IProxy
 
         else if (guiID == ModVisibleArmorSlots.GUI_BREWING_STAND) {
             return new ContainerBrewingStandCustom(player.inventory, (IInventory) targetTile);
+        }
+
+        else if (guiID == ModVisibleArmorSlots.GUI_BEACON) {
+            final TileEntityBeacon tile = (TileEntityBeacon) targetTile;
+            return new ContainerBeaconCustom(player.inventory, tile);
         }
 
         return null;
