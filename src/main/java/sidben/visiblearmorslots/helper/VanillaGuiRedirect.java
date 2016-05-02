@@ -7,13 +7,14 @@ import net.minecraft.block.Block;
 public class VanillaGuiRedirect
 {
 
-    private final Block _theBlock;
-    private final int   _theNewGuiId;
+    private final Block   _theBlock;
+    private final int     _theNewGuiId;
+    private final boolean _enabled;
 
 
     public boolean compareBlock(Block targetBlock)
     {
-        return targetBlock == null ? false : this._theBlock.equals(targetBlock);
+        return !this._enabled ? false : (targetBlock == null ? false : this._theBlock.equals(targetBlock));
     }
 
     public int getRedirectGuiId()
@@ -23,9 +24,10 @@ public class VanillaGuiRedirect
 
 
 
-    public VanillaGuiRedirect(Block blockToBeChecked, int guiToBeUsed) {
+    public VanillaGuiRedirect(Block blockToBeChecked, int guiToBeUsed, boolean shouldOverride) {
         this._theBlock = blockToBeChecked;
         this._theNewGuiId = guiToBeUsed;
+        this._enabled = shouldOverride;
     }
 
 }
