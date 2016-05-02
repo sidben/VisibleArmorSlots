@@ -36,39 +36,38 @@ public class PlayerEventHandler
 
 
         /*
-         * LogHelper.info("    " + event.getHand());
-         * LogHelper.info("    " + event.getPos());
-         * LogHelper.info("    " + event.getUseBlock());
-         * LogHelper.info("    " + event.getUseItem());
-         * LogHelper.info("    " + event.getClass());
-         * LogHelper.info("    " + event.getWorld().getBlockState(event.getPos()));
-         */
-
-        final IBlockState targetBlock = event.getWorld().getBlockState(event.getPos());
-
-        /*
          * final String blockName = targetBlock.getBlock().getUnlocalizedName();
          * LogHelper.info("onRightClickBlock() " + event.getHand() + " on " + (event.getWorld().isRemote ? "Client" : "Server") + " -> " + blockName);
          */
 
         
-        // Check blocks that should have the GUI redirected
-        for (final VanillaGuiRedirect item : guiRedirectArray) {
-
-            if (item.compareBlock(targetBlock.getBlock())) {
-                // First deny the vanilla GUI
-                event.setCanceled(true);
-
-                
-                // Display the custom GUI (only on server)
-                if (!event.getWorld().isRemote && event.getHand().equals(EnumHand.MAIN_HAND)) {
-                    event.getEntityPlayer().openGui(ModVisibleArmorSlots.instance, item.getRedirectGuiId(), event.getWorld(), event.getPos().getX(), event.getPos().getY(), event.getPos().getZ());
+        final IBlockState targetBlock = event.getWorld().getBlockState(event.getPos());
+        
+        // NOTE: Keep an eye on PlayerInteractionManager.processRightClickBlock. There is a check for the held item
+        // doesSneakBypassUse() method, but from what I can see from the code, every item returns false. 
+        if (!event.getEntityPlayer().isSneaking()) {
+            
+            // Check blocks that should have the GUI redirected
+            for (final VanillaGuiRedirect item : guiRedirectArray) {
+    
+                if (item.compareBlock(targetBlock.getBlock())) {
+                    // First deny the vanilla GUI
+                    event.setCanceled(true);
+    
+                    
+                    // Display the custom GUI (only on server)
+                    if (!event.getWorld().isRemote && event.getHand().equals(EnumHand.MAIN_HAND)) {
+                        event.getEntityPlayer().openGui(ModVisibleArmorSlots.instance, item.getRedirectGuiId(), event.getWorld(), event.getPos().getX(), event.getPos().getY(), event.getPos().getZ());
+                    }
+    
+                    break;
                 }
-
-                break;
+    
             }
 
         }
+        
+        
 
 
     }
