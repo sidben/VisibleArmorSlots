@@ -1,5 +1,7 @@
 package sidben.visiblearmorslots.proxy;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockChest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryEnderChest;
 import net.minecraft.tileentity.TileEntity;
@@ -12,6 +14,7 @@ import net.minecraft.tileentity.TileEntityEnderChest;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.World;
 import sidben.visiblearmorslots.ModVisibleArmorSlots;
 import sidben.visiblearmorslots.client.gui.GuiBeaconCustom;
@@ -67,11 +70,12 @@ public class ClientProxy extends CommonProxy
         }
 
         else if (guiID == ModVisibleArmorSlots.GUI_CHEST) {
-            if (!(targetTile instanceof TileEntityChest)) {
+            if (!(targetTile instanceof TileEntityChest) || !(targetTile instanceof ILockableContainer)) {
                 return null;
             }
-            final TileEntityChest tile = (TileEntityChest) targetTile;
-            return new GuiChestCustom(player.inventory, tile);
+            Block targetBlock = world.getBlockState(targetPos).getBlock();
+            ILockableContainer lockableTile = ((BlockChest)targetBlock).getLockableContainer(world, targetPos);
+            return new GuiChestCustom(player.inventory, lockableTile);
         }
 
         else if (guiID == ModVisibleArmorSlots.GUI_ENDER_CHEST) {
