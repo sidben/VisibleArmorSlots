@@ -13,4 +13,7 @@ public class Reference
 
     public static final String ServerSlotHelperClass = "sidben.visiblearmorslots.helper.ExtraSlotsHelperServer";
     public static final String ClientSlotHelperClass = "sidben.visiblearmorslots.helper.ExtraSlotsHelperClient";
+    
+    public static final String GuiFactoryClass       = "sidben.visiblearmorslots.client.gui.config.GuiFactory";
+
 }

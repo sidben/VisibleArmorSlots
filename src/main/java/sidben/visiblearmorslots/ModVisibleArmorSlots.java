@@ -13,7 +13,7 @@ import sidben.visiblearmorslots.proxy.IProxy;
 import sidben.visiblearmorslots.reference.Reference;
 
 
-@Mod(modid = Reference.ModID, name = Reference.ModName, version = Reference.ModVersion)
+@Mod(modid = Reference.ModID, name = Reference.ModName, version = Reference.ModVersion, guiFactory = Reference.GuiFactoryClass)
 public class ModVisibleArmorSlots
 {
 
