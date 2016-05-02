@@ -1,0 +1,15 @@
+﻿# Config GUI
+slots_side=Posição dos slots extras
+slots_margin=Margem dos slots extras
+slots_margin.tooltip=Espaço entre os slots extras de armadura/mão secundária e o inventário aberto.
+enabled_on_enchanting=Exibir na Mesa de Encantamentos
+enabled_on_anvil=Exibir na Bigorna
+enabled_on_chest=Exibir no Baú
+enabled_on_ender_chest=Exibir no Baú do End
+enabled_on_furnace=Exibir na Fornalha
+enabled_on_crafting=Exibir na Bancada de Trabalho
+enabled_on_dispenser=Exibir no Ejetor
+enabled_on_dropper=Exibir no Liberador
+enabled_on_hopper=Exibir no Funil
+enabled_on_brewing=Exibir no Suporte de Poções
+enabled_on_beacon=Exibir no Sinalizador

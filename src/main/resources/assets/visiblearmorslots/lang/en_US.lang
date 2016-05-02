@@ -1,0 +1,15 @@
+# Config GUI
+slots_side=Extra slots position
+slots_margin=Extra slots margin
+slots_margin.tooltip=Space between the extra armor/off-hand slots and the container inventory.
+enabled_on_enchanting=Display on Enchantment Table
+enabled_on_anvil=Display on Anvil
+enabled_on_chest=Display on Chest
+enabled_on_ender_chest=Display on Ender Chest
+enabled_on_furnace=Display on Furnace
+enabled_on_crafting=Display on Crafting Table
+enabled_on_dispenser=Display on Dispenser
+enabled_on_dropper=Display on Dropper
+enabled_on_hopper=Display on Hopper
+enabled_on_brewing=Display on Brewing Stand
+enabled_on_beacon=Display on Beacon
