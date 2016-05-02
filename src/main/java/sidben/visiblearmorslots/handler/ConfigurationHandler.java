@@ -9,6 +9,14 @@ import sidben.visiblearmorslots.reference.Reference;
 
 public class ConfigurationHandler
 {
+    public static final int     GUI_SLOTS_XOFFSET    = -22;
+
+    public static final int     HOPPER_YOFFSET       = -33;
+    public static final int     BEACON_YOFFSET       = 53;
+    public static final int     CHEST_SINGLE_YOFFSET = 1;
+    public static final int     CHEST_DOUBLE_YOFFSET = 55;
+
+
     public static final String  CATEGORY_DEBUG       = "debug";
 
     public static boolean       overrideEnchantTable = true;

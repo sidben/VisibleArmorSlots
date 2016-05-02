@@ -1,16 +1,11 @@
 package sidben.visiblearmorslots.helper;
 
-import java.util.HashMap;
-import java.util.Map;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import sidben.visiblearmorslots.client.gui.GuiBeaconCustom;
-import sidben.visiblearmorslots.client.gui.GuiHopperCustom;
-import sidben.visiblearmorslots.inventory.ContainerBeaconCustom;
-import sidben.visiblearmorslots.inventory.ContainerHopperCustom;
+import sidben.visiblearmorslots.handler.ConfigurationHandler;
 import sidben.visiblearmorslots.inventory.SlotArmor;
 import sidben.visiblearmorslots.inventory.SlotOffHand;
 
@@ -20,26 +15,11 @@ import sidben.visiblearmorslots.inventory.SlotOffHand;
 public abstract class ExtraSlotsHelperCommon
 {
 
-    public static int                      PLAYER_SLOT_INDEX_HELMET     = 39;
-    public static int                      PLAYER_SLOT_INDEX_CHESTPLATE = 38;
-    public static int                      PLAYER_SLOT_INDEX_LEGGINGS   = 37;
-    public static int                      PLAYER_SLOT_INDEX_BOOTS      = 36;
-    public static int                      PLAYER_SLOT_INDEX_OFFHAND    = 40;
-
-    protected static final int             GUI_SLOTS_XOFFSET            = -22;
-    protected static final int             HOPPER_YOFFSET               = -33;
-    protected static final int             BEACON_YOFFSET               = 53;
-
-    protected final Map<Class<?>, Integer> guiYOffsetMap;
-
-
-
-    public ExtraSlotsHelperCommon() {
-        guiYOffsetMap = new HashMap<Class<?>, Integer>();
-
-        guiYOffsetMap.put(ContainerBeaconCustom.class, BEACON_YOFFSET);
-        guiYOffsetMap.put(ContainerHopperCustom.class, HOPPER_YOFFSET);
-    }
+    public static int PLAYER_SLOT_INDEX_HELMET     = 39;
+    public static int PLAYER_SLOT_INDEX_CHESTPLATE = 38;
+    public static int PLAYER_SLOT_INDEX_LEGGINGS   = 37;
+    public static int PLAYER_SLOT_INDEX_BOOTS      = 36;
+    public static int PLAYER_SLOT_INDEX_OFFHAND    = 40;
 
 
 
@@ -51,18 +31,19 @@ public abstract class ExtraSlotsHelperCommon
 
     public void addExtraSlotsToContainer(Container originalContainer, IInventory playerInventory)
     {
-        Integer yOffset = 0;
 
         // Check if this GUI need extra Y offset
-        yOffset = guiYOffsetMap.containsKey(originalContainer.getClass()) ? guiYOffsetMap.get(originalContainer.getClass()) : 0;
-
+        Integer yOffset = 0;
+        if (originalContainer instanceof IVerticalOffset) {
+            yOffset = ((IVerticalOffset) originalContainer).getYOffset();
+        }
 
         // Adds the armor slots
-        addSlotToContainer(originalContainer, new SlotArmor(playerInventory, PLAYER_SLOT_INDEX_HELMET, GUI_SLOTS_XOFFSET, 66 + yOffset));
-        addSlotToContainer(originalContainer, new SlotArmor(playerInventory, PLAYER_SLOT_INDEX_CHESTPLATE, GUI_SLOTS_XOFFSET, 84 + yOffset));
-        addSlotToContainer(originalContainer, new SlotArmor(playerInventory, PLAYER_SLOT_INDEX_LEGGINGS, GUI_SLOTS_XOFFSET, 102 + yOffset));
-        addSlotToContainer(originalContainer, new SlotArmor(playerInventory, PLAYER_SLOT_INDEX_BOOTS, GUI_SLOTS_XOFFSET, 120 + yOffset));
-        addSlotToContainer(originalContainer, new SlotOffHand(playerInventory, PLAYER_SLOT_INDEX_OFFHAND, GUI_SLOTS_XOFFSET, 142 + yOffset));
+        addSlotToContainer(originalContainer, new SlotArmor(playerInventory, PLAYER_SLOT_INDEX_HELMET, ConfigurationHandler.GUI_SLOTS_XOFFSET, 66 + yOffset));
+        addSlotToContainer(originalContainer, new SlotArmor(playerInventory, PLAYER_SLOT_INDEX_CHESTPLATE, ConfigurationHandler.GUI_SLOTS_XOFFSET, 84 + yOffset));
+        addSlotToContainer(originalContainer, new SlotArmor(playerInventory, PLAYER_SLOT_INDEX_LEGGINGS, ConfigurationHandler.GUI_SLOTS_XOFFSET, 102 + yOffset));
+        addSlotToContainer(originalContainer, new SlotArmor(playerInventory, PLAYER_SLOT_INDEX_BOOTS, ConfigurationHandler.GUI_SLOTS_XOFFSET, 120 + yOffset));
+        addSlotToContainer(originalContainer, new SlotOffHand(playerInventory, PLAYER_SLOT_INDEX_OFFHAND, ConfigurationHandler.GUI_SLOTS_XOFFSET, 142 + yOffset));
 
     }
 

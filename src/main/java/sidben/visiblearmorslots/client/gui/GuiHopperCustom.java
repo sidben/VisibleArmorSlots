@@ -7,12 +7,14 @@ import net.minecraft.inventory.IInventory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sidben.visiblearmorslots.ModVisibleArmorSlots;
+import sidben.visiblearmorslots.handler.ConfigurationHandler;
+import sidben.visiblearmorslots.helper.IVerticalOffset;
 import sidben.visiblearmorslots.inventory.ContainerHopperCustom;
 
 
 
 @SideOnly(Side.CLIENT)
-public class GuiHopperCustom extends GuiHopper
+public class GuiHopperCustom extends GuiHopper implements IVerticalOffset
 {
 
 
@@ -31,6 +33,13 @@ public class GuiHopperCustom extends GuiHopper
         ModVisibleArmorSlots.extraSlotsHelper.drawExtraSlotsOnGui(this, this.xSize, this.ySize);
 
         super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+    }
+
+
+    @Override
+    public int getYOffset()
+    {
+        return ConfigurationHandler.HOPPER_YOFFSET;
     }
 
 
