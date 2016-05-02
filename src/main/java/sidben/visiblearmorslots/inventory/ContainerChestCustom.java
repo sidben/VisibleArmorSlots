@@ -5,10 +5,10 @@ import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
 import sidben.visiblearmorslots.ModVisibleArmorSlots;
 import sidben.visiblearmorslots.handler.ConfigurationHandler;
-import sidben.visiblearmorslots.helper.IVerticalOffset;
+import sidben.visiblearmorslots.helper.IExtraOffset;
 
 
-public class ContainerChestCustom extends ContainerChest implements IVerticalOffset
+public class ContainerChestCustom extends ContainerChest implements IExtraOffset
 {
 
     private final int _yOffset;
@@ -24,6 +24,13 @@ public class ContainerChestCustom extends ContainerChest implements IVerticalOff
     }
 
 
+    @Override
+    public int getXOffset()
+    {
+        return 0;
+    }
+
+    
     @Override
     public int getYOffset()
     {

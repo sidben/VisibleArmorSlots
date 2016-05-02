@@ -24,17 +24,21 @@ public class ExtraSlotsHelperClient extends ExtraSlotsHelperCommon
         // xSize and ySize are the GUI size.
 
 
-        // Check if this GUI need extra Y offset
+        // Check if this GUI need extra offset
+        Integer xOffset = 0;
         Integer yOffset = 0;
-        if (originalGui instanceof IVerticalOffset) {
-            yOffset = ((IVerticalOffset) originalGui).getYOffset();
+        
+        if (originalGui instanceof IExtraOffset) {
+            IExtraOffset extra = ((IExtraOffset) originalGui);
+            xOffset = extra.getXOffset();
+            yOffset = extra.getYOffset();
         }
 
         // Draws the extra armor slots
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         originalGui.mc.getTextureManager().bindTexture(GUI_EXTRA_SLOTS);
 
-        final int startX = ((originalGui.width - xSize) / 2) - 4 + ConfigurationHandler.GUI_SLOTS_XOFFSET;
+        final int startX = ((originalGui.width - xSize) / 2) - 4 + getExtraSlotsXOffset() + xOffset;
         final int startY = ((originalGui.height - ySize) / 2) + 62 + yOffset;
         originalGui.drawTexturedModalRect(startX, startY, 0, 62, 24, 100);
 

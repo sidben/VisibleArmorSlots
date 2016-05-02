@@ -7,13 +7,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sidben.visiblearmorslots.ModVisibleArmorSlots;
 import sidben.visiblearmorslots.handler.ConfigurationHandler;
-import sidben.visiblearmorslots.helper.IVerticalOffset;
+import sidben.visiblearmorslots.helper.IExtraOffset;
 import sidben.visiblearmorslots.inventory.ContainerChestCustom;
 
 
 
 @SideOnly(Side.CLIENT)
-public class GuiChestCustom extends GuiChest implements IVerticalOffset
+public class GuiChestCustom extends GuiChest implements IExtraOffset
 {
 
     private final int _yOffset;
@@ -40,6 +40,13 @@ public class GuiChestCustom extends GuiChest implements IVerticalOffset
     }
 
 
+    @Override
+    public int getXOffset()
+    {
+        return 0;
+    }
+
+    
     @Override
     public int getYOffset()
     {

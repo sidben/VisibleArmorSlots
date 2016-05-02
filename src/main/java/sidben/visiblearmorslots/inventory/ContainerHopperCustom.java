@@ -6,10 +6,10 @@ import net.minecraft.inventory.ContainerHopper;
 import net.minecraft.inventory.IInventory;
 import sidben.visiblearmorslots.ModVisibleArmorSlots;
 import sidben.visiblearmorslots.handler.ConfigurationHandler;
-import sidben.visiblearmorslots.helper.IVerticalOffset;
+import sidben.visiblearmorslots.helper.IExtraOffset;
 
 
-public class ContainerHopperCustom extends ContainerHopper implements IVerticalOffset
+public class ContainerHopperCustom extends ContainerHopper implements IExtraOffset
 {
 
 
@@ -21,6 +21,13 @@ public class ContainerHopperCustom extends ContainerHopper implements IVerticalO
     }
 
 
+    @Override
+    public int getXOffset()
+    {
+        return 0;
+    }
+
+    
     @Override
     public int getYOffset()
     {

@@ -7,13 +7,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sidben.visiblearmorslots.ModVisibleArmorSlots;
 import sidben.visiblearmorslots.handler.ConfigurationHandler;
-import sidben.visiblearmorslots.helper.IVerticalOffset;
+import sidben.visiblearmorslots.helper.IExtraOffset;
 import sidben.visiblearmorslots.inventory.ContainerBeaconCustom;
 
 
 
 @SideOnly(Side.CLIENT)
-public class GuiBeaconCustom extends GuiBeacon implements IVerticalOffset
+public class GuiBeaconCustom extends GuiBeacon implements IExtraOffset
 {
 
 
@@ -35,6 +35,17 @@ public class GuiBeaconCustom extends GuiBeacon implements IVerticalOffset
     }
 
 
+    @Override
+    public int getXOffset()
+    {
+        if (ConfigurationHandler.extraSlotsSide.equals(ConfigurationHandler.SLOT_SIDES[1])) {
+            return ConfigurationHandler.BEACON_XOFFSET;    
+        } else {
+            return 0;
+        }
+    }
+
+    
     @Override
     public int getYOffset()
     {

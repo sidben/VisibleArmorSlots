@@ -9,19 +9,27 @@ import sidben.visiblearmorslots.reference.Reference;
 
 public class ConfigurationHandler
 {
-    public static final int     GUI_SLOTS_XOFFSET    = -22;
+    // public static final int     GUI_SLOTS_XOFFSET    = -22;
 
     public static final int     HOPPER_YOFFSET       = -33;
+    public static final int     BEACON_XOFFSET       = 54;
     public static final int     BEACON_YOFFSET       = 53;
     public static final int     CHEST_SINGLE_YOFFSET = 1;
     public static final int     CHEST_DOUBLE_YOFFSET = 55;
 
 
+    public static final String[] SLOT_SIDES = new String[] { "LEFT", "RIGHT" };
+
     public static final String  CATEGORY_DEBUG       = "debug";
+    
+    public static String        extraSlotsSide;
+    public static int           extraSlotsMargin;
+    public static boolean       overrideEnchantTable;
+    public static boolean       overrideAnvil;
 
-    public static boolean       overrideEnchantTable = true;
-    public static boolean       overrideAnvil        = true;
 
+    
+    
     // Instance
     public static Configuration config;
 
@@ -44,8 +52,11 @@ public class ConfigurationHandler
     {
 
         // Load properties - debug
-        overrideEnchantTable = config.getBoolean("enabled_on_enchanting", Configuration.CATEGORY_GENERAL, true, "");
-        overrideAnvil = config.getBoolean("enabled_on_anvil", Configuration.CATEGORY_GENERAL, true, "");
+        extraSlotsSide = config.getString("slots_side", Configuration.CATEGORY_GENERAL, SLOT_SIDES[0], "", SLOT_SIDES, "");
+        extraSlotsMargin = config.getInt("slots_margin", Configuration.CATEGORY_GENERAL, 2, 0, 256, "", "");
+        
+        overrideEnchantTable = config.getBoolean("enabled_on_enchanting", Configuration.CATEGORY_GENERAL, true, "", "");
+        overrideAnvil = config.getBoolean("enabled_on_anvil", Configuration.CATEGORY_GENERAL, true, "", "");
 
         // saving the configuration to its file
         if (config.hasChanged()) {

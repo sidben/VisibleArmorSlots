@@ -5,10 +5,10 @@ import net.minecraft.inventory.ContainerBeacon;
 import net.minecraft.inventory.IInventory;
 import sidben.visiblearmorslots.ModVisibleArmorSlots;
 import sidben.visiblearmorslots.handler.ConfigurationHandler;
-import sidben.visiblearmorslots.helper.IVerticalOffset;
+import sidben.visiblearmorslots.helper.IExtraOffset;
 
 
-public class ContainerBeaconCustom extends ContainerBeacon implements IVerticalOffset
+public class ContainerBeaconCustom extends ContainerBeacon implements IExtraOffset
 {
 
 
@@ -20,6 +20,13 @@ public class ContainerBeaconCustom extends ContainerBeacon implements IVerticalO
     }
 
 
+    @Override
+    public int getXOffset()
+    {
+        return ConfigurationHandler.BEACON_XOFFSET;
+    }
+
+    
     @Override
     public int getYOffset()
     {

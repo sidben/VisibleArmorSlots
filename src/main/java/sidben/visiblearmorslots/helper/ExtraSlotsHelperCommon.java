@@ -32,18 +32,22 @@ public abstract class ExtraSlotsHelperCommon
     public void addExtraSlotsToContainer(Container originalContainer, IInventory playerInventory)
     {
 
-        // Check if this GUI need extra Y offset
+        // Check if this GUI need extra offset
+        Integer xOffset = 0;
         Integer yOffset = 0;
-        if (originalContainer instanceof IVerticalOffset) {
-            yOffset = ((IVerticalOffset) originalContainer).getYOffset();
+        
+        if (originalContainer instanceof IExtraOffset) {
+            IExtraOffset extra = ((IExtraOffset) originalContainer);
+            xOffset = extra.getXOffset();
+            yOffset = extra.getYOffset();
         }
 
         // Adds the armor slots
-        addSlotToContainer(originalContainer, new SlotArmor(playerInventory, PLAYER_SLOT_INDEX_HELMET, ConfigurationHandler.GUI_SLOTS_XOFFSET, 66 + yOffset));
-        addSlotToContainer(originalContainer, new SlotArmor(playerInventory, PLAYER_SLOT_INDEX_CHESTPLATE, ConfigurationHandler.GUI_SLOTS_XOFFSET, 84 + yOffset));
-        addSlotToContainer(originalContainer, new SlotArmor(playerInventory, PLAYER_SLOT_INDEX_LEGGINGS, ConfigurationHandler.GUI_SLOTS_XOFFSET, 102 + yOffset));
-        addSlotToContainer(originalContainer, new SlotArmor(playerInventory, PLAYER_SLOT_INDEX_BOOTS, ConfigurationHandler.GUI_SLOTS_XOFFSET, 120 + yOffset));
-        addSlotToContainer(originalContainer, new SlotOffHand(playerInventory, PLAYER_SLOT_INDEX_OFFHAND, ConfigurationHandler.GUI_SLOTS_XOFFSET, 142 + yOffset));
+        addSlotToContainer(originalContainer, new SlotArmor(playerInventory, PLAYER_SLOT_INDEX_HELMET, getExtraSlotsXOffset() + xOffset, 66 + yOffset));
+        addSlotToContainer(originalContainer, new SlotArmor(playerInventory, PLAYER_SLOT_INDEX_CHESTPLATE, getExtraSlotsXOffset() + xOffset, 84 + yOffset));
+        addSlotToContainer(originalContainer, new SlotArmor(playerInventory, PLAYER_SLOT_INDEX_LEGGINGS, getExtraSlotsXOffset() + xOffset, 102 + yOffset));
+        addSlotToContainer(originalContainer, new SlotArmor(playerInventory, PLAYER_SLOT_INDEX_BOOTS, getExtraSlotsXOffset() + xOffset, 120 + yOffset));
+        addSlotToContainer(originalContainer, new SlotOffHand(playerInventory, PLAYER_SLOT_INDEX_OFFHAND, getExtraSlotsXOffset() + xOffset, 142 + yOffset));
 
     }
 
@@ -56,5 +60,15 @@ public abstract class ExtraSlotsHelperCommon
         return slotIn;
     }
 
+    
+    protected int getExtraSlotsXOffset() 
+    {
+        // NOTE: SLOT_SIDES[1] == "RIGHT"
+        if (ConfigurationHandler.extraSlotsSide.equals(ConfigurationHandler.SLOT_SIDES[1])) {
+            return 180 + ConfigurationHandler.extraSlotsMargin;
+        } else {
+            return -20 - ConfigurationHandler.extraSlotsMargin;
+        }
+    }
 
 }
