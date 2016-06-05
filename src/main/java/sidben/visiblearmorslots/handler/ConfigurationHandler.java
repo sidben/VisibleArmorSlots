@@ -83,18 +83,18 @@ public class ConfigurationHandler
 
         // load the redirect array
         guiRedirectArray = new VanillaGuiRedirect[] { 
-                new VanillaGuiRedirect(Blocks.enchanting_table, ModVisibleArmorSlots.GUI_ENCHANTMENT_TABLE, overrideEnchantTable),
-                new VanillaGuiRedirect(Blocks.anvil, ModVisibleArmorSlots.GUI_ANVIL, overrideAnvil), 
-                new VanillaGuiRedirect(Blocks.chest, ModVisibleArmorSlots.GUI_CHEST, overrideChest),
-                new VanillaGuiRedirect(Blocks.trapped_chest, ModVisibleArmorSlots.GUI_CHEST, overrideChest),
-                new VanillaGuiRedirect(Blocks.ender_chest, ModVisibleArmorSlots.GUI_ENDER_CHEST, overrideEnderChest),
-                new VanillaGuiRedirect(Blocks.furnace, ModVisibleArmorSlots.GUI_FURNACE, overrideFurnace),
-                new VanillaGuiRedirect(Blocks.crafting_table, ModVisibleArmorSlots.GUI_CRAFTING_TABLE, overrideCraftingTable),
-                new VanillaGuiRedirect(Blocks.dispenser, ModVisibleArmorSlots.GUI_DISPENSER, overrideDispenser),
-                new VanillaGuiRedirect(Blocks.dropper, ModVisibleArmorSlots.GUI_DISPENSER, overrideDropper), 
-                new VanillaGuiRedirect(Blocks.hopper, ModVisibleArmorSlots.GUI_HOPPER, overrideHopper),
-                new VanillaGuiRedirect(Blocks.brewing_stand, ModVisibleArmorSlots.GUI_BREWING_STAND, overrideBrewingStand),
-                new VanillaGuiRedirect(Blocks.beacon, ModVisibleArmorSlots.GUI_BEACON, overrideBeacon) };
+                new VanillaGuiRedirect(Blocks.ENCHANTING_TABLE, ModVisibleArmorSlots.GUI_ENCHANTMENT_TABLE, overrideEnchantTable),
+                new VanillaGuiRedirect(Blocks.ANVIL, ModVisibleArmorSlots.GUI_ANVIL, overrideAnvil), 
+                new VanillaGuiRedirect(Blocks.CHEST, ModVisibleArmorSlots.GUI_CHEST, overrideChest),
+                new VanillaGuiRedirect(Blocks.TRAPPED_CHEST, ModVisibleArmorSlots.GUI_CHEST, overrideChest),
+                new VanillaGuiRedirect(Blocks.ENDER_CHEST, ModVisibleArmorSlots.GUI_ENDER_CHEST, overrideEnderChest),
+                new VanillaGuiRedirect(Blocks.FURNACE, ModVisibleArmorSlots.GUI_FURNACE, overrideFurnace),
+                new VanillaGuiRedirect(Blocks.CRAFTING_TABLE, ModVisibleArmorSlots.GUI_CRAFTING_TABLE, overrideCraftingTable),
+                new VanillaGuiRedirect(Blocks.DISPENSER, ModVisibleArmorSlots.GUI_DISPENSER, overrideDispenser),
+                new VanillaGuiRedirect(Blocks.DROPPER, ModVisibleArmorSlots.GUI_DISPENSER, overrideDropper), 
+                new VanillaGuiRedirect(Blocks.HOPPER, ModVisibleArmorSlots.GUI_HOPPER, overrideHopper),
+                new VanillaGuiRedirect(Blocks.BREWING_STAND, ModVisibleArmorSlots.GUI_BREWING_STAND, overrideBrewingStand),
+                new VanillaGuiRedirect(Blocks.BEACON, ModVisibleArmorSlots.GUI_BEACON, overrideBeacon) };
 
 
         // saving the configuration to its file
