@@ -23,7 +23,11 @@ public class ContainerBeaconCustom extends ContainerBeacon implements IExtraOffs
     @Override
     public int getXOffset()
     {
-        return ConfigurationHandler.BEACON_XOFFSET;
+        if (ConfigurationHandler.extraSlotsSide.equals(ConfigurationHandler.SLOT_SIDES[1])) {
+            return ConfigurationHandler.BEACON_XOFFSET;    
+        } else {
+            return 0;
+        }
     }
 
     
