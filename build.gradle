@@ -1,17 +1,14 @@
-// For those who want the bleeding edge
 buildscript {
     repositories {
         jcenter()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
+        maven { url = "http://files.minecraftforge.net/maven" }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
+//Only edit below this line, the above code adds and enables the nessasary things for Forge to be setup.
 
 
 ext.configFile = file "build.properties"
@@ -25,6 +22,11 @@ configFile.withReader {
 version = config.mod_version
 group= "sidben.visiblearmorslots"
 archivesBaseName = config.mod_prefix + "["+ config.minecraft_version +"]"
+
+sourceCompatibility = targetCompatibility = "1.6" // Need this here so eclipse task generates correctly.
+compileJava {
+    sourceCompatibility = targetCompatibility = "1.6"
+}
 
 minecraft {
     version = config.minecraft_version + "-" + config.forge_version
