@@ -81,42 +81,38 @@ public abstract class ExtraSlotsHelperCommon
 
 
             // OBS: for vanilla containers I can use fixed values. Containers from other mods need guessing.
-            if (container instanceof ContainerBeacon) {
-                xOffset = 234;
+            if (isVanillaContainer(container)) {
+                if (container instanceof ContainerBeacon) {
+                    xOffset = 234;
+                } else {
+                    xOffset = 180;
+                }
+
             } else {
-                xOffset = 180;
+                // Since containers don't have width/height, I need to
+                // use other slots as reference to position my custom slots.
+                //
+                // For the X coordinate, I seek the first hotbar slot (slot #1)
+                // and compare to the initial point of the container. Assuming that
+                // the hot bar is centered and the container is symmetrical, the distance
+                // from the first slot to the zero coordinate should be the same from
+                // the last slot and the right margin.
+
+                for (final Slot theSlot : container.inventorySlots) {
+                    if (theSlot.inventory instanceof InventoryPlayer && theSlot.getSlotIndex() == HOTBAR_FIRST_SLOT_INDEX) {
+                        final int positionOfFirstHotbarSlot = theSlot.xDisplayPosition;
+                        final int estimatedPositionOfLastHotbarSlot = positionOfFirstHotbarSlot + 144; // 144 == 8 slots with 18px width
+
+                        xOffset = estimatedPositionOfLastHotbarSlot + 16 + positionOfFirstHotbarSlot + 4;
+
+                        LogHelper.info("  Reference slot - x: " + theSlot.xDisplayPosition + " / y: " + theSlot.yDisplayPosition + " / stack: " + theSlot.getStack());
+                        LogHelper.info("  xOffset: " + xOffset);
+
+                        break;
+                    }
+                }
+
             }
-
-
-
-            // TODO: Detect vanilla or modded containers
-
-            // Since containers don't have width/height, I need to
-            // use other slots as reference to position my custom slots.
-            //
-            // For the X coordinate, I seek the first hotbar slot (slot #1)
-            // and compare to the initial point of the container. Assuming that
-            // the hot bar is centered and the container is symmetrical, the distance
-            // from the first slot to the zero coordinate should be the same from
-            // the last slot and the right margin.
-            /*
-             * 
-             * for (Slot theSlot : container.inventorySlots)
-             * {
-             * if (theSlot.inventory instanceof InventoryPlayer && theSlot.getSlotIndex() == HOTBAR_FIRST_SLOT_INDEX) {
-             * LogHelper.info("  x: " + theSlot.xDisplayPosition + " / y: " + theSlot.yDisplayPosition + " / stack: " + theSlot.getStack());
-             * 
-             * int positionOfFirstHotbarSlot = theSlot.xDisplayPosition;
-             * int estimatedPositionOfLastHotbarSlot = positionOfFirstHotbarSlot + 144; // 144 == 8 slots with 18px width
-             * 
-             * xOffset = estimatedPositionOfLastHotbarSlot + 16 + positionOfFirstHotbarSlot + 4;
-             * break;
-             * }
-             * }
-             * 
-             * 
-             * LogHelper.info("  " + xOffset);
-             */
 
             return xOffset + ConfigurationHandler.extraSlotsMargin;
 
@@ -176,5 +172,18 @@ public abstract class ExtraSlotsHelperCommon
     {
         return false;
     }
+
+
+
+    /**
+     * Checks is the container belongs to vanilla Minecraft or not.
+     * Modded containers may require extra logic.
+     */
+    protected boolean isVanillaContainer(Container container)
+    {
+        final String className = container.getClass().getName();
+        return className.startsWith("net.minecraft");
+    }
+
 
 }

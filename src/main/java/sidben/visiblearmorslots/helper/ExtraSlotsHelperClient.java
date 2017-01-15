@@ -60,10 +60,10 @@ public class ExtraSlotsHelperClient extends ExtraSlotsHelperCommon
         try {
             xSize = FIELD_XSIZE.getInt(originalGui);
             ySize = FIELD_YSIZE.getInt(originalGui);
-        } catch (IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             LogHelper.info("Error loading xSize and ySize from container.");
             LogHelper.error(e);
-        } catch (IllegalAccessException e) {
+        } catch (final IllegalAccessException e) {
             LogHelper.info("Error loading xSize and ySize from container.");
             LogHelper.error(e);
         }
