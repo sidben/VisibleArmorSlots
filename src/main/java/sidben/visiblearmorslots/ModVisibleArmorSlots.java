@@ -31,17 +31,6 @@ public class ModVisibleArmorSlots
 
 
 
-    public static final int              GUI_ENCHANTMENT_TABLE = 50;
-    public static final int              GUI_ANVIL             = 51;
-    public static final int              GUI_CHEST             = 52;
-    public static final int              GUI_ENDER_CHEST       = 53;
-    public static final int              GUI_FURNACE           = 54;
-    public static final int              GUI_CRAFTING_TABLE    = 55;
-    public static final int              GUI_DISPENSER         = 56;
-    public static final int              GUI_HOPPER            = 57;
-    public static final int              GUI_BREWING_STAND     = 58;
-    public static final int              GUI_BEACON            = 59;
-
 
 
     @Mod.EventHandler
