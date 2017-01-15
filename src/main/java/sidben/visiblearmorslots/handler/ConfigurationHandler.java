@@ -1,27 +1,25 @@
 package sidben.visiblearmorslots.handler;
 
 import java.io.File;
-import net.minecraft.init.Blocks;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import sidben.visiblearmorslots.ModVisibleArmorSlots;
 import sidben.visiblearmorslots.reference.Reference;
 
 
 public class ConfigurationHandler
 {
-    public static final String[]       SLOT_SIDES           = new String[] { "LEFT", "RIGHT" };
+    public static final String[] SLOT_SIDES     = new String[] { "LEFT", "RIGHT" };
+    public static final String   CATEGORY_DEBUG = "debug";
 
-    public static final String         CATEGORY_DEBUG       = "debug";
-
-    public static String               extraSlotsSide;
-    public static int                  extraSlotsMargin;
+    public static boolean        onDebug;
+    public static String         extraSlotsSide;
+    public static int            extraSlotsMargin;
 
 
 
     // Instance
-    public static Configuration        config;
+    public static Configuration  config;
 
 
 
@@ -41,7 +39,8 @@ public class ConfigurationHandler
     private static void loadConfig()
     {
 
-        // Load properties - debug
+        // Load properties
+        onDebug = config.getBoolean("on_debug", CATEGORY_DEBUG, false, "");
         extraSlotsSide = config.getString("slots_side", Configuration.CATEGORY_GENERAL, SLOT_SIDES[0], "", SLOT_SIDES);
         extraSlotsMargin = config.getInt("slots_margin", Configuration.CATEGORY_GENERAL, 2, 0, 128, "");
 

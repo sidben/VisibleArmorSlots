@@ -1,5 +1,6 @@
 package sidben.visiblearmorslots.helper;
 
+import java.util.ListIterator;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -13,17 +14,22 @@ import sidben.visiblearmorslots.inventory.SlotArmor;
 import sidben.visiblearmorslots.inventory.SlotOffHand;
 
 
-// TODO: Process shift+click on my GUIs
 // TODO: Implement extra slots on creative menu (right know it messes up the hotbar slots, so I removed it)
 
 public abstract class ExtraSlotsHelperCommon
 {
 
-    public static int PLAYER_SLOT_INDEX_HELMET     = 39;
-    public static int PLAYER_SLOT_INDEX_CHESTPLATE = 38;
-    public static int PLAYER_SLOT_INDEX_LEGGINGS   = 37;
-    public static int PLAYER_SLOT_INDEX_BOOTS      = 36;
-    public static int PLAYER_SLOT_INDEX_OFFHAND    = 40;
+    private final static int PLAYER_SLOT_INDEX_HELMET     = 39;
+    private final static int PLAYER_SLOT_INDEX_CHESTPLATE = 38;
+    private final static int PLAYER_SLOT_INDEX_LEGGINGS   = 37;
+    private final static int PLAYER_SLOT_INDEX_BOOTS      = 36;
+    private final static int PLAYER_SLOT_INDEX_OFFHAND    = 40;
+    private final static int HOTBAR_FIRST_SLOT_INDEX      = 0;
+    private final static int HELMET_SLOT_Y_POSITION       = (18 * 0);
+    private final static int CHESTPLATE_SLOT_Y_POSITION   = (18 * 1);
+    private final static int LEGGINGS_SLOT_Y_POSITION     = (18 * 2);
+    private final static int BOOTS_SLOT_Y_POSITION        = (18 * 3);
+    private final static int OFFHAND_SLOT_Y_POSITION      = 76;
 
 
 
@@ -38,20 +44,22 @@ public abstract class ExtraSlotsHelperCommon
         LogHelper.info("addExtraSlotsToContainer(" + container + ")");
         LogHelper.info("    Before: " + container.inventorySlots.size() + " slots");
 
-        
+
         // Check if this GUI need extra offset
-        Integer xOffset = getExtraSlotsXOffset(container);
-        Integer yOffset = getExtraSlotsYOffset(container);
-       
+        final Integer xOffset = getExtraSlotsXOffset(container);
+        final Integer yOffset = getExtraSlotsYOffset(container);
+
 
         // Adds the extra slots
-        addSlotToContainer(container, new SlotArmor(playerInventory, PLAYER_SLOT_INDEX_HELMET, xOffset, 0 + yOffset));
-        addSlotToContainer(container, new SlotArmor(playerInventory, PLAYER_SLOT_INDEX_CHESTPLATE, xOffset, 18 + yOffset));
-        addSlotToContainer(container, new SlotArmor(playerInventory, PLAYER_SLOT_INDEX_LEGGINGS, xOffset, 36 + yOffset));
-        addSlotToContainer(container, new SlotArmor(playerInventory, PLAYER_SLOT_INDEX_BOOTS, xOffset, 54 + yOffset));
-        addSlotToContainer(container, new SlotOffHand(playerInventory, PLAYER_SLOT_INDEX_OFFHAND, xOffset, 76 + yOffset));
+        // NOTE: When the player shift-clicks from a container to the inventory, the first slot
+        // that the game will try to use is the last of this list (helmet).
+        addSlotToContainer(container, new SlotOffHand(playerInventory, PLAYER_SLOT_INDEX_OFFHAND, xOffset, OFFHAND_SLOT_Y_POSITION + yOffset));
+        addSlotToContainer(container, new SlotArmor(playerInventory, PLAYER_SLOT_INDEX_BOOTS, xOffset, BOOTS_SLOT_Y_POSITION + yOffset));
+        addSlotToContainer(container, new SlotArmor(playerInventory, PLAYER_SLOT_INDEX_LEGGINGS, xOffset, LEGGINGS_SLOT_Y_POSITION + yOffset));
+        addSlotToContainer(container, new SlotArmor(playerInventory, PLAYER_SLOT_INDEX_CHESTPLATE, xOffset, CHESTPLATE_SLOT_Y_POSITION + yOffset));
+        addSlotToContainer(container, new SlotArmor(playerInventory, PLAYER_SLOT_INDEX_HELMET, xOffset, HELMET_SLOT_Y_POSITION + yOffset));
 
-        
+
         LogHelper.info("    After: " + container.inventorySlots.size() + " slots");
     }
 
@@ -64,109 +72,109 @@ public abstract class ExtraSlotsHelperCommon
         return slotIn;
     }
 
-    
-    protected int getExtraSlotsXOffset(Container container) 
+
+    protected int getExtraSlotsXOffset(Container container)
     {
         // NOTE: SLOT_SIDES[1] == "RIGHT"
         if (ConfigurationHandler.extraSlotsSide.equals(ConfigurationHandler.SLOT_SIDES[1])) {
             int xOffset = 0;
-            
-            
-            // OBS: for vanilla containers I can use fixed values. Containers from other mods need guessing. 
+
+
+            // OBS: for vanilla containers I can use fixed values. Containers from other mods need guessing.
             if (container instanceof ContainerBeacon) {
                 xOffset = 234;
             } else {
                 xOffset = 180;
             }
-            
-            
-            
-            
+
+
+
             // TODO: Detect vanilla or modded containers
-            
+
             // Since containers don't have width/height, I need to
             // use other slots as reference to position my custom slots.
             //
             // For the X coordinate, I seek the first hotbar slot (slot #1)
-            // and compare to the initial point of the container. Assuming that 
+            // and compare to the initial point of the container. Assuming that
             // the hot bar is centered and the container is symmetrical, the distance
             // from the first slot to the zero coordinate should be the same from
             // the last slot and the right margin.
             /*
+             * 
+             * for (Slot theSlot : container.inventorySlots)
+             * {
+             * if (theSlot.inventory instanceof InventoryPlayer && theSlot.getSlotIndex() == HOTBAR_FIRST_SLOT_INDEX) {
+             * LogHelper.info("  x: " + theSlot.xDisplayPosition + " / y: " + theSlot.yDisplayPosition + " / stack: " + theSlot.getStack());
+             * 
+             * int positionOfFirstHotbarSlot = theSlot.xDisplayPosition;
+             * int estimatedPositionOfLastHotbarSlot = positionOfFirstHotbarSlot + 144; // 144 == 8 slots with 18px width
+             * 
+             * xOffset = estimatedPositionOfLastHotbarSlot + 16 + positionOfFirstHotbarSlot + 4;
+             * break;
+             * }
+             * }
+             * 
+             * 
+             * LogHelper.info("  " + xOffset);
+             */
 
-            for (Slot theSlot : container.inventorySlots) 
-            {
-                if (theSlot.inventory instanceof InventoryPlayer && theSlot.getSlotIndex() == 0) {      // TODO: static
-                    LogHelper.info("  x: " + theSlot.xDisplayPosition + " / y: " + theSlot.yDisplayPosition + " / stack: " + theSlot.getStack());
-                    
-                    int positionOfFirstHotbarSlot = theSlot.xDisplayPosition;
-                    int estimatedPositionOfLastHotbarSlot = positionOfFirstHotbarSlot + 144;        // 144 == 8 slots with 18px width 
-                    
-                    xOffset = estimatedPositionOfLastHotbarSlot + 16 + positionOfFirstHotbarSlot + 4;
-                    break;
-                }
-            }
-
-            
-            LogHelper.info("  " + xOffset);
-           */
-            
             return xOffset + ConfigurationHandler.extraSlotsMargin;
-            
+
         } else {
             // For the left side, no extra math needed.
             return -20 - ConfigurationHandler.extraSlotsMargin;
-            
+
         }
     }
 
-    protected int getExtraSlotsYOffset(Container container) 
+    protected int getExtraSlotsYOffset(Container container)
     {
         // Since containers don't have width/height, I need to
         // use other slots as reference to position my custom slots.
         //
-        // For the Y coordinate, I seek the middle hotbar slot (slot #5)
+        // For the Y coordinate, I seek a hotbar slot (slot #1, index 0)
         // to find where is the bottom.
-        
+
         int yOffset = 0;
-        
-        for (Slot theSlot : container.inventorySlots) 
-        {
-            // LogHelper.info("  " + theSlot.getSlotIndex() + " - " + theSlot + " : " + theSlot.getStack() + " / inv: " + theSlot.inventory);
-            if (theSlot.inventory instanceof InventoryPlayer && theSlot.getSlotIndex() == 4) {      // TODO: static
-                // LogHelper.info("  x: " + theSlot.xDisplayPosition + " / y: " + theSlot.yDisplayPosition);
-                
-                yOffset = theSlot.yDisplayPosition - 76;
+
+        for (final Slot theSlot : container.inventorySlots) {
+            if (theSlot.inventory instanceof InventoryPlayer && theSlot.getSlotIndex() == HOTBAR_FIRST_SLOT_INDEX) {
+                yOffset = theSlot.yDisplayPosition - OFFHAND_SLOT_Y_POSITION;
                 break;
             }
         }
-        
+
         return yOffset;
     }
-    
-    
-    
-    public boolean shouldAddExtraSlotsToContainer(Container container) 
+
+
+
+    public boolean shouldAddExtraSlotsToContainer(Container container)
     {
         // Check if it's a valid container to get extra slots
-        if (container == null) return false;
-        if (container instanceof ContainerPlayer) return false;
-        
-        // Check if the slots weren't added already
-        for (Slot theSlot : container.inventorySlots)       // TODO: iterates on reverse order, the slots should be at the end of the array
-        {
+        if (container == null) {
+            return false;
+        }
+        if (container instanceof ContainerPlayer) {
+            return false;
+        }
+
+        // Check if the slots weren't added already (iterates in reverse order, the slots should be at the end of the array)
+        final ListIterator<Slot> iterator = container.inventorySlots.listIterator(container.inventorySlots.size());
+        while (iterator.hasPrevious()) {
+            final Slot theSlot = iterator.previous();
             if ((theSlot instanceof SlotArmor) || (theSlot instanceof SlotOffHand)) {
                 return false;
             }
-         }
-       
+        }
+
         return true;
     }
 
-    
-    public boolean shouldDrawExtraSlotsOnGui(GuiContainer gui) 
+
+    public boolean shouldDrawExtraSlotsOnGui(GuiContainer gui)
     {
         return false;
     }
-    
+
 }

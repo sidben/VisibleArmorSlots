@@ -6,7 +6,6 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import sidben.visiblearmorslots.handler.ConfigurationHandler;
 import sidben.visiblearmorslots.helper.ExtraSlotsHelperCommon;
 import sidben.visiblearmorslots.proxy.IProxy;
@@ -31,8 +30,6 @@ public class ModVisibleArmorSlots
 
 
 
-
-
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
@@ -48,9 +45,6 @@ public class ModVisibleArmorSlots
     @Mod.EventHandler
     public void load(FMLInitializationEvent event)
     {
-        // GUIs
-        NetworkRegistry.INSTANCE.registerGuiHandler(this, ModVisibleArmorSlots.proxy);
-
         // Sided initializations
         proxy.initialize();
     }

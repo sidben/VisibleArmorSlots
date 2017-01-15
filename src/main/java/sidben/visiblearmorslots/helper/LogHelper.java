@@ -1,8 +1,9 @@
 package sidben.visiblearmorslots.helper;
 
 
-import net.minecraftforge.fml.common.FMLLog;
 import org.apache.logging.log4j.Level;
+import net.minecraftforge.fml.common.FMLLog;
+import sidben.visiblearmorslots.handler.ConfigurationHandler;
 import sidben.visiblearmorslots.reference.Reference;
 
 
@@ -37,7 +38,9 @@ public class LogHelper
 
     public static void info(Object object)
     {
-        log(Level.INFO, object);
+        if (ConfigurationHandler.onDebug) {
+            log(Level.INFO, object);
+        }
     }
 
     public static void off(Object object)
