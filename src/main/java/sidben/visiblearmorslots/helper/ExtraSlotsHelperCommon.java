@@ -14,7 +14,7 @@ import sidben.visiblearmorslots.inventory.SlotOffHand;
 
 
 // TODO: Process shift+click on my GUIs
-// TODO: Fix creative mode
+// TODO: Implement extra slots on creative menu (right know it messes up the hotbar slots, so I removed it)
 
 public abstract class ExtraSlotsHelperCommon
 {

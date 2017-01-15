@@ -109,10 +109,21 @@ public class ExtraSlotsHelperClient extends ExtraSlotsHelperCommon
     @Override
     public boolean shouldAddExtraSlotsToContainer(Container container) 
     {
-        // Special case for creative container (client-side only)
-        // if (container instanceof GuiContainerCreative.ContainerCreative) return false;
+        boolean result = super.shouldAddExtraSlotsToContainer(container); 
         
-        return super.shouldAddExtraSlotsToContainer(container);
+        if (result) {
+            // Special case for creative container (client-side only).
+            //
+            // The class is [GuiContainerCreative.ContainerCreative], but that class
+            // is not public so I have to work around it.
+            
+            Class containerWrapperClass = container.getClass().getEnclosingClass(); 
+            if (containerWrapperClass != null && containerWrapperClass.equals(GuiContainerCreative.class)) {
+                result = false;
+            }
+        }
+        
+        return result;
     }
     
     
@@ -122,6 +133,7 @@ public class ExtraSlotsHelperClient extends ExtraSlotsHelperCommon
         // Check if it's a valid container to get extra slots
         if (gui == null) return false;
         if (gui instanceof GuiInventory) return false;
+        if (gui instanceof GuiContainerCreative) return false;
         
         return true;
     }

@@ -25,7 +25,6 @@ import sidben.visiblearmorslots.reference.Reference;
 
 // TODO: Test adventure mode
 // TODO: ONDEBUG for debug text
-// TODO: Fix messed up hotbar on creative inventory GuiContainerCreative
 
 
 public class PlayerEventHandler
@@ -56,7 +55,6 @@ public class PlayerEventHandler
     public void onGuiOpenEvent(GuiOpenEvent event)
     {
         // OBS: Runs client-side
-        
         
         if (!(event.getGui() instanceof GuiContainer)) return;
         GuiContainer targetGui = (GuiContainer)event.getGui();
