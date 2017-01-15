@@ -24,6 +24,10 @@ public class ExtraSlotsHelperClient extends ExtraSlotsHelperCommon
     private static final int extraSlotsGuiStartY = 62;
     private static final int extraSlotsGuiWidth = 24;
     private static final int extraSlotsGuiHeight = 100;
+    private static final String containerHorizontalSizeVarName = "xSize";
+    private static final String containerHorizontalSizeObfuscatedName = "field_146999_f";
+    private static final String containerVerticalSizeVarName = "ySize";
+    private static final String containerVerticalSizeObfuscatedName = "field_147000_g";
 
     private static Field xSizeGuiField;
     private static Field ySizeGuiField;
@@ -33,13 +37,11 @@ public class ExtraSlotsHelperClient extends ExtraSlotsHelperCommon
     private void loadGuiContainerProtectedFields()
     {
         if (xSizeGuiField == null) {
-            xSizeGuiField = ReflectionHelper.findField(GuiContainer.class, "xSize");        // TODO: reflected field
-            xSizeGuiField.setAccessible(true);
+            xSizeGuiField = ReflectionHelper.findField(GuiContainer.class, containerHorizontalSizeVarName, containerHorizontalSizeObfuscatedName);
         }
 
         if (ySizeGuiField == null) {
-            ySizeGuiField = ReflectionHelper.findField(GuiContainer.class, "ySize");        // TODO: reflected field
-            ySizeGuiField.setAccessible(true);
+            ySizeGuiField = ReflectionHelper.findField(GuiContainer.class, containerVerticalSizeVarName, containerVerticalSizeObfuscatedName);
         }
     }
     
@@ -50,8 +52,8 @@ public class ExtraSlotsHelperClient extends ExtraSlotsHelperCommon
     public void drawExtraSlotsOnGui(GuiContainer originalGui)
     {
         // NOTES:
-        // originalGui.width and originalGui.height are the window size.
-        // xSize and ySize are the GUI size.
+        //   - originalGui.width and originalGui.height are the window size.
+        //   - xSize and ySize are the GUI size in pixels.
 
 
         int xSize = 0;
