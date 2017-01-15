@@ -9,12 +9,6 @@ public class ExtraSlotsHelperServer extends ExtraSlotsHelperCommon
 {
 
     @Override
-    public void drawExtraSlotsOnGui(GuiContainer originalGui, int xSize, int ySize)
-    {
-    }
-
-
-    @Override
     public void addExtraSlotsToContainer(Container originalContainer, IInventory playerInventory)
     {
         super.addExtraSlotsToContainer(originalContainer, playerInventory);
