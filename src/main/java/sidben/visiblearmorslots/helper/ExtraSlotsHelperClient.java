@@ -1,6 +1,5 @@
 package sidben.visiblearmorslots.helper;
 
-import java.lang.reflect.Field;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
@@ -9,7 +8,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import sidben.visiblearmorslots.handler.ConfigurationHandler;
 import sidben.visiblearmorslots.reference.Reference;
 
@@ -17,31 +15,11 @@ import sidben.visiblearmorslots.reference.Reference;
 public class ExtraSlotsHelperClient extends ExtraSlotsHelperCommon
 {
 
-    private static final ResourceLocation GUI_EXTRA_SLOTS                           = new ResourceLocation(Reference.ModID + ":textures/gui/extra-slots.png");
-    private static final int              GUI_EXTRA_SLOTS_START_X                   = 0;
-    private static final int              GUI_EXTRA_SLOTS_START_Y                   = 62;
-    private static final int              GUI_EXTRA_SLOTS_WIDTH                     = 24;
-    private static final int              GUI_EXTRA_SLOTS_HEIGHT                    = 100;
-    private static final String           CONTAINER_HORIZONTAL_SIZE_VAR_NAME        = "xSize";
-    private static final String           CONTAINER_HORIZONTAL_SIZE_OBFUSCATED_NAME = "field_146999_f";
-    private static final String           CONTAINER_VERTICAL_SIZE_VAR_NAME          = "ySize";
-    private static final String           CONTAINER_VERTICAL_SIZE_OBFUSCATED_NAME   = "field_147000_g";
-
-    private static Field                  FIELD_XSIZE;
-    private static Field                  FIELD_YSIZE;
-
-
-
-    private void loadGuiContainerProtectedFields()
-    {
-        if (FIELD_XSIZE == null) {
-            FIELD_XSIZE = ReflectionHelper.findField(GuiContainer.class, CONTAINER_HORIZONTAL_SIZE_VAR_NAME, CONTAINER_HORIZONTAL_SIZE_OBFUSCATED_NAME);
-        }
-
-        if (FIELD_YSIZE == null) {
-            FIELD_YSIZE = ReflectionHelper.findField(GuiContainer.class, CONTAINER_VERTICAL_SIZE_VAR_NAME, CONTAINER_VERTICAL_SIZE_OBFUSCATED_NAME);
-        }
-    }
+    private static final ResourceLocation GUI_EXTRA_SLOTS         = new ResourceLocation(Reference.ModID + ":textures/gui/extra-slots.png");
+    private static final int              GUI_EXTRA_SLOTS_START_X = 0;
+    private static final int              GUI_EXTRA_SLOTS_START_Y = 62;
+    private static final int              GUI_EXTRA_SLOTS_WIDTH   = 24;
+    private static final int              GUI_EXTRA_SLOTS_HEIGHT  = 100;
 
 
 
@@ -53,20 +31,8 @@ public class ExtraSlotsHelperClient extends ExtraSlotsHelperCommon
         // - xSize and ySize are the GUI size in pixels.
 
 
-        int xSize = 0;
-        int ySize = 0;
-        loadGuiContainerProtectedFields();
-
-        try {
-            xSize = FIELD_XSIZE.getInt(originalGui);
-            ySize = FIELD_YSIZE.getInt(originalGui);
-        } catch (final IllegalArgumentException e) {
-            LogHelper.info("Error loading xSize and ySize from container.");
-            LogHelper.error(e);
-        } catch (final IllegalAccessException e) {
-            LogHelper.info("Error loading xSize and ySize from container.");
-            LogHelper.error(e);
-        }
+        int xSize = originalGui.getXSize();
+        int ySize = originalGui.getYSize();
 
 
         // HOTFIX: Chest containers have their height wrong by 2 pixels
