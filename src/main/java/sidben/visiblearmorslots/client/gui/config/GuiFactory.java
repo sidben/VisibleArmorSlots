@@ -26,10 +26,11 @@ public class GuiFactory implements IModGuiFactory
         return null;
     }
 
-    @Override
-    public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element)
-    {
-        return null;
-    }
+	@SuppressWarnings("deprecation")
+	@Override
+	public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element) 
+	{
+		return null;
+	}
 
 }
