@@ -2,14 +2,3 @@
 slots_side=Позиция дополнительного слота
 slots_margin=Запас дополнительного слота
 slots_margin.tooltip=Пространство между дополнительными слотами брони/второй руки и инвентарём.
-enabled_on_enchanting=Отображать в столе зачарований
-enabled_on_anvil=Отображать в наковальне
-enabled_on_chest=Отображать в сундуке
-enabled_on_ender_chest=Отображать в эндер-сундуке
-enabled_on_furnace=Отображать в печи
-enabled_on_crafting=Отображать в верстаке
-enabled_on_dispenser=Отображать в раздатчике
-enabled_on_dropper=Отображать в выбрасывателе
-enabled_on_hopper=Отображать в воронке
-enabled_on_brewing=Отображать в зельеварке
-enabled_on_beacon=Отображать в маяке
