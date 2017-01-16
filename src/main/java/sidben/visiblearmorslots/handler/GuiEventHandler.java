@@ -31,7 +31,7 @@ public class GuiEventHandler
 
         // Adds the extra slots
         final Minecraft mc = Minecraft.getMinecraft();
-        final IInventory playerInventory = mc.thePlayer.inventory;
+        final IInventory playerInventory = mc.player.inventory;
         final Container openedContainer = targetGui.inventorySlots;
 
 

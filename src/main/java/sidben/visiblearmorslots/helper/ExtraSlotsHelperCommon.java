@@ -68,7 +68,7 @@ public abstract class ExtraSlotsHelperCommon
     {
         slotIn.slotNumber = container.inventorySlots.size();
         container.inventorySlots.add(slotIn);
-        container.inventoryItemStacks.add((ItemStack) null);
+        container.inventoryItemStacks.add(ItemStack.EMPTY);
         return slotIn;
     }
 
@@ -100,12 +100,12 @@ public abstract class ExtraSlotsHelperCommon
 
                 for (final Slot theSlot : container.inventorySlots) {
                     if (theSlot.inventory instanceof InventoryPlayer && theSlot.getSlotIndex() == HOTBAR_FIRST_SLOT_INDEX) {
-                        final int positionOfFirstHotbarSlot = theSlot.xDisplayPosition;
+                        final int positionOfFirstHotbarSlot = theSlot.xPos;
                         final int estimatedPositionOfLastHotbarSlot = positionOfFirstHotbarSlot + 144; // 144 == 8 slots with 18px width
 
                         xOffset = estimatedPositionOfLastHotbarSlot + 16 + positionOfFirstHotbarSlot + 4;
 
-                        LogHelper.info("  Reference slot - x: " + theSlot.xDisplayPosition + " / y: " + theSlot.yDisplayPosition + " / stack: " + theSlot.getStack());
+                        LogHelper.info("  Reference slot - x: " + theSlot.xPos + " / y: " + theSlot.yPos + " / stack: " + theSlot.getStack());
                         LogHelper.info("  xOffset: " + xOffset);
 
                         break;
@@ -135,7 +135,7 @@ public abstract class ExtraSlotsHelperCommon
 
         for (final Slot theSlot : container.inventorySlots) {
             if (theSlot.inventory instanceof InventoryPlayer && theSlot.getSlotIndex() == HOTBAR_FIRST_SLOT_INDEX) {
-                yOffset = theSlot.yDisplayPosition - OFFHAND_SLOT_Y_POSITION;
+                yOffset = theSlot.yPos - OFFHAND_SLOT_Y_POSITION;
                 break;
             }
         }
