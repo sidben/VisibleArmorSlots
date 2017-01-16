@@ -1,9 +1,6 @@
 package sidben.visiblearmorslots.proxy;
 
-import net.minecraftforge.fml.common.network.IGuiHandler;
-
-
-public interface IProxy extends IGuiHandler
+public interface IProxy
 {
 
     public void pre_initialize();
