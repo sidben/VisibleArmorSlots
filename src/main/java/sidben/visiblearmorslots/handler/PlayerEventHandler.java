@@ -2,7 +2,7 @@ package sidben.visiblearmorslots.handler;
 
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
-import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
+import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import sidben.visiblearmorslots.ModVisibleArmorSlots;
 import sidben.visiblearmorslots.helper.LogHelper;
@@ -14,7 +14,7 @@ public class PlayerEventHandler
 
 
     @SubscribeEvent
-    public void onPlayerOpenContainerEvent(PlayerOpenContainerEvent event)
+    public void onPlayerOpenContainerEvent(PlayerContainerEvent event)
     {
         // OBS: Runs server-side
         // NOTE - Gets called constantly while the container is open
