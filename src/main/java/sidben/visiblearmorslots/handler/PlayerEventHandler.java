@@ -25,7 +25,7 @@ public class PlayerEventHandler
 
 
         if (ModVisibleArmorSlots.extraSlotsHelper.shouldAddExtraSlotsToContainer(openedContainer)) {
-            LogHelper.info("Adding extra slots server-side.");
+            LogHelper.trace("Adding extra slots server-side.");
             ModVisibleArmorSlots.extraSlotsHelper.addExtraSlotsToContainer(openedContainer, playerInventory);
         }
 

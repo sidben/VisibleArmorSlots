@@ -30,7 +30,6 @@ public abstract class ExtraSlotsHelperCommon
     private final static int LEGGINGS_SLOT_Y_POSITION     = (18 * 2);
     private final static int BOOTS_SLOT_Y_POSITION        = (18 * 3);
     private final static int OFFHAND_SLOT_Y_POSITION      = 76;
-    
 
 
 
@@ -42,8 +41,8 @@ public abstract class ExtraSlotsHelperCommon
 
     public void addExtraSlotsToContainer(Container container, IInventory playerInventory)
     {
-        LogHelper.info("addExtraSlotsToContainer(" + container + ")");
-        LogHelper.info("    Before: " + container.inventorySlots.size() + " slots");
+        LogHelper.trace("addExtraSlotsToContainer(%s)", container);
+        LogHelper.trace("    Before: %d slots", container.inventorySlots.size());
 
 
         // Check if this GUI need extra offset
@@ -62,7 +61,7 @@ public abstract class ExtraSlotsHelperCommon
 
         // TODO: change the order to attempt fix integration with Inventory Tweaks and creative mode
 
-        LogHelper.info("    After: " + container.inventorySlots.size() + " slots");
+        LogHelper.trace("    After: %d slots", container.inventorySlots.size());
     }
 
 
@@ -106,8 +105,8 @@ public abstract class ExtraSlotsHelperCommon
 
                         xOffset = estimatedPositionOfLastHotbarSlot + 16 + positionOfFirstHotbarSlot + 4;
 
-                        LogHelper.info("  Reference slot - x: " + theSlot.xPos + " / y: " + theSlot.yPos + " / stack: " + theSlot.getStack());
-                        LogHelper.info("  xOffset: " + xOffset);
+                        LogHelper.trace("  Reference slot - x: %d / y: %d / stack: %s", theSlot.xPos, theSlot.yPos, theSlot.getStack());
+                        LogHelper.trace("  xOffset: %d", xOffset);
 
                         break;
                     }
@@ -149,35 +148,29 @@ public abstract class ExtraSlotsHelperCommon
     public boolean shouldAddExtraSlotsToContainer(Container container)
     {
         // Check if it's a valid container to get extra slots
-        if (container == null) return false;
-        if (container instanceof ContainerPlayer) return false;
-        if (isContainerBlacklisted(container)) return false;
-        
+        if (container == null) { return false; }
+        if (container instanceof ContainerPlayer) { return false; }
+        if (isContainerBlacklisted(container)) { return false; }
+
 
         // TODO: counter for the amount of iterations to find the slot
         // Check if the slots weren't added already (iterates in reverse order, the slots should be at the end of the array)
         final ListIterator<Slot> iterator = container.inventorySlots.listIterator(container.inventorySlots.size());
         while (iterator.hasPrevious()) {
             final Slot theSlot = iterator.previous();
-            if ((theSlot instanceof SlotArmor) || (theSlot instanceof SlotOffHand)) {
-                return false;
-            }
+            if ((theSlot instanceof SlotArmor) || (theSlot instanceof SlotOffHand)) { return false; }
         }
 
         return true;
     }
-    
+
 
     public boolean shouldDrawExtraSlotsOnGui(GuiContainer gui)
     {
-        if (isContainerBlacklisted(gui.inventorySlots)) return false;
+        if (isContainerBlacklisted(gui.inventorySlots)) { return false; }
 
         return true;
     }
-    
-
-
-    
 
 
 
@@ -196,18 +189,16 @@ public abstract class ExtraSlotsHelperCommon
     {
         if (ConfigurationHandler.blacklistedModPackages.length > 0) {
             final String className = container.getClass().getName();
-            LogHelper.trace(String.format("Checking if %s is blacklisted...", className));
-            
-            for(String blacklisted : ConfigurationHandler.blacklistedModPackages) {
-                if (className.startsWith(blacklisted + ".")) {
-                    return true;
-                }
+            LogHelper.trace("Checking if %s is blacklisted...", className);
+
+            for (final String blacklisted : ConfigurationHandler.blacklistedModPackages) {
+                if (className.startsWith(blacklisted + ".")) { return true; }
             }
         }
-         
+
         return false;
     }
 
-    
+
 
 }

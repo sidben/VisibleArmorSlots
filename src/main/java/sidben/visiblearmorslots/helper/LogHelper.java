@@ -7,55 +7,52 @@ import sidben.visiblearmorslots.handler.ConfigurationHandler;
 import sidben.visiblearmorslots.reference.Reference;
 
 
-// Based on Pahimar LohHelper class
+
 public class LogHelper
 {
 
-    public static void log(Level logLevel, Object object)
+    private static void log(Level logLevel, String format, Object... data)
     {
-        FMLLog.log(Reference.ModName, logLevel, String.valueOf(object));
+        FMLLog.log(Reference.ModID, logLevel, format, data);
     }
 
-    public static void all(Object object)
+    public static void error(String format, Object... data)
     {
-        log(Level.ALL, object);
+        log(Level.ERROR, format, data);
+    }
+
+    public static void warn(String format, Object... data)
+    {
+        log(Level.WARN, format, data);
+    }
+
+    public static void info(String format, Object... data)
+    {
+        log(Level.INFO, format, data);
+    }
+
+    public static void debug(String format, Object... data)
+    {
+        if (ConfigurationHandler.onDebug) {
+            log(Level.DEBUG, format, data);
+        }
     }
 
     public static void debug(Object object)
     {
-        log(Level.DEBUG, object);
+        debug(String.valueOf(object));
     }
 
-    public static void error(Object object)
-    {
-        log(Level.ERROR, object);
-    }
-
-    public static void fatal(Object object)
-    {
-        log(Level.FATAL, object);
-    }
-
-    public static void info(Object object)
+    public static void trace(String format, Object... data)
     {
         if (ConfigurationHandler.onDebug) {
-            log(Level.INFO, object);
+            log(Level.TRACE, format, data);
         }
-    }
-
-    public static void off(Object object)
-    {
-        log(Level.OFF, object);
     }
 
     public static void trace(Object object)
     {
-        log(Level.TRACE, object);
-    }
-
-    public static void warn(Object object)
-    {
-        log(Level.WARN, object);
+        trace(String.valueOf(object));
     }
 
 }

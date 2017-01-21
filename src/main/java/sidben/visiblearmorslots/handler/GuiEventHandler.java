@@ -21,13 +21,10 @@ public class GuiEventHandler
     @SideOnly(Side.CLIENT)
     public void onGuiOpenEvent(GuiOpenEvent event)
     {
-        // OBS: Runs client-side
+        if (!(event.getGui() instanceof GuiContainer)) { return; }
 
-        if (!(event.getGui() instanceof GuiContainer)) {
-            return;
-        }
+
         final GuiContainer targetGui = (GuiContainer) event.getGui();
-
 
         // Adds the extra slots
         final Minecraft mc = Minecraft.getMinecraft();
@@ -36,7 +33,7 @@ public class GuiEventHandler
 
 
         if (ModVisibleArmorSlots.extraSlotsHelper.shouldAddExtraSlotsToContainer(openedContainer)) {
-            LogHelper.info("Adding extra slots client-side.");
+            LogHelper.trace("Adding extra slots client-side.");
             ModVisibleArmorSlots.extraSlotsHelper.addExtraSlotsToContainer(openedContainer, playerInventory);
         }
 
@@ -47,9 +44,8 @@ public class GuiEventHandler
     @SideOnly(Side.CLIENT)
     public void onBackgroundDrawScreenEvent(BackgroundDrawnEvent event)
     {
-        if (!(event.getGui() instanceof GuiContainer)) {
-            return;      // Ignores non-container GUIs
-        }
+        if (!(event.getGui() instanceof GuiContainer)) { return; }
+
         final GuiContainer targetGui = (GuiContainer) event.getGui();
 
         if (ModVisibleArmorSlots.extraSlotsHelper.shouldDrawExtraSlotsOnGui(targetGui)) {
