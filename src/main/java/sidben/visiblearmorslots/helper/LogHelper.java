@@ -40,7 +40,7 @@ public class LogHelper
 
     public static void debug(Object object)
     {
-        debug(String.valueOf(object));
+        debug(String.valueOf(object), new Object[0]);
     }
 
     public static void trace(String format, Object... data)
@@ -52,7 +52,7 @@ public class LogHelper
 
     public static void trace(Object object)
     {
-        trace(String.valueOf(object));
+        trace(String.valueOf(object), new Object[0]);
     }
 
 }
