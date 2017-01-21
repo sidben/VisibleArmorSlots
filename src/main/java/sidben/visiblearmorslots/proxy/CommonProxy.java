@@ -1,6 +1,7 @@
 package sidben.visiblearmorslots.proxy;
 
 import net.minecraftforge.common.MinecraftForge;
+import sidben.visiblearmorslots.handler.ConfigurationHandler;
 import sidben.visiblearmorslots.handler.PlayerEventHandler;
 
 
@@ -28,6 +29,7 @@ public abstract class CommonProxy implements IProxy
     @Override
     public void post_initialize()
     {
+        ConfigurationHandler.updateBlacklistedMods();
     }
 
 

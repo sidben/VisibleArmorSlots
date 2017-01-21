@@ -44,8 +44,7 @@ public class ExtraSlotsHelperClient extends ExtraSlotsHelperCommon
         Integer xOffset = 0;
         final Integer yOffset = ySize - GUI_EXTRA_SLOTS_HEIGHT - 4;
 
-        // NOTE: SLOT_SIDES[1] == "RIGHT"
-        if (ConfigurationHandler.extraSlotsSide.equals(ConfigurationHandler.SLOT_SIDES[1])) {
+        if (ConfigurationHandler.extraSlotsSide.equals(ConfigurationHandler.POSITION_RIGHT)) {
             xOffset = xSize + ConfigurationHandler.extraSlotsMargin;
         } else {
             xOffset = (GUI_EXTRA_SLOTS_WIDTH * -1) - ConfigurationHandler.extraSlotsMargin;
@@ -75,21 +74,16 @@ public class ExtraSlotsHelperClient extends ExtraSlotsHelperCommon
     @Override
     public boolean shouldAddExtraSlotsToContainer(Container container)
     {
-        boolean result = super.shouldAddExtraSlotsToContainer(container);
-
-        if (result) {
-            // Special case for creative container (client-side only).
-            //
-            // The class is [GuiContainerCreative.ContainerCreative], but that class
-            // is not public so I have to work around it.
-
-            final Class containerWrapperClass = container.getClass().getEnclosingClass();
-            if (containerWrapperClass != null && containerWrapperClass.equals(GuiContainerCreative.class)) {
-                result = false;
-            }
+        // Special case for creative container (client-side only).
+        //
+        // The class is [GuiContainerCreative.ContainerCreative], but that class
+        // is not public so I have to work around it.
+        final Class containerWrapperClass = container.getClass().getEnclosingClass();
+        if (containerWrapperClass != null && containerWrapperClass.equals(GuiContainerCreative.class)) {
+            return false;
         }
 
-        return result;
+        return super.shouldAddExtraSlotsToContainer(container);
     }
 
 
@@ -97,17 +91,11 @@ public class ExtraSlotsHelperClient extends ExtraSlotsHelperCommon
     public boolean shouldDrawExtraSlotsOnGui(GuiContainer gui)
     {
         // Check if it's a valid container to get extra slots
-        if (gui == null) {
-            return false;
-        }
-        if (gui instanceof GuiInventory) {
-            return false;
-        }
-        if (gui instanceof GuiContainerCreative) {
-            return false;
-        }
-
-        return true;
+        if (gui == null) return false;
+        if (gui instanceof GuiInventory) return false;
+        if (gui instanceof GuiContainerCreative) return false;
+        
+        return super.shouldDrawExtraSlotsOnGui(gui);
     }
 
 }

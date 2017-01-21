@@ -30,6 +30,7 @@ public abstract class ExtraSlotsHelperCommon
     private final static int LEGGINGS_SLOT_Y_POSITION     = (18 * 2);
     private final static int BOOTS_SLOT_Y_POSITION        = (18 * 3);
     private final static int OFFHAND_SLOT_Y_POSITION      = 76;
+    
 
 
 
@@ -59,6 +60,7 @@ public abstract class ExtraSlotsHelperCommon
         addSlotToContainer(container, new SlotArmor(playerInventory, PLAYER_SLOT_INDEX_CHESTPLATE, xOffset, CHESTPLATE_SLOT_Y_POSITION + yOffset));
         addSlotToContainer(container, new SlotArmor(playerInventory, PLAYER_SLOT_INDEX_HELMET, xOffset, HELMET_SLOT_Y_POSITION + yOffset));
 
+        // TODO: change the order to attempt fix integration with Inventory Tweaks and creative mode
 
         LogHelper.info("    After: " + container.inventorySlots.size() + " slots");
     }
@@ -73,10 +75,9 @@ public abstract class ExtraSlotsHelperCommon
     }
 
 
-    protected int getExtraSlotsXOffset(Container container)
+    protected final int getExtraSlotsXOffset(Container container)
     {
-        // NOTE: SLOT_SIDES[1] == "RIGHT"
-        if (ConfigurationHandler.extraSlotsSide.equals(ConfigurationHandler.SLOT_SIDES[1])) {
+        if (ConfigurationHandler.extraSlotsSide.equals(ConfigurationHandler.POSITION_RIGHT)) {
             int xOffset = 0;
 
 
@@ -123,7 +124,7 @@ public abstract class ExtraSlotsHelperCommon
         }
     }
 
-    protected int getExtraSlotsYOffset(Container container)
+    protected final int getExtraSlotsYOffset(Container container)
     {
         // Since containers don't have width/height, I need to
         // use other slots as reference to position my custom slots.
@@ -148,13 +149,12 @@ public abstract class ExtraSlotsHelperCommon
     public boolean shouldAddExtraSlotsToContainer(Container container)
     {
         // Check if it's a valid container to get extra slots
-        if (container == null) {
-            return false;
-        }
-        if (container instanceof ContainerPlayer) {
-            return false;
-        }
+        if (container == null) return false;
+        if (container instanceof ContainerPlayer) return false;
+        if (isContainerBlacklisted(container)) return false;
+        
 
+        // TODO: counter for the amount of iterations to find the slot
         // Check if the slots weren't added already (iterates in reverse order, the slots should be at the end of the array)
         final ListIterator<Slot> iterator = container.inventorySlots.listIterator(container.inventorySlots.size());
         while (iterator.hasPrevious()) {
@@ -166,12 +166,18 @@ public abstract class ExtraSlotsHelperCommon
 
         return true;
     }
-
+    
 
     public boolean shouldDrawExtraSlotsOnGui(GuiContainer gui)
     {
-        return false;
+        if (isContainerBlacklisted(gui.inventorySlots)) return false;
+
+        return true;
     }
+    
+
+
+    
 
 
 
@@ -179,11 +185,29 @@ public abstract class ExtraSlotsHelperCommon
      * Checks is the container belongs to vanilla Minecraft or not.
      * Modded containers may require extra logic.
      */
-    protected boolean isVanillaContainer(Container container)
+    protected final boolean isVanillaContainer(Container container)
     {
         final String className = container.getClass().getName();
-        return className.startsWith("net.minecraft");
+        return className.startsWith(ConfigurationHandler.MINECRAFT_NAMESPACE + ".");
     }
 
+
+    protected final boolean isContainerBlacklisted(Container container)
+    {
+        if (ConfigurationHandler.blacklistedModPackages.length > 0) {
+            final String className = container.getClass().getName();
+            LogHelper.trace(String.format("Checking if %s is blacklisted...", className));
+            
+            for(String blacklisted : ConfigurationHandler.blacklistedModPackages) {
+                if (className.startsWith(blacklisted + ".")) {
+                    return true;
+                }
+            }
+        }
+         
+        return false;
+    }
+
+    
 
 }
