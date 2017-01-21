@@ -79,9 +79,7 @@ public class ExtraSlotsHelperClient extends ExtraSlotsHelperCommon
         // The class is [GuiContainerCreative.ContainerCreative], but that class
         // is not public so I have to work around it.
         final Class containerWrapperClass = container.getClass().getEnclosingClass();
-        if (containerWrapperClass != null && containerWrapperClass.equals(GuiContainerCreative.class)) {
-            return false;
-        }
+        if (containerWrapperClass != null && containerWrapperClass.equals(GuiContainerCreative.class)) { return false; }
 
         return super.shouldAddExtraSlotsToContainer(container);
     }
@@ -91,10 +89,10 @@ public class ExtraSlotsHelperClient extends ExtraSlotsHelperCommon
     public boolean shouldDrawExtraSlotsOnGui(GuiContainer gui)
     {
         // Check if it's a valid container to get extra slots
-        if (gui == null) return false;
-        if (gui instanceof GuiInventory) return false;
-        if (gui instanceof GuiContainerCreative) return false;
-        
+        if (gui == null) { return false; }
+        if (gui instanceof GuiInventory) { return false; }
+        if (gui instanceof GuiContainerCreative) { return false; }
+
         return super.shouldDrawExtraSlotsOnGui(gui);
     }
 
