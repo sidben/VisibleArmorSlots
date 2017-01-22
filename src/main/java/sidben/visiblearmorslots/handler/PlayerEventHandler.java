@@ -14,23 +14,24 @@ public class PlayerEventHandler
 
 
     @SubscribeEvent
-    public void onPlayerOpenContainerEvent(PlayerContainerEvent event)
+    public void onPlayerContainerEvent(PlayerContainerEvent event)
     {
-        // OBS: Runs server-side
-        // NOTE - Gets called constantly while the container is open
-
-
-        final Container openedContainer = event.getEntityPlayer().openContainer;
-        final IInventory playerInventory = event.getEntityPlayer().inventory;
-
-
-        if (ModVisibleArmorSlots.extraSlotsHelper.shouldAddExtraSlotsToContainer(openedContainer)) {
-            LogHelper.trace("Adding extra slots server-side.");
-            ModVisibleArmorSlots.extraSlotsHelper.addExtraSlotsToContainer(openedContainer, playerInventory);
-        }
-
+        LogHelper.trace("  onPlayerContainerEvent(%s)", event.getContainer());
+    }
+   
+    
+    @SubscribeEvent
+    public void onPlayerOpenContainerEvent(PlayerContainerEvent.Open event)
+    {
+        LogHelper.trace("  onPlayerOpenContainerEvent(%s)", event.getContainer());
     }
 
+    
+    @SubscribeEvent
+    public void onPlayerCloseContainerEvent(PlayerContainerEvent.Close event)
+    {
+        LogHelper.trace("  onPlayerCloseContainerEvent(%s)", event.getContainer());
+    }
 
 
 }
