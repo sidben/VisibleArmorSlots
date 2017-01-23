@@ -4,7 +4,7 @@ import net.minecraftforge.common.MinecraftForge;
 import sidben.visiblearmorslots.handler.EventDelegatorGuiOverlay;
 
 
-public class ClientProxy extends CommonProxy
+public class ProxyClient extends ProxyCommon
 {
 
     @Override

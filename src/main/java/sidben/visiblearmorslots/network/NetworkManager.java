@@ -19,7 +19,7 @@ public class NetworkManager
         this._networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(MOD_CHANNEL);
 
         int packetdId = 0;
-        this._networkWrapper.registerMessage(MessageExtraSlotInteract.PickupHandler.class, MessageExtraSlotInteract.class, packetdId++, Side.SERVER);
+        this._networkWrapper.registerMessage(MessageExtraSlotInteract.Handler.class, MessageExtraSlotInteract.class, packetdId++, Side.SERVER);
         // this._networkWrapper.registerMessage(MessageExtraSlotInteract.PlaceOnHandler.class, MessageExtraSlotInteract.class, packetdId++, Side.SERVER);
     }
 

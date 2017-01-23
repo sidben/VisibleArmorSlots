@@ -9,7 +9,7 @@ import sidben.visiblearmorslots.handler.EventHandlerPlayer;
 /*
  * Base proxy class, here I initialize everything that must happen on both, server and client.
  */
-public abstract class CommonProxy implements IProxy
+public abstract class ProxyCommon implements IProxy
 {
 
 

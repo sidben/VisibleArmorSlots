@@ -12,6 +12,7 @@ import sidben.visiblearmorslots.config.ConfigurationHandler;
 import sidben.visiblearmorslots.reference.Reference;
 
 
+@Deprecated
 public class ExtraSlotsHelperClient extends ExtraSlotsHelperCommon
 {
 

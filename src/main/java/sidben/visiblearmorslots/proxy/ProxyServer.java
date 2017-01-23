@@ -1,5 +1,5 @@
 package sidben.visiblearmorslots.proxy;
 
-public class ServerProxy extends CommonProxy
+public class ProxyServer extends ProxyCommon
 {
 }

@@ -63,7 +63,7 @@ public class MessageExtraSlotInteract implements IMessage
 
 
 
-    public static class PickupHandler implements IMessageHandler<MessageExtraSlotInteract, IMessage>
+    public static class Handler implements IMessageHandler<MessageExtraSlotInteract, IMessage>
     {
 
         @Override

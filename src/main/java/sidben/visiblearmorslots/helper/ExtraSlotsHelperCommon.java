@@ -16,6 +16,7 @@ import sidben.visiblearmorslots.inventory.SlotOffHand;
 
 // TODO: Implement extra slots on creative menu (right know it messes up the hotbar slots, so I removed it)
 
+@Deprecated
 public abstract class ExtraSlotsHelperCommon
 {
 
