@@ -16,6 +16,7 @@ import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sidben.visiblearmorslots.ModVisibleArmorSlots;
@@ -39,6 +40,8 @@ public class GuiExtraSlotsOverlay extends Gui
 
     private static final ResourceLocation GUI_EXTRA_SLOTS = new ResourceLocation(Reference.ModID + ":textures/gui/extra-slots.png");
 
+    /** holds the slot currently hovered */
+    private Slot theSlot;
     private int                           eventButton;
     private long                          lastMouseEvent;
 
@@ -68,6 +71,11 @@ public class GuiExtraSlotsOverlay extends Gui
     }
 
 
+    
+    // -----------------------------------------------------------
+    // Slots info
+    // -----------------------------------------------------------
+    
     protected void loadSupportedSlotsInfo(List<InfoExtraSlots> list)
     {
         final int xStart = 4;       // Gui margin
@@ -104,6 +112,10 @@ public class GuiExtraSlotsOverlay extends Gui
 
 
 
+    // -----------------------------------------------------------
+    // Gui parameters
+    // -----------------------------------------------------------
+    
     public void setWorldAndResolution(Minecraft mc, int width, int height)
     {
         this.mc = mc;
@@ -113,26 +125,31 @@ public class GuiExtraSlotsOverlay extends Gui
         this.screenHeight = height;
     }
 
-    /*
-     * public void onResize(Minecraft mc, int width, int height) // TODO: test
-     * {
-     * this.setWorldAndResolution(mc, width, height);
-     * }
-     */
 
+    
+
+    
+    // -----------------------------------------------------------
+    // Gui drawing
+    // -----------------------------------------------------------
 
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
+        this.theSlot = null;
+        
         // Draw the slots
         for (final Slot oneSlot : extraSlots) {
 
+            // Slot content
             if (oneSlot.canBeHovered()) {
                 this.drawSlot(oneSlot);
             }
 
+            // Hover box
             if (this.isMouseOverSlot(oneSlot, mouseX, mouseY) && oneSlot.canBeHovered()) {
                 final int hoverX = oneSlot.xPos + this.guiLeft;
                 final int hoverY = oneSlot.yPos + this.guiTop;
+                this.theSlot = oneSlot;
 
                 GlStateManager.disableLighting();
                 GlStateManager.disableDepth();
@@ -145,8 +162,27 @@ public class GuiExtraSlotsOverlay extends Gui
 
         }
 
-        // TODO: render itemstack tooltip
-        // TODO: draw the item on the mouse over the slot hover box
+
+        InventoryPlayer inventoryplayer = this.mc.player.inventory;
+        ItemStack playerItemStack = inventoryplayer.getItemStack(); 
+        
+        // Redraws the item stack over the hover box  
+        if (!playerItemStack.isEmpty() && this.theSlot != null)
+        {
+            this.itemRender.zLevel = 250.0F;
+            itemRender.renderItemAndEffectIntoGUI(mc.player, playerItemStack, mouseX - 8, mouseY - 8);
+            itemRender.renderItemOverlayIntoGUI(fontRendererObj, playerItemStack, mouseX - 8, mouseY - 8, null);
+            this.itemRender.zLevel = 0.0F;
+        }
+        
+        
+        // Tooltip
+        if (playerItemStack.isEmpty() && this.theSlot != null && this.theSlot.getHasStack())
+        {
+            ItemStack slotStack = this.theSlot.getStack();
+            this.renderToolTip(slotStack, mouseX, mouseY);
+        }
+        
 
         RenderHelper.disableStandardItemLighting();
     }
@@ -166,8 +202,107 @@ public class GuiExtraSlotsOverlay extends Gui
         this.drawTexturedModalRect(startX, startY, textureStartX, textureStartY, textureWidth, textureHeight);
     }
 
+    
+    
+    
+    private void drawSlot(Slot slotIn)
+    {
+        final int x = slotIn.xPos + this.guiLeft;
+        final int y = slotIn.yPos + this.guiTop;
+        final ItemStack itemstack = slotIn.getStack();
+
+        this.itemRender.zLevel = 100.0F;
 
 
+        // Slot background
+        if (itemstack.isEmpty() && slotIn.canBeHovered()) {
+            final TextureAtlasSprite textureatlassprite = slotIn.getBackgroundSprite();
+
+            if (textureatlassprite != null) {
+                this.mc.getTextureManager().bindTexture(slotIn.getBackgroundLocation());
+                this.drawTexturedModalRect(x, y, textureatlassprite, 16, 16);
+            }
+        }
+
+
+        // Slot item
+        if (!itemstack.isEmpty()) {
+            GlStateManager.enableDepth();
+            itemRender.renderItemAndEffectIntoGUI(mc.player, itemstack, x, y);
+            itemRender.renderItemOverlayIntoGUI(fontRendererObj, itemstack, x, y, null);
+        }
+
+
+        this.itemRender.zLevel = 0.0F;
+    }
+    
+
+    
+
+    protected void renderToolTip(ItemStack stack, int x, int y)
+    {
+        List<String> list = stack.getTooltip(this.mc.player, this.mc.gameSettings.advancedItemTooltips);
+
+        for (int i = 0; i < list.size(); ++i)
+        {
+            if (i == 0)
+            {
+                list.set(i, stack.getRarity().rarityColor + (String)list.get(i));
+            }
+            else
+            {
+                list.set(i, TextFormatting.GRAY + (String)list.get(i));
+            }
+        }
+
+        FontRenderer font = stack.getItem().getFontRenderer(stack);
+        net.minecraftforge.fml.client.config.GuiUtils.preItemToolTip(stack);
+        this.drawHoveringText(list, x, y, (font == null ? fontRendererObj : font));
+        net.minecraftforge.fml.client.config.GuiUtils.postItemToolTip();
+    }
+    
+    
+    protected void drawHoveringText(List<String> textLines, int x, int y, FontRenderer font)
+    {
+        net.minecraftforge.fml.client.config.GuiUtils.drawHoveringText(textLines, x, y, this.screenWidth, this.screenHeight, -1, font);
+    }
+    
+    
+    
+
+    // -----------------------------------------------------------
+    // Mouse interaction
+    // -----------------------------------------------------------
+
+    /**
+     * @return Should cancel the mouse event (since it was handled by this gui).
+     */
+    public boolean handleMouseInput()
+    {
+        final int relativeMouseX = Mouse.getEventX() * this.screenWidth / this.mc.displayWidth;
+        final int relativeMouseY = this.screenHeight - Mouse.getEventY() * this.screenHeight / this.mc.displayHeight - 1;
+        final int mouseButton = Mouse.getEventButton();
+
+        if (!this.isMouseOverGui(relativeMouseX, relativeMouseY)) { return false; }
+
+
+        if (Mouse.getEventButtonState()) {
+            this.eventButton = mouseButton;
+            this.lastMouseEvent = Minecraft.getSystemTime();
+            this.mouseClicked(relativeMouseX, relativeMouseY, this.eventButton);
+        } else if (mouseButton != -1) {
+            this.eventButton = -1;
+            this.mouseReleased(relativeMouseX, relativeMouseY, mouseButton);
+        } else if (this.eventButton != -1 && this.lastMouseEvent > 0L) {
+            final long l = Minecraft.getSystemTime() - this.lastMouseEvent;
+            this.mouseClickMove(relativeMouseX, relativeMouseY, this.eventButton, l);
+        }
+
+
+        return true;
+    }
+
+    
     /**
      * Called when the mouse is clicked. Args : mouseX, mouseY, clickedButton
      */
@@ -193,7 +328,8 @@ public class GuiExtraSlotsOverlay extends Gui
         LogHelper.trace("    - slot has %s, can take: %s", slot.getStack(), slot.canTakeStack(this.mc.player));
 
 
-        // TODO: handle right-click (pick half)
+        // TODO: handle right-click (pick half or place one)
+        // TODO: handle dragging
         // TODO: handle ClickType.SWAP
         // TODO: handle ClickType.QUICK_MOVE
         // TODO: handle ClickType.CLONE
@@ -205,8 +341,10 @@ public class GuiExtraSlotsOverlay extends Gui
             // Player is taking from the slot
             // ----------------------------------------------
 
-            if (isButtonPickBlock && this.mc.player.capabilities.isCreativeMode) {
-                this.handleMouseClick(slot, ClickType.CLONE);
+            if (isButtonPickBlock) {
+                if (this.mc.player.capabilities.isCreativeMode) {
+                    this.handleMouseClick(slot, ClickType.CLONE);
+                }
             } else {
                 ClickType clicktype = ClickType.PICKUP;
 
@@ -253,39 +391,37 @@ public class GuiExtraSlotsOverlay extends Gui
     }
 
 
-
-    private void drawSlot(Slot slotIn)
+    /**
+     * Called when the mouse is clicked over a slot or outside the gui.
+     */
+    protected void handleMouseClick(Slot slot, ClickType type)
     {
-        final int x = slotIn.xPos + this.guiLeft;
-        final int y = slotIn.yPos + this.guiTop;
-        final ItemStack itemstack = slotIn.getStack();
+        final ItemStack playerItem = mc.player.inventory.getItemStack();
+        LogHelper.trace("  handleMouseClick(%s, %s) - slot has %s, player has %s", slot, type, slot.getStack(), playerItem);
 
-        this.itemRender.zLevel = 100.0F;
+        // TODO: make the item disappears instantly, like vanilla hotbar slot
 
+        if (type == ClickType.PICKUP) {
+            // Puts item on player mouse
+            mc.player.inventory.setItemStack(slot.getStack());
+            ModVisibleArmorSlots.instance.getNetworkManager().sendPickupFromExtraSlot(slot.getSlotIndex(), slot.slotNumber);
 
-        // Slot background
-        if (itemstack.isEmpty() && slotIn.canBeHovered()) {
-            final TextureAtlasSprite textureatlassprite = slotIn.getBackgroundSprite();
-
-            if (textureatlassprite != null) {
-                this.mc.getTextureManager().bindTexture(slotIn.getBackgroundLocation());
-                this.drawTexturedModalRect(x, y, textureatlassprite, 16, 16);
-            }
+            // Updates slot (reflect server-sided containers)
+            mc.player.inventory.setInventorySlotContents(slot.getSlotIndex(), playerItem);
         }
 
-
-        // Slot item
-        if (!itemstack.isEmpty()) {
-            GlStateManager.enableDepth();
-            itemRender.renderItemAndEffectIntoGUI(mc.player, itemstack, x, y);
-            itemRender.renderItemOverlayIntoGUI(fontRendererObj, itemstack, x, y, null);
-        }
-
-
-        this.itemRender.zLevel = 0.0F;
     }
 
+    
+    
 
+
+
+
+    
+    // -----------------------------------------------------------
+    // Utility
+    // -----------------------------------------------------------
 
     /**
      * Returns if the mouse is over this GUI.
@@ -319,7 +455,6 @@ public class GuiExtraSlotsOverlay extends Gui
     }
 
 
-
     /**
      * Returns the slot at the given coordinates or null if there is none.
      */
@@ -331,61 +466,6 @@ public class GuiExtraSlotsOverlay extends Gui
 
         return null;
     }
-
-
-
-    /**
-     * Called when the mouse is clicked over a slot or outside the gui.
-     */
-    protected void handleMouseClick(Slot slot, ClickType type)
-    {
-        final ItemStack playerItem = mc.player.inventory.getItemStack();
-        LogHelper.trace("  handleMouseClick(%s, %s) - slot has %s, player has %s", slot, type, slot.getStack(), playerItem);
-
-        // TODO: make the item disappears instantly, like vanilla hotbar slot
-
-        if (type == ClickType.PICKUP || type == ClickType.SWAP) {
-            // Puts item on player mouse
-            mc.player.inventory.setItemStack(slot.getStack());
-            ModVisibleArmorSlots.instance.getNetworkManager().sendPickupFromExtraSlot(slot.getSlotIndex(), slot.slotNumber);
-
-            // Updates slot (reflect server-sided containers)
-            mc.player.inventory.setInventorySlotContents(slot.getSlotIndex(), playerItem);
-        }
-
-    }
-
-
-
-    /**
-     *
-     * @return Should cancel the mouse event (since it was handled by this gui).
-     */
-    public boolean handleMouseInput()
-    {
-        final int relativeMouseX = Mouse.getEventX() * this.screenWidth / this.mc.displayWidth;
-        final int relativeMouseY = this.screenHeight - Mouse.getEventY() * this.screenHeight / this.mc.displayHeight - 1;
-        final int mouseButton = Mouse.getEventButton();
-
-        if (!this.isMouseOverGui(relativeMouseX, relativeMouseY)) { return false; }
-
-
-        if (Mouse.getEventButtonState()) {
-            this.eventButton = mouseButton;
-            this.lastMouseEvent = Minecraft.getSystemTime();
-            this.mouseClicked(relativeMouseX, relativeMouseY, this.eventButton);
-        } else if (mouseButton != -1) {
-            this.eventButton = -1;
-            this.mouseReleased(relativeMouseX, relativeMouseY, mouseButton);
-        } else if (this.eventButton != -1 && this.lastMouseEvent > 0L) {
-            final long l = Minecraft.getSystemTime() - this.lastMouseEvent;
-            this.mouseClickMove(relativeMouseX, relativeMouseY, this.eventButton, l);
-        }
-
-
-        return true;
-    }
-
 
 
     /**
