@@ -1,7 +1,7 @@
 package sidben.visiblearmorslots.proxy;
 
 import net.minecraftforge.common.MinecraftForge;
-import sidben.visiblearmorslots.handler.GuiEventHandler;
+import sidben.visiblearmorslots.handler.EventDelegatorGuiOverlay;
 
 
 public class ClientProxy extends CommonProxy
@@ -13,7 +13,7 @@ public class ClientProxy extends CommonProxy
         super.initialize();
 
         // Event Handlers
-        MinecraftForge.EVENT_BUS.register(new GuiEventHandler());
+        MinecraftForge.EVENT_BUS.register(new EventDelegatorGuiOverlay());
     }
 
 }

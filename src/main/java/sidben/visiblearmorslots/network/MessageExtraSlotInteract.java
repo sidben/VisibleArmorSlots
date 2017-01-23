@@ -24,27 +24,28 @@ public class MessageExtraSlotInteract implements IMessage
         this._playerInventorySlotIndex = inventorySlotIndex;
     }
 
-    
-    
-    
-    
-    public int getInventorySlotIndex() {
+
+
+    @Deprecated     // TODO: check if can be removed, the message can work with just the container index
+    public int getInventorySlotIndex()
+    {
         return this._playerInventorySlotIndex;
     }
-    
-    public int getContainerSlotIndex() {
+
+    public int getContainerSlotIndex()
+    {
         return this._playerContainerSlotIndex;
     }
-    
-    
-    
+
+
+
     @Override
     public void fromBytes(ByteBuf buf)
     {
         this._playerContainerSlotIndex = buf.readInt();
         this._playerInventorySlotIndex = buf.readInt();
     }
-    
+
 
     @Override
     public void toBytes(ByteBuf buf)
@@ -53,7 +54,7 @@ public class MessageExtraSlotInteract implements IMessage
         buf.writeInt(this._playerInventorySlotIndex);
     }
 
-    
+
     @Override
     public String toString()
     {
@@ -61,8 +62,7 @@ public class MessageExtraSlotInteract implements IMessage
     }
 
 
-    
-    
+
     public static class PickupHandler implements IMessageHandler<MessageExtraSlotInteract, IMessage>
     {
 
@@ -70,70 +70,53 @@ public class MessageExtraSlotInteract implements IMessage
         public IMessage onMessage(MessageExtraSlotInteract message, MessageContext ctx)
         {
             LogHelper.trace("Handling MessageExtraSlotInteract.PickupHandler (%s)", message);
-            EntityPlayer player = ctx.getServerHandler().playerEntity;
+            final EntityPlayer player = ctx.getServerHandler().playerEntity;
+            if (player == null) { return null; }
 
-            if (player != null) {
-                LogHelper.trace("    current stack (1) %s", player.inventory.getItemStack());
-                LogHelper.trace("    stack on slot %d = %s", message.getInventorySlotIndex(), player.inventory.getStackInSlot(message.getInventorySlotIndex()));
+            final Slot targetSlot = player.inventoryContainer.getSlot(message.getContainerSlotIndex());
+            if (targetSlot == null) { return null; }
+
+            final ItemStack targetSlotItem = targetSlot.getStack();
+            final ItemStack currentItemPicked = player.inventory.getItemStack();
 
 
-                Slot targetSlot = player.inventoryContainer.getSlot(message.getContainerSlotIndex());
-                
-                if (targetSlot != null) {
-                    LogHelper.trace("        target slot index %d, number %d, content %s, can take [%s]", targetSlot.getSlotIndex(), targetSlot.slotNumber, targetSlot.getStack(), targetSlot.canTakeStack(player));
-                    
-                    ItemStack targetSlotItem = targetSlot.getStack();
-                    ItemStack currentItemPicked = player.inventory.getItemStack();
-                    
-                    if (currentItemPicked.isEmpty()) {
-                        if (targetSlot.canTakeStack(player)) {
-                            LogHelper.trace("    Taking item from slot");
-                            
-                            player.inventory.setItemStack(targetSlotItem);
-                            
-                            targetSlot.putStack(ItemStack.EMPTY);
-                            targetSlot.onTake(player, currentItemPicked);
-                        }
-                    }
-                    
-                    targetSlot.onSlotChanged();
+            LogHelper.trace("    (1) current stack on mouse %s", player.inventory.getItemStack());
+            LogHelper.trace("    (1) stack on player inventory slot %d = %s", message.getInventorySlotIndex(), player.inventory.getStackInSlot(message.getInventorySlotIndex()));
+            LogHelper.trace("    (1) player container slot index %d, number %d, content %s, can take [%s]", targetSlot.getSlotIndex(), targetSlot.slotNumber, targetSlot.getStack(),
+                    targetSlot.canTakeStack(player));
+
+
+
+            if (currentItemPicked.isEmpty()) {
+                if (targetSlot.canTakeStack(player)) {
+                    LogHelper.trace("  Taking item from slot");
+
+                    player.inventory.setItemStack(targetSlotItem);
+                    targetSlot.putStack(ItemStack.EMPTY);
+                    // targetSlot.onTake(player, targetSlotItem);
                 }
-                
+            } else {
+                if (targetSlot.isItemValid(currentItemPicked)) {
+                    LogHelper.trace("  Placing item on slot");
 
-                
-                LogHelper.trace("    current stack (2) %s", player.inventory.getItemStack());
-
-                
+                    player.inventory.setItemStack(targetSlotItem);
+                    targetSlot.putStack(currentItemPicked);
+                }
             }
-            
+
+            targetSlot.onSlotChanged();
+
+
+
+            LogHelper.trace("    (2) current stack on mouse %s", player.inventory.getItemStack());
+            LogHelper.trace("    (2) stack on player inventory slot %d = %s", message.getInventorySlotIndex(), player.inventory.getStackInSlot(message.getInventorySlotIndex()));
+            LogHelper.trace("    (2) player container slot index %d, number %d, content %s, can take [%s]", targetSlot.getSlotIndex(), targetSlot.slotNumber, targetSlot.getStack(),
+                    targetSlot.canTakeStack(player));
             return null;
         }
 
     }
 
-    
-    /*
-    public static class PlaceOnHandler implements IMessageHandler<MessageExtraSlotInteract, IMessage>
-    {
 
-        @Override
-        public IMessage onMessage(MessageExtraSlotInteract message, MessageContext ctx)
-        {
-            LogHelper.trace("Handling MessageExtraSlotInteract.PlaceOnHandler");
-            EntityPlayer player = ctx.getServerHandler().playerEntity;
 
-            LogHelper.trace("    %s", message);
-            LogHelper.trace("    player %s", player);
-            if (player != null) {
-                LogHelper.trace("    current stack %s", player.inventory.getItemStack());
-                LogHelper.trace("    stack on slot %d = %s", message.getSlotIndex(), player.inventory.getStackInSlot(message.getSlotIndex()));
-            }
-            
-            return null;
-        }
-
-    }
-    */
-
-    
 }
