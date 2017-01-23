@@ -3,7 +3,7 @@ package sidben.visiblearmorslots.helper;
 
 import org.apache.logging.log4j.Level;
 import net.minecraftforge.fml.common.FMLLog;
-import sidben.visiblearmorslots.handler.ConfigurationHandler;
+import sidben.visiblearmorslots.config.ConfigurationHandler;
 import sidben.visiblearmorslots.reference.Reference;
 
 

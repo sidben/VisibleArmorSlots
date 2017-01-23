@@ -6,8 +6,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import sidben.visiblearmorslots.handler.ConfigurationHandler;
+import sidben.visiblearmorslots.config.ConfigurationHandler;
 import sidben.visiblearmorslots.helper.ExtraSlotsHelperCommon;
 import sidben.visiblearmorslots.network.NetworkManager;
 import sidben.visiblearmorslots.proxy.IProxy;
@@ -30,18 +29,18 @@ public class ModVisibleArmorSlots
     @SidedProxy(clientSide = Reference.ClientSlotHelperClass, serverSide = Reference.ServerSlotHelperClass)
     public static ExtraSlotsHelperCommon extraSlotsHelper;
 
-    
-    
-    private NetworkManager _networkManager;
-    
-    
+
+
+    private NetworkManager               _networkManager;
+
+
     public NetworkManager getNetworkManager()
     {
-        if (_networkManager == null) _networkManager = new NetworkManager();  
+        if (_networkManager == null) {
+            _networkManager = new NetworkManager();
+        }
         return _networkManager;
     }
-
-    
 
 
 

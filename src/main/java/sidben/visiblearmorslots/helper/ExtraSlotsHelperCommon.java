@@ -9,7 +9,7 @@ import net.minecraft.inventory.ContainerPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import sidben.visiblearmorslots.handler.ConfigurationHandler;
+import sidben.visiblearmorslots.config.ConfigurationHandler;
 import sidben.visiblearmorslots.inventory.SlotArmor;
 import sidben.visiblearmorslots.inventory.SlotOffHand;
 

@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
-import sidben.visiblearmorslots.handler.ConfigurationHandler;
+import sidben.visiblearmorslots.config.ConfigurationHandler;
 import sidben.visiblearmorslots.reference.Reference;
 
 

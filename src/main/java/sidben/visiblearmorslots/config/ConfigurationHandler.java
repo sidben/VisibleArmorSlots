@@ -1,4 +1,4 @@
-package sidben.visiblearmorslots.handler;
+package sidben.visiblearmorslots.config;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class ConfigurationHandler
     public static final String  CATEGORY_DEBUG      = "debug";
     public static final String  MINECRAFT_NAMESPACE = "net.minecraft";
 
-    public static boolean       onDebug;                                                     // TODO: read-only accessors
+    public static boolean       onDebug;                                                                                   // TODO: read-only accessors
     public static String        extraSlotsSide;
     public static int           extraSlotsMargin;
     public static String[]      blacklistedModIds;

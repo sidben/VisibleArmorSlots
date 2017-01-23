@@ -9,7 +9,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.GuiConfigEntries;
 import net.minecraftforge.fml.client.config.IConfigElement;
-import sidben.visiblearmorslots.handler.ConfigurationHandler;
+import sidben.visiblearmorslots.config.ConfigurationHandler;
 import sidben.visiblearmorslots.reference.Reference;
 
 

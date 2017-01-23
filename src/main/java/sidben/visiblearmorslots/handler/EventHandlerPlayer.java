@@ -1,15 +1,12 @@
 package sidben.visiblearmorslots.handler;
 
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import sidben.visiblearmorslots.ModVisibleArmorSlots;
 import sidben.visiblearmorslots.helper.LogHelper;
 
 
 
-public class PlayerEventHandler
+public class EventHandlerPlayer
 {
 
 
@@ -18,15 +15,15 @@ public class PlayerEventHandler
     {
         LogHelper.trace("  onPlayerContainerEvent(%s)", event.getContainer());
     }
-   
-    
+
+
     @SubscribeEvent
     public void onPlayerOpenContainerEvent(PlayerContainerEvent.Open event)
     {
         LogHelper.trace("  onPlayerOpenContainerEvent(%s)", event.getContainer());
     }
 
-    
+
     @SubscribeEvent
     public void onPlayerCloseContainerEvent(PlayerContainerEvent.Close event)
     {
