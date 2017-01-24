@@ -60,38 +60,40 @@ public class EventDelegatorGuiOverlay
      */
     InfoGuiOverlayDisplayParams getDisplayParamsForGui(GuiScreen gui)
     {
-        if (!(gui instanceof GuiContainer)) { return InfoGuiOverlayDisplayParams.EMPTY;
-        // LogHelper.trace("* %s / %s [%s] [%s]", gui instanceof GuiChest, guiContainer instanceof GuiChest, gui, guiContainer);
+        if (!(gui instanceof GuiContainer)) { return InfoGuiOverlayDisplayParams.EMPTY; }
+
+        final GuiContainer guiContainer = (GuiContainer) gui;
+        InfoGuiOverlayDisplayParams displayParams = InfoGuiOverlayDisplayParams.EMPTY;
+
+        // NOTE: inventorySlots should not be null, but we never know for sure...
+        int containerSize = 0;
+        if (guiContainer.inventorySlots != null && guiContainer.inventorySlots.inventorySlots != null) {
+            containerSize = guiContainer.inventorySlots.inventorySlots.size();
         }
 
-        final String guiClassName = gui.getClass().getName();
-        InfoGuiOverlayDisplayParams displayParams = InfoGuiOverlayDisplayParams.EMPTY;
+        // Allows the same GuiContainer to have different parameters, if the container size
+        // is different. Example: Chests and Double Chests.
+        //
+        // If this causes problems in the future I'll append the gui size to the key.
+        String guiClassKey = gui.getClass().getName();
+        guiClassKey += "|" + containerSize;
+
 
 
         // LogHelper.trace("* Looking for info with key [%s]", guiClassName);
-        if (EventDelegatorGuiOverlay._cacheDisplayParams.containsKey(guiClassName)) {
-            displayParams = _cacheDisplayParams.get(guiClassName);
+        if (EventDelegatorGuiOverlay._cacheDisplayParams.containsKey(guiClassKey)) {
+            displayParams = _cacheDisplayParams.get(guiClassKey);
             // LogHelper.trace("* Found: [%s]", displayParams);
 
         } else {
-            LogHelper.trace("  Caching new InfoGuiOverlayDisplayParams for [%s], key [%s]", gui, guiClassName);
-
-            displayParams = InfoGuiOverlayDisplayParams.create((GuiContainer) gui, guiClassName);
-            _cacheDisplayParams.put(guiClassName, displayParams);
+            displayParams = InfoGuiOverlayDisplayParams.create(guiContainer, guiClassKey);
+            _cacheDisplayParams.put(guiClassKey, displayParams);
+            LogHelper.trace("  Cached display parameters for [%s], key [%s], value [%s]", gui, guiClassKey, displayParams);
         }
 
 
         return displayParams;
     }
-
-
-
-    /*
-     * boolean isGuiBlacklisted(GuiScreen container)
-     * {
-     * return false; // TODO
-     * }
-     */
 
 
 
@@ -168,5 +170,8 @@ public class EventDelegatorGuiOverlay
         }
     }
 
+
+
+    // TODO: handle potion pushing player inventory to the side
 
 }
