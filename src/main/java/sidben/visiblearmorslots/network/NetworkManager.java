@@ -20,7 +20,6 @@ public class NetworkManager
 
         int packetdId = 0;
         this._networkWrapper.registerMessage(MessageExtraSlotInteract.Handler.class, MessageExtraSlotInteract.class, packetdId++, Side.SERVER);
-        // this._networkWrapper.registerMessage(MessageExtraSlotInteract.PlaceOnHandler.class, MessageExtraSlotInteract.class, packetdId++, Side.SERVER);
     }
 
 
@@ -28,7 +27,6 @@ public class NetworkManager
     public void sendPickupFromExtraSlot(int inventorySlotIndex, int containerSlotIndex)
     {
         final MessageExtraSlotInteract message = new MessageExtraSlotInteract(inventorySlotIndex, containerSlotIndex);
-
         LogHelper.trace("Sending MessagePickupFromExtraSlots(%d, %d)", inventorySlotIndex, containerSlotIndex);
 
         this._networkWrapper.sendToServer(message);
