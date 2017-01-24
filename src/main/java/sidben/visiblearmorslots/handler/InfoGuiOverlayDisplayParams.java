@@ -5,6 +5,8 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiShulkerBox;
 import sidben.visiblearmorslots.client.gui.GuiExtraSlotsOverlay;
 import sidben.visiblearmorslots.config.ConfigurationHandler;
+import sidben.visiblearmorslots.helper.LogHelper;
+
 
 public class InfoGuiOverlayDisplayParams
 {
@@ -40,34 +42,55 @@ public class InfoGuiOverlayDisplayParams
         this._guiTop = y;
         this._shouldDisplay = shouldDisplay;
     }
-    
-    
 
-    public static InfoGuiOverlayDisplayParams create(GuiContainer gui, String guiClassName) {
-        if (gui == null) return InfoGuiOverlayDisplayParams.EMPTY;
-        
+
+
+    public static InfoGuiOverlayDisplayParams create(GuiContainer gui, String guiClassName)
+    {
+        if (gui == null) { return InfoGuiOverlayDisplayParams.EMPTY; }
+
+
+        // Check for blacklisted gui's
+        if (isBlacklisted(gui)) { return InfoGuiOverlayDisplayParams.EMPTY; }
+
+
         int overlayX = 0;
         int overlayY = 0;
 
-        // TODO: blacklisted mods
-        
-        
         if (ConfigurationHandler.extraSlotsSide.equals(ConfigurationHandler.POSITION_LEFT)) {
             overlayX = gui.getGuiLeft() - GuiExtraSlotsOverlay.GUI_WIDTH - ConfigurationHandler.extraSlotsMargin;
         } else if (ConfigurationHandler.extraSlotsSide.equals(ConfigurationHandler.POSITION_RIGHT)) {
             overlayX = gui.getGuiLeft() + gui.getXSize() + ConfigurationHandler.extraSlotsMargin;
         }
         overlayY = gui.getGuiTop() + gui.getYSize() - GuiExtraSlotsOverlay.GUI_HEIGHT - 4;
-        
-        
+
+
         // HOTFIX: Chest containers have their height (YSize) wrong
         if (gui instanceof GuiChest || gui instanceof GuiShulkerBox) {
             overlayY -= 1;
         }
 
 
-        InfoGuiOverlayDisplayParams displayParams = new InfoGuiOverlayDisplayParams(overlayX, overlayY, true);
+        final InfoGuiOverlayDisplayParams displayParams = new InfoGuiOverlayDisplayParams(overlayX, overlayY, true);
         return displayParams;
+    }
+
+
+
+    protected final static boolean isBlacklisted(GuiContainer gui)
+    {
+        if (ConfigurationHandler.blacklistedModPackages.length > 0) {
+            final String className = gui.getClass().getName();
+
+            for (final String blacklisted : ConfigurationHandler.blacklistedModPackages) {
+                if (className.startsWith(blacklisted + ".")) {
+                    LogHelper.trace("  This gui is blacklisted: [%s]", className);
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
 
@@ -75,6 +98,6 @@ public class InfoGuiOverlayDisplayParams
     @Override
     public String toString()
     {
-        return String.format("Display info - x: %d, y: %d, visible: %s", this.getGuiLeft(), this.getGuiTop(), this.getShouldDisplay());
+        return String.format("x: %d, y: %d, visible: %s", this.getGuiLeft(), this.getGuiTop(), this.getShouldDisplay());
     }
 }
