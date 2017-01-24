@@ -8,7 +8,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -27,6 +26,9 @@ import sidben.visiblearmorslots.inventory.SlotOffHand;
 import sidben.visiblearmorslots.reference.Reference;
 
 
+// TODO: fix item placing on creative mode
+
+
 /**
  * This class simulates a simplified GuiContainer that runs only on the client,
  * since it uses the player inventory.
@@ -39,9 +41,11 @@ public class GuiExtraSlotsOverlay extends Gui
 {
 
     private static final ResourceLocation GUI_EXTRA_SLOTS = new ResourceLocation(Reference.ModID + ":textures/gui/extra-slots.png");
+    public static final int               GUI_WIDTH       = 24;
+    public static final int               GUI_HEIGHT      = 100;
 
     /** holds the slot currently hovered */
-    private Slot theSlot;
+    private Slot                          theSlot;
     private int                           eventButton;
     private long                          lastMouseEvent;
 
@@ -53,17 +57,12 @@ public class GuiExtraSlotsOverlay extends Gui
 
     public int                            screenWidth;
     public int                            screenHeight;
-    public int                            guiWidth;
-    public int                            guiHeight;
     public int                            guiLeft;
     public int                            guiTop;
 
 
 
     public GuiExtraSlotsOverlay() {
-        this.guiWidth = 24;
-        this.guiHeight = 100;
-
         supportedSlotsInfo = Lists.<InfoExtraSlots> newArrayList();
         loadSupportedSlotsInfo(supportedSlotsInfo);
 
@@ -71,11 +70,11 @@ public class GuiExtraSlotsOverlay extends Gui
     }
 
 
-    
+
     // -----------------------------------------------------------
     // Slots info
     // -----------------------------------------------------------
-    
+
     protected void loadSupportedSlotsInfo(List<InfoExtraSlots> list)
     {
         final int xStart = 4;       // Gui margin
@@ -115,7 +114,7 @@ public class GuiExtraSlotsOverlay extends Gui
     // -----------------------------------------------------------
     // Gui parameters
     // -----------------------------------------------------------
-    
+
     public void setWorldAndResolution(Minecraft mc, int width, int height)
     {
         this.mc = mc;
@@ -126,17 +125,19 @@ public class GuiExtraSlotsOverlay extends Gui
     }
 
 
-    
 
-    
     // -----------------------------------------------------------
     // Gui drawing
     // -----------------------------------------------------------
 
-    public void drawScreen(int mouseX, int mouseY, float partialTicks)
+    public void drawScreen(int mouseX, int mouseY)
     {
         this.theSlot = null;
-        
+
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(this.guiLeft, this.guiTop, 0.0F);
+
+
         // Draw the slots
         for (final Slot oneSlot : extraSlots) {
 
@@ -147,14 +148,14 @@ public class GuiExtraSlotsOverlay extends Gui
 
             // Hover box
             if (this.isMouseOverSlot(oneSlot, mouseX, mouseY) && oneSlot.canBeHovered()) {
-                final int hoverX = oneSlot.xPos + this.guiLeft;
-                final int hoverY = oneSlot.yPos + this.guiTop;
+                final int hoverX = oneSlot.xPos;
+                final int hoverY = oneSlot.yPos;
                 this.theSlot = oneSlot;
 
                 GlStateManager.disableLighting();
                 GlStateManager.disableDepth();
                 GlStateManager.colorMask(true, true, true, false);
-                this.drawGradientRect(hoverX, hoverY, hoverX + 16, hoverY + 16, -2130706433, -2130706433);
+                this.drawGradientRect(hoverX, hoverY, hoverX + 16, hoverY + 16, 0x7FFFFFFF, 0x7FFFFFFF);
                 GlStateManager.colorMask(true, true, true, true);
                 GlStateManager.enableLighting();
                 GlStateManager.enableDepth();
@@ -163,29 +164,10 @@ public class GuiExtraSlotsOverlay extends Gui
         }
 
 
-        InventoryPlayer inventoryplayer = this.mc.player.inventory;
-        ItemStack playerItemStack = inventoryplayer.getItemStack(); 
-        
-        // Redraws the item stack over the hover box  
-        if (!playerItemStack.isEmpty() && this.theSlot != null)
-        {
-            this.itemRender.zLevel = 250.0F;
-            itemRender.renderItemAndEffectIntoGUI(mc.player, playerItemStack, mouseX - 8, mouseY - 8);
-            itemRender.renderItemOverlayIntoGUI(fontRendererObj, playerItemStack, mouseX - 8, mouseY - 8, null);
-            this.itemRender.zLevel = 0.0F;
-        }
-        
-        
-        // Tooltip
-        if (playerItemStack.isEmpty() && this.theSlot != null && this.theSlot.getHasStack())
-        {
-            ItemStack slotStack = this.theSlot.getStack();
-            this.renderToolTip(slotStack, mouseX, mouseY);
-        }
-        
-
-        RenderHelper.disableStandardItemLighting();
+        GlStateManager.popMatrix();
+        GlStateManager.disableLighting();
     }
+
 
 
     public void drawBackground()
@@ -202,16 +184,37 @@ public class GuiExtraSlotsOverlay extends Gui
         this.drawTexturedModalRect(startX, startY, textureStartX, textureStartY, textureWidth, textureHeight);
     }
 
-    
-    
-    
+
+
+    public void drawForeground(int mouseX, int mouseY)
+    {
+        final InventoryPlayer inventoryplayer = this.mc.player.inventory;
+        final ItemStack playerItemStack = inventoryplayer.getItemStack();
+
+
+        // Redraws the mouse item stack over the hover box
+        if (!playerItemStack.isEmpty() && this.theSlot != null) {
+            this.itemRender.zLevel = 240.0F;
+            itemRender.renderItemAndEffectIntoGUI(mc.player, playerItemStack, mouseX - 8, mouseY - 8);
+            itemRender.renderItemOverlayIntoGUI(fontRendererObj, playerItemStack, mouseX - 8, mouseY - 8, null);
+            this.itemRender.zLevel = 0.0F;
+        }
+
+
+        // Tooltip
+        if (playerItemStack.isEmpty() && this.theSlot != null && this.theSlot.getHasStack()) {
+            final ItemStack slotStack = this.theSlot.getStack();
+            this.renderToolTip(slotStack, mouseX, mouseY);
+        }
+    }
+
+
+
     private void drawSlot(Slot slotIn)
     {
-        final int x = slotIn.xPos + this.guiLeft;
-        final int y = slotIn.yPos + this.guiTop;
+        final int x = slotIn.xPos;
+        final int y = slotIn.yPos;
         final ItemStack itemstack = slotIn.getStack();
-
-        this.itemRender.zLevel = 100.0F;
 
 
         // Slot background
@@ -222,53 +225,40 @@ public class GuiExtraSlotsOverlay extends Gui
                 this.mc.getTextureManager().bindTexture(slotIn.getBackgroundLocation());
                 this.drawTexturedModalRect(x, y, textureatlassprite, 16, 16);
             }
-        }
 
+        }
 
         // Slot item
         if (!itemstack.isEmpty()) {
-            GlStateManager.enableDepth();
             itemRender.renderItemAndEffectIntoGUI(mc.player, itemstack, x, y);
             itemRender.renderItemOverlayIntoGUI(fontRendererObj, itemstack, x, y, null);
         }
 
 
-        this.itemRender.zLevel = 0.0F;
     }
-    
 
-    
+
 
     protected void renderToolTip(ItemStack stack, int x, int y)
     {
-        List<String> list = stack.getTooltip(this.mc.player, this.mc.gameSettings.advancedItemTooltips);
+        final List<String> list = stack.getTooltip(this.mc.player, this.mc.gameSettings.advancedItemTooltips);
 
-        for (int i = 0; i < list.size(); ++i)
-        {
-            if (i == 0)
-            {
-                list.set(i, stack.getRarity().rarityColor + (String)list.get(i));
-            }
-            else
-            {
-                list.set(i, TextFormatting.GRAY + (String)list.get(i));
+        for (int i = 0; i < list.size(); ++i) {
+            if (i == 0) {
+                list.set(i, stack.getRarity().rarityColor + list.get(i));
+            } else {
+                list.set(i, TextFormatting.GRAY + list.get(i));
             }
         }
 
         FontRenderer font = stack.getItem().getFontRenderer(stack);
+        font = (font == null ? fontRendererObj : font);
         net.minecraftforge.fml.client.config.GuiUtils.preItemToolTip(stack);
-        this.drawHoveringText(list, x, y, (font == null ? fontRendererObj : font));
+        net.minecraftforge.fml.client.config.GuiUtils.drawHoveringText(list, x, y, this.screenWidth, this.screenHeight, -1, font);
         net.minecraftforge.fml.client.config.GuiUtils.postItemToolTip();
     }
-    
-    
-    protected void drawHoveringText(List<String> textLines, int x, int y, FontRenderer font)
-    {
-        net.minecraftforge.fml.client.config.GuiUtils.drawHoveringText(textLines, x, y, this.screenWidth, this.screenHeight, -1, font);
-    }
-    
-    
-    
+
+
 
     // -----------------------------------------------------------
     // Mouse interaction
@@ -302,28 +292,34 @@ public class GuiExtraSlotsOverlay extends Gui
         return true;
     }
 
-    
+
     /**
      * Called when the mouse is clicked. Args : mouseX, mouseY, clickedButton
      */
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
     {
         /*
-         * About ClickTypes:
+         * About {@link net.minecraft.inventory.ClickTypes ClickTypes}:
          *
          * - PICKUP: Mouse clicked on the slot (left or right button)
          * - PICKUP_ALL: Double-click on the slot, pick all items of the type
          * - CLONE: Middle click, creative only
          * - QUICK_MOVE: Shift + click
          * - SWAP: Swap with hotbar when a number is pressed (can use this.slotUnderTheMouse)
-         * 
+         * - THROW: Click outside the gui
+         *
          */
+
         LogHelper.trace("  mouseClicked(%d, %d, %d)", mouseX, mouseY, mouseButton);
 
 
         final ItemStack playerMouseItemStack = this.mc.player.inventory.getItemStack();
         final boolean isButtonPickBlock = this.mc.gameSettings.keyBindPickBlock.isActiveAndMatches(mouseButton - 100);
         final Slot slot = this.getSlotAtPosition(mouseX, mouseY);
+
+        // NOTE: I don't need to handle the ClickType.THROW, the parent gui will take care of it.
+        if (slot == null) { return; }
+
 
         LogHelper.trace("    - slot has %s, can take: %s", slot.getStack(), slot.canTakeStack(this.mc.player));
 
@@ -412,13 +408,8 @@ public class GuiExtraSlotsOverlay extends Gui
 
     }
 
-    
-    
 
 
-
-
-    
     // -----------------------------------------------------------
     // Utility
     // -----------------------------------------------------------
@@ -428,7 +419,7 @@ public class GuiExtraSlotsOverlay extends Gui
      */
     private boolean isMouseOverGui(int mouseX, int mouseY)
     {
-        return this.isPointInRegion(0, 0, this.guiWidth, this.guiHeight, mouseX, mouseY);
+        return this.isPointInRegion(0, 0, GUI_WIDTH, GUI_HEIGHT, mouseX, mouseY);
     }
 
 

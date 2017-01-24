@@ -1,19 +1,21 @@
 package sidben.visiblearmorslots.handler;
 
+import java.util.HashMap;
 import org.lwjgl.input.Mouse;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraftforge.client.event.GuiScreenEvent.BackgroundDrawnEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.DrawScreenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.MouseInputEvent;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sidben.visiblearmorslots.client.gui.GuiExtraSlotsOverlay;
 import sidben.visiblearmorslots.helper.LogHelper;
+import sidben.visiblearmorslots.reference.Reference;
 
 
 /**
@@ -23,7 +25,8 @@ import sidben.visiblearmorslots.helper.LogHelper;
 public class EventDelegatorGuiOverlay
 {
 
-    private static GuiExtraSlotsOverlay _guiOverlay;
+    private static GuiExtraSlotsOverlay                         _guiOverlay;
+    private static HashMap<String, InfoGuiOverlayDisplayParams> _cacheDisplayParams = new HashMap<String, InfoGuiOverlayDisplayParams>();
 
 
 
@@ -44,6 +47,7 @@ public class EventDelegatorGuiOverlay
     {
         if (gui == null) { return false; }
         if (!(gui instanceof GuiContainer)) { return false; }
+        if (gui instanceof GuiInventory && gui.mc.player.isCreative()) { return false; }
 
         final InfoGuiOverlayDisplayParams displayParams = getDisplayParamsForGui(gui);
         return displayParams.getShouldDisplay();
@@ -56,13 +60,28 @@ public class EventDelegatorGuiOverlay
      */
     InfoGuiOverlayDisplayParams getDisplayParamsForGui(GuiScreen gui)
     {
-        if (gui instanceof GuiInventory) { return new InfoGuiOverlayDisplayParams(((gui.width - 176) / 2) - 30, ((gui.height - 166) / 2), true); }
-        if (gui instanceof GuiChest) { return new InfoGuiOverlayDisplayParams(25, 10, true); }
+        if (!(gui instanceof GuiContainer)) { return InfoGuiOverlayDisplayParams.EMPTY;
+        // LogHelper.trace("* %s / %s [%s] [%s]", gui instanceof GuiChest, guiContainer instanceof GuiChest, gui, guiContainer);
+        }
 
-        // TODO
-        // OBS: cache on array, index is the string with classname
+        final String guiClassName = gui.getClass().getName();
+        InfoGuiOverlayDisplayParams displayParams = InfoGuiOverlayDisplayParams.EMPTY;
 
-        return InfoGuiOverlayDisplayParams.EMPTY;
+
+        // LogHelper.trace("* Looking for info with key [%s]", guiClassName);
+        if (EventDelegatorGuiOverlay._cacheDisplayParams.containsKey(guiClassName)) {
+            displayParams = _cacheDisplayParams.get(guiClassName);
+            // LogHelper.trace("* Found: [%s]", displayParams);
+
+        } else {
+            LogHelper.trace("  Caching new InfoGuiOverlayDisplayParams for [%s], key [%s]", gui, guiClassName);
+
+            displayParams = InfoGuiOverlayDisplayParams.create((GuiContainer) gui, guiClassName);
+            _cacheDisplayParams.put(guiClassName, displayParams);
+        }
+
+
+        return displayParams;
     }
 
 
@@ -82,10 +101,10 @@ public class EventDelegatorGuiOverlay
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
-    public void onInitGuiEventPost(InitGuiEvent.Post event)
+    public void onInitGuiEvent(InitGuiEvent.Post event)
     {
         if (!this.shouldDisplayGuiOverlay(event.getGui())) { return; }
-        LogHelper.trace("EventDelegatorGuiOverlay.onInitGuiEventPost(%s)", event.getGui());
+        LogHelper.trace("EventDelegatorGuiOverlay.onInitGuiEvent.Post(%s)", event.getGui());
 
         final GuiScreen gui = event.getGui();
         final InfoGuiOverlayDisplayParams displayParams = getDisplayParamsForGui(gui);
@@ -100,24 +119,23 @@ public class EventDelegatorGuiOverlay
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
-    public void onBackgroundDrawScreenEvent(BackgroundDrawnEvent event)
+    public void onBackgroundDrawEvent(BackgroundDrawnEvent event)
     {
         if (!this.shouldDisplayGuiOverlay(event.getGui())) { return; }
 
-        // LogHelper.trace("EventDelegatorGuiOverlay.onBackgroundDrawScreenEvent(%s)", event.getGui());
         this.getGuiOverlay().drawBackground();
+        this.getGuiOverlay().drawScreen(event.getMouseX(), event.getMouseY());
     }
 
 
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
-    public void onDrawScreenEvent(DrawScreenEvent event)
+    public void onDrawScreenEventPost(DrawScreenEvent.Post event)
     {
         if (!this.shouldDisplayGuiOverlay(event.getGui())) { return; }
 
-        // LogHelper.trace("EventDelegatorGuiOverlay.onDrawScreenEvent(%s)", event.getGui());
-        this.getGuiOverlay().drawScreen(event.getMouseX(), event.getMouseY(), event.getRenderPartialTicks());
+        this.getGuiOverlay().drawForeground(event.getMouseX(), event.getMouseY());
     }
 
 
@@ -140,6 +158,15 @@ public class EventDelegatorGuiOverlay
 
     }
 
+
+    @SubscribeEvent
+    public void onConfigurationChangedEvent(ConfigChangedEvent.OnConfigChangedEvent event)
+    {
+        if (event.getModID().equalsIgnoreCase(Reference.ModID)) {
+            // Refresh the display parameters when the config changes
+            _cacheDisplayParams = new HashMap<String, InfoGuiOverlayDisplayParams>();
+        }
+    }
 
 
 }
