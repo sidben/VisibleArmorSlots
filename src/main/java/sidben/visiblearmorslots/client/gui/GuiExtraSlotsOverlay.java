@@ -10,6 +10,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
@@ -20,13 +21,16 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sidben.visiblearmorslots.ModVisibleArmorSlots;
 import sidben.visiblearmorslots.client.gui.InfoExtraSlots.EnumSlotType;
+import sidben.visiblearmorslots.handler.action.SlotActionManager;
+import sidben.visiblearmorslots.handler.action.SlotActionType;
 import sidben.visiblearmorslots.helper.LogHelper;
 import sidben.visiblearmorslots.inventory.SlotArmor;
 import sidben.visiblearmorslots.inventory.SlotOffHand;
 import sidben.visiblearmorslots.reference.Reference;
 
 
-// TODO: fix item placing on creative mode
+// TODO: fix item placing on creative inventory
+// TODO: test spectator mode (should not display extra slots)
 
 
 /**
@@ -296,7 +300,7 @@ public class GuiExtraSlotsOverlay extends Gui
     /**
      * Called when the mouse is clicked. Args : mouseX, mouseY, clickedButton
      */
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
+    protected void mouseClicked(int mouseX, int mouseY, int clickedButton)
     {
         /*
          * About {@link net.minecraft.inventory.ClickTypes ClickTypes}:
@@ -310,18 +314,18 @@ public class GuiExtraSlotsOverlay extends Gui
          *
          */
 
-        LogHelper.trace("  mouseClicked(%d, %d, %d)", mouseX, mouseY, mouseButton);
+        LogHelper.trace("  mouseClicked(%d, %d, %d)", mouseX, mouseY, clickedButton);
 
 
         final ItemStack playerMouseItemStack = this.mc.player.inventory.getItemStack();
-        final boolean isButtonPickBlock = this.mc.gameSettings.keyBindPickBlock.isActiveAndMatches(mouseButton - 100);
+        final boolean isButtonPickBlock = this.mc.gameSettings.keyBindPickBlock.isActiveAndMatches(clickedButton - 100);
         final Slot slot = this.getSlotAtPosition(mouseX, mouseY);
 
         // NOTE: I don't need to handle the ClickType.THROW, the parent gui will take care of it.
         if (slot == null) { return; }
 
 
-        LogHelper.trace("    - slot has %s, can take: %s", slot.getStack(), slot.canTakeStack(this.mc.player));
+        // LogHelper.trace("    - slot has %s, can take: %s", slot.getStack(), slot.canTakeStack(this.mc.player));
 
 
         // TODO: handle right-click (pick half or place one)
@@ -331,7 +335,16 @@ public class GuiExtraSlotsOverlay extends Gui
         // TODO: handle ClickType.CLONE
         // TODO: handle ClickType.PICKUP_ALL
 
+        EntityPlayer player = this.mc.player;
+        SlotActionType.MouseButton slotMouseButton = SlotActionType.MouseButton.create(clickedButton, isButtonPickBlock);
+        SlotActionType slotAction = SlotActionType.create(player, slot, this.isShiftKeyDown(), slotMouseButton);
+        
+        SlotActionManager.instance.processActionOnClient(slotAction);
+        
+        // TODO: send network packet with SlotActionType for server-side processing 
+        // ModVisibleArmorSlots.instance.getNetworkManager().sendSlotActionToServer(slotAction);
 
+        /*
         if (playerMouseItemStack.isEmpty() && !slot.getStack().isEmpty() && slot.canTakeStack(this.mc.player)) {
             // ----------------------------------------------
             // Player is taking from the slot
@@ -361,6 +374,8 @@ public class GuiExtraSlotsOverlay extends Gui
             }
 
         }
+        */
+        
 
 
     }
@@ -373,7 +388,7 @@ public class GuiExtraSlotsOverlay extends Gui
     protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick)
     {
         LogHelper.trace("  mouseClickMove(%d, %d, %d, %d)", mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
-        // TODO
+        // TODO: mouseClickMove
     }
 
 
@@ -383,13 +398,14 @@ public class GuiExtraSlotsOverlay extends Gui
     protected void mouseReleased(int mouseX, int mouseY, int state)
     {
         LogHelper.trace("  mouseReleased(%d, %d, %d)", mouseX, mouseY, state);
-        // TODO
+        // TODO: mouseReleased
     }
 
 
     /**
      * Called when the mouse is clicked over a slot or outside the gui.
      */
+    @Deprecated
     protected void handleMouseClick(Slot slot, ClickType type)
     {
         final ItemStack playerItem = mc.player.inventory.getItemStack();
