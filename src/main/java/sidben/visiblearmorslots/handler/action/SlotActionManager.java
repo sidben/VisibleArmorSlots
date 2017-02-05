@@ -1,73 +1,91 @@
 package sidben.visiblearmorslots.handler.action;
 
 import java.util.HashMap;
-import sidben.visiblearmorslots.handler.InfoGuiOverlayDisplayParams;
-import sidben.visiblearmorslots.handler.action.SlotActionType.MouseButton;
+import java.util.Map;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Slot;
+import sidben.visiblearmorslots.ModVisibleArmorSlots;
 import sidben.visiblearmorslots.helper.LogHelper;
 
+
 /**
- *  Works like an event handler for slot actions.
+ * Works like an event handler for slot actions.
  */
-public class SlotActionManager 
+public class SlotActionManager
 {
-    
-    private ISlotActionResolver[] _actionResolvers = {
-            new SlotActionResolver_Clone(),
-            new SlotActionResolver_TryPlacingOneItemOnSlot(),
-            new SlotActionResolver_QuickTakeFromSlot(),
-            new SlotActionResolver_TakeHalfStack(),
-            new SlotActionResolver_TrySwapMouseWithSlot(),
-            new SlotActionResolver_DoesNothing() 
-        };
-    
-    
-    
-    public static SlotActionManager instance = new SlotActionManager(); 
-    
-    
-    private SlotActionManager() 
-    {
+
+    private final Map<Integer, ISlotActionResolver> _actionResolvers = new HashMap<Integer, ISlotActionResolver>();
+
+
+    public static SlotActionManager                 instance         = new SlotActionManager();
+
+
+    private SlotActionManager() {
+        int index = 0;
+
+        // NOTE: The order is essential
+        _actionResolvers.put(index++, new SlotActionResolver_Debug());
+        _actionResolvers.put(index++, new SlotActionResolver_Clone());
+        _actionResolvers.put(index++, new SlotActionResolver_TryPlacingOneItemOnSlot());
+        _actionResolvers.put(index++, new SlotActionResolver_QuickTakeFromSlot());
+        _actionResolvers.put(index++, new SlotActionResolver_TakeHalfStack());
+        _actionResolvers.put(index++, new SlotActionResolver_TrySwapMouseWithSlot());
+        _actionResolvers.put(index++, new SlotActionResolver_DoesNothing());
     }
-    
-    
-    
 
 
-    private ISlotActionResolver getResolverForAction(SlotActionType actionType)
+
+    private Map.Entry<Integer, ISlotActionResolver> getResolverForAction(SlotActionType actionType)
     {
-        // LogHelper.debug("***TEST*** %s", (MouseButton.ATTACK_BUTTON & (MouseButton.ATTACK_BUTTON | MouseButton.PLACE_BLOCK_BUTTON))));
-        
-        for (ISlotActionResolver actionResolver : this._actionResolvers)
-        {
-            if (actionResolver.isSatisfiedBy(actionType)) {
-                LogHelper.trace("SlotActionManager: Using [%s] to resolve %s", actionResolver, actionType);
-                return actionResolver;
+        // for (ISlotActionResolver actionResolver : this._actionResolvers.)
+        for (final Map.Entry<Integer, ISlotActionResolver> entry : this._actionResolvers.entrySet()) {
+            if (entry.getValue().isSatisfiedBy(actionType)) {
+                LogHelper.trace("SlotActionManager: Using [%s], index %d, to resolve %s", entry.getValue(), entry.getKey(), actionType);
+                return entry;
             }
         }
 
         return null;
     }
-    
-    
-    
-    /**
-     * Process what should happen on the server. 
-     */
-    public void processActionOnServer(SlotActionType actionType) 
+
+    private ISlotActionResolver getResolverByIndex(int actionResolverIndex)
     {
-        ISlotActionResolver actionResolver = this.getResolverForAction(actionType);
-        if (actionResolver != null) actionResolver.handleServerSide();
-    }
-    
-    
-    /**
-     * Process what should happen on the client. 
-     */
-    public void processActionOnClient(SlotActionType actionType) 
-    {
-        ISlotActionResolver actionResolver = this.getResolverForAction(actionType);
-        if (actionResolver != null) actionResolver.handleClientSide();
+        final ISlotActionResolver actionResolver = this._actionResolvers.getOrDefault(actionResolverIndex, new SlotActionResolver_DoesNothing());
+        LogHelper.trace("SlotActionManager: Using [%s] to resolve index %d", actionResolver, actionResolverIndex);
+        return actionResolver;
     }
 
-    
+
+
+    /**
+     * Process what should happen on the server.
+     */
+    public void processActionOnServer(int actionResolverIndex, Slot targetSlot, EntityPlayer player)
+    {
+        if (targetSlot == null || player == null) { return; }
+        final ISlotActionResolver actionResolver = this.getResolverByIndex(actionResolverIndex);
+        if (actionResolver != null) {
+            actionResolver.handleServerSide(targetSlot, player);
+        }
+    }
+
+
+    /**
+     * Process what should happen on the client.
+     */
+    public void processActionOnClient(SlotActionType actionType, Slot targetSlot, EntityPlayer player)
+    {
+        if (actionType == null || targetSlot == null || player == null || actionType == SlotActionType.EMPTY) { return; }
+
+        final Map.Entry<Integer, ISlotActionResolver> resolverEntry = this.getResolverForAction(actionType);
+        if (resolverEntry != null) {
+            final ISlotActionResolver actionResolver = resolverEntry.getValue();
+            actionResolver.handleClientSide(targetSlot, player);
+            if (actionResolver.requiresServerSideHandling()) {
+                ModVisibleArmorSlots.instance.getNetworkManager().sendSlotActionToServer(resolverEntry.getKey(), targetSlot);
+            }
+        }
+    }
+
+
 }

@@ -12,14 +12,12 @@ import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import sidben.visiblearmorslots.ModVisibleArmorSlots;
 import sidben.visiblearmorslots.client.gui.InfoExtraSlots.EnumSlotType;
 import sidben.visiblearmorslots.handler.action.SlotActionManager;
 import sidben.visiblearmorslots.handler.action.SlotActionType;
@@ -317,7 +315,6 @@ public class GuiExtraSlotsOverlay extends Gui
         LogHelper.trace("  mouseClicked(%d, %d, %d)", mouseX, mouseY, clickedButton);
 
 
-        final ItemStack playerMouseItemStack = this.mc.player.inventory.getItemStack();
         final boolean isButtonPickBlock = this.mc.gameSettings.keyBindPickBlock.isActiveAndMatches(clickedButton - 100);
         final Slot slot = this.getSlotAtPosition(mouseX, mouseY);
 
@@ -325,7 +322,7 @@ public class GuiExtraSlotsOverlay extends Gui
         if (slot == null) { return; }
 
 
-        // LogHelper.trace("    - slot has %s, can take: %s", slot.getStack(), slot.canTakeStack(this.mc.player));
+        // LogHelper.trace(" - slot has %s, can take: %s", slot.getStack(), slot.canTakeStack(this.mc.player));
 
 
         // TODO: handle right-click (pick half or place one)
@@ -335,49 +332,11 @@ public class GuiExtraSlotsOverlay extends Gui
         // TODO: handle ClickType.CLONE
         // TODO: handle ClickType.PICKUP_ALL
 
-        EntityPlayer player = this.mc.player;
-        SlotActionType.MouseButton slotMouseButton = SlotActionType.MouseButton.create(clickedButton, isButtonPickBlock);
-        SlotActionType slotAction = SlotActionType.create(player, slot, this.isShiftKeyDown(), slotMouseButton);
-        
-        SlotActionManager.instance.processActionOnClient(slotAction);
-        
-        // TODO: send network packet with SlotActionType for server-side processing 
-        // ModVisibleArmorSlots.instance.getNetworkManager().sendSlotActionToServer(slotAction);
+        final EntityPlayer player = this.mc.player;
+        final SlotActionType.MouseButton slotMouseButton = SlotActionType.MouseButton.create(clickedButton, isButtonPickBlock);
+        final SlotActionType slotAction = SlotActionType.create(player, slot, GuiExtraSlotsOverlay.isShiftKeyDown(), slotMouseButton);
 
-        /*
-        if (playerMouseItemStack.isEmpty() && !slot.getStack().isEmpty() && slot.canTakeStack(this.mc.player)) {
-            // ----------------------------------------------
-            // Player is taking from the slot
-            // ----------------------------------------------
-
-            if (isButtonPickBlock) {
-                if (this.mc.player.capabilities.isCreativeMode) {
-                    this.handleMouseClick(slot, ClickType.CLONE);
-                }
-            } else {
-                ClickType clicktype = ClickType.PICKUP;
-
-                if (GuiExtraSlotsOverlay.isShiftKeyDown()) {
-                    clicktype = ClickType.QUICK_MOVE;
-                }
-
-                this.handleMouseClick(slot, clicktype);
-            }
-
-
-        } else if (!playerMouseItemStack.isEmpty() && slot.isItemValid(playerMouseItemStack) && slot.canTakeStack(this.mc.player)) {
-            // ----------------------------------------------
-            // Player is placing on the empty slot
-            // ----------------------------------------------
-            if (slot.isItemValid(playerMouseItemStack)) {
-                this.handleMouseClick(slot, ClickType.PICKUP);
-            }
-
-        }
-        */
-        
-
-
+        SlotActionManager.instance.processActionOnClient(slotAction, slot, this.mc.player);
     }
 
 
@@ -399,29 +358,6 @@ public class GuiExtraSlotsOverlay extends Gui
     {
         LogHelper.trace("  mouseReleased(%d, %d, %d)", mouseX, mouseY, state);
         // TODO: mouseReleased
-    }
-
-
-    /**
-     * Called when the mouse is clicked over a slot or outside the gui.
-     */
-    @Deprecated
-    protected void handleMouseClick(Slot slot, ClickType type)
-    {
-        final ItemStack playerItem = mc.player.inventory.getItemStack();
-        LogHelper.trace("  handleMouseClick(%s, %s) - slot has %s, player has %s", slot, type, slot.getStack(), playerItem);
-
-        // TODO: make the item disappears instantly, like vanilla hotbar slot
-
-        if (type == ClickType.PICKUP) {
-            // Puts item on player mouse
-            mc.player.inventory.setItemStack(slot.getStack());
-            ModVisibleArmorSlots.instance.getNetworkManager().sendPickupFromExtraSlot(slot.getSlotIndex(), slot.slotNumber);
-
-            // Updates slot (reflect server-sided containers)
-            mc.player.inventory.setInventorySlotContents(slot.getSlotIndex(), playerItem);
-        }
-
     }
 
 
