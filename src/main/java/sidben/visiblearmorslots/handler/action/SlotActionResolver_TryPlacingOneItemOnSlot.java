@@ -1,19 +1,74 @@
 package sidben.visiblearmorslots.handler.action;
 
-import sidben.visiblearmorslots.helper.LogHelper;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 
 
 public class SlotActionResolver_TryPlacingOneItemOnSlot extends SlotActionResolver
 {
 
+    private boolean _needsServerSide = false;
+
+
+
+    @Override
+    public void handleClientSide(Slot targetSlot, EntityPlayer player)
+    {
+        this._needsServerSide = false;
+        this.placeOneItemOnSlot(targetSlot, player);
+    }
+
+
+    @Override
+    public void handleServerSide(Slot targetSlot, EntityPlayer player)
+    {
+        this.placeOneItemOnSlot(targetSlot, player);
+    }
+
+
+    private void placeOneItemOnSlot(Slot targetSlot, EntityPlayer player)
+    {
+
+        final ItemStack mouseStack = player.inventory.getItemStack();
+        final ItemStack slotStack = targetSlot.getStack();
+
+        if (slotStack.isEmpty()) {
+            // Slot is empty, place a new stack of one
+            final boolean canPlaceOnSlot = targetSlot.isItemValid(mouseStack) && !mouseStack.isEmpty();
+            if (canPlaceOnSlot) {
+                targetSlot.putStack(mouseStack.splitStack(1));
+                this._needsServerSide = true;
+            }
+
+
+        } else {
+
+            // Mouse and slot have items, place one
+            final boolean stacksCompatible = ItemStack.areItemsEqual(mouseStack, slotStack) 
+                    && mouseStack.getMetadata() == slotStack.getMetadata()
+                    && ItemStack.areItemStackTagsEqual(mouseStack, slotStack);
+            final boolean canCombineStacks = slotStack.getMaxStackSize() > 1 && slotStack.getCount() < slotStack.getMaxStackSize();
+
+            if (stacksCompatible && canCombineStacks) {
+                mouseStack.shrink(1);
+                slotStack.grow(1);
+                this._needsServerSide = true;
+            }
+
+        }
+
+    }
+
+
 
     @Override
     public boolean requiresServerSideHandling()
     {
-        return true;
+        return _needsServerSide;
     }
-    
-    
+
+
     @Override
     protected boolean isSatisfiedByInternal(SlotActionType action)
     {
