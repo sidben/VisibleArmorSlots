@@ -9,6 +9,10 @@ import sidben.visiblearmorslots.helper.LogHelper;
 
 public class SlotActionResolver_Debug extends SlotActionResolver
 {
+    
+    private boolean _requiresServer = true;
+    
+    
 
     @Override
     public void handleClientSide(Slot targetSlot, EntityPlayer player)
@@ -18,6 +22,10 @@ public class SlotActionResolver_Debug extends SlotActionResolver
             LogHelper.debug("*** %s", player.inventoryContainer);
             LogHelper.debug("*** %s", player.inventory);
             LogHelper.debug("*** %s", player.openContainer);
+            LogHelper.debug("*** %s", player.openContainer.getClass().getName().contains("ContainerCreative"));
+            
+            boolean unnecessarilyLongVariableToDetermineIfThePlayerIsOnCreativeModeWithPersonalContainerThatDontRequireServerSideHandling = player.openContainer.getClass().getName().contains("ContainerCreative");
+            this._requiresServer = !unnecessarilyLongVariableToDetermineIfThePlayerIsOnCreativeModeWithPersonalContainerThatDontRequireServerSideHandling;
 
 
             final int slotIndex = 40;
@@ -40,6 +48,9 @@ public class SlotActionResolver_Debug extends SlotActionResolver
                 final ItemStack diamonds = new ItemStack(Items.DIAMOND, 3);
                 offHandSlot.putStack(diamonds);
 
+                if (unnecessarilyLongVariableToDetermineIfThePlayerIsOnCreativeModeWithPersonalContainerThatDontRequireServerSideHandling) {
+                    player.inventoryContainer.detectAndSendChanges();
+                }
             }
 
             LogHelper.debug("*** (c2) Slot index %d, number %d, has %s", offHandSlot.getSlotIndex(), offHandSlot.slotNumber, offHandSlot.getStack());
@@ -107,7 +118,7 @@ public class SlotActionResolver_Debug extends SlotActionResolver
     @Override
     public boolean requiresServerSideHandling()
     {
-        return true;
+        return _requiresServer;
     }
 
 

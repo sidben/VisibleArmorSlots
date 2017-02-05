@@ -80,8 +80,14 @@ public class SlotActionManager
         final Map.Entry<Integer, ISlotActionResolver> resolverEntry = this.getResolverForAction(actionType);
         if (resolverEntry != null) {
             final ISlotActionResolver actionResolver = resolverEntry.getValue();
+            final boolean isPlayerOnCreativeInventory = player.openContainer.getClass().getName().contains("ContainerCreative");
+            
             actionResolver.handleClientSide(targetSlot, player);
-            if (actionResolver.requiresServerSideHandling()) {
+
+            // NOTE: the creative mode player inventory must be client-side only
+            if (isPlayerOnCreativeInventory) {
+                player.inventoryContainer.detectAndSendChanges();
+            } else if (actionResolver.requiresServerSideHandling()) {
                 ModVisibleArmorSlots.instance.getNetworkManager().sendSlotActionToServer(resolverEntry.getKey(), targetSlot);
             }
         }
