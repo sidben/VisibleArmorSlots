@@ -30,6 +30,8 @@ public class SlotActionResolver_TakeHalfStack extends SlotActionResolver
      */
     private void takeHalfStack(Slot targetSlot, EntityPlayer player)
     {
+        if (targetSlot.getStack().isEmpty() || !targetSlot.canTakeStack(player)) { return; }
+
         final int amount = (targetSlot.getStack().getCount() + 1) / 2;
 
         final ItemStack slotStack = targetSlot.getStack();
