@@ -1,5 +1,6 @@
 package sidben.visiblearmorslots.handler;
 
+import javax.annotation.concurrent.Immutable;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiShulkerBox;
@@ -8,6 +9,7 @@ import sidben.visiblearmorslots.config.ConfigurationHandler;
 import sidben.visiblearmorslots.helper.LogHelper;
 
 
+@Immutable
 public class InfoGuiOverlayDisplayParams
 {
 

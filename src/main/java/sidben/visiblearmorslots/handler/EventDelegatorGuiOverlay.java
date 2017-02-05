@@ -2,13 +2,16 @@ package sidben.visiblearmorslots.handler;
 
 import java.util.HashMap;
 import org.lwjgl.input.Mouse;
+import com.google.common.collect.Maps;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraftforge.client.event.GuiScreenEvent.BackgroundDrawnEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.DrawScreenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
+import net.minecraftforge.client.event.GuiScreenEvent.KeyboardInputEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.MouseInputEvent;
+import net.minecraftforge.client.event.GuiScreenEvent.PotionShiftEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -27,6 +30,7 @@ public class EventDelegatorGuiOverlay
 
     private static GuiExtraSlotsOverlay                         _guiOverlay;
     private static HashMap<String, InfoGuiOverlayDisplayParams> _cacheDisplayParams = new HashMap<String, InfoGuiOverlayDisplayParams>();
+    // TODO: check Maps.newIdentityHashMap()
 
 
 
@@ -139,6 +143,18 @@ public class EventDelegatorGuiOverlay
 
         this.getGuiOverlay().drawForeground(event.getMouseX(), event.getMouseY());
     }
+    
+
+    
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public void onPotionShiftEvent(PotionShiftEvent event)
+    {
+        if (!this.shouldDisplayGuiOverlay(event.getGui())) { return; }
+        
+        // TODO: handle potion pushing player inventory to the side
+    }
+
 
 
 
@@ -159,6 +175,15 @@ public class EventDelegatorGuiOverlay
         }
 
     }
+    
+    
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public void onKeyboardInputEvent(KeyboardInputEvent.Post event)
+    {
+        // TODO: for future use (manual gui overlay positioning)
+    }
+    
 
 
     @SubscribeEvent
@@ -170,8 +195,6 @@ public class EventDelegatorGuiOverlay
         }
     }
 
-
-
-    // TODO: handle potion pushing player inventory to the side
+    
 
 }

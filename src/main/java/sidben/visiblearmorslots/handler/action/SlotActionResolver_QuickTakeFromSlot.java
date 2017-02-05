@@ -6,6 +6,14 @@ import sidben.visiblearmorslots.helper.LogHelper;
 public class SlotActionResolver_QuickTakeFromSlot extends SlotActionResolver
 {
 
+
+    @Override
+    public boolean requiresServerSideHandling()
+    {
+        return true;
+    }
+    
+    
     @Override
     protected boolean isSatisfiedByInternal(SlotActionType action)
     {

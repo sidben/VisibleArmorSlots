@@ -47,6 +47,8 @@ public class SlotActionResolver_TrySwapMouseWithSlot extends SlotActionResolver
             player.inventory.setItemStack(targetSlot.getStack());
             targetSlot.putStack(playerMouseItem);
         }
+        
+        // TODO: combine stacks
     }
 
 
