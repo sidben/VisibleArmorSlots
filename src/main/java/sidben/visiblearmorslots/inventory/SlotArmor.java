@@ -1,5 +1,6 @@
 package sidben.visiblearmorslots.inventory;
 
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -63,6 +64,14 @@ public class SlotArmor extends Slot
         return ItemArmor.EMPTY_SLOT_NAMES[slotTypeIndex];
     }
 
+
+
+    @Override
+    public boolean canTakeStack(EntityPlayer player)
+    {
+        final ItemStack itemstack = this.getStack();
+        return !itemstack.isEmpty() && !player.isCreative() && EnchantmentHelper.hasBindingCurse(itemstack) ? false : super.canTakeStack(player);
+    }
 
 
 }

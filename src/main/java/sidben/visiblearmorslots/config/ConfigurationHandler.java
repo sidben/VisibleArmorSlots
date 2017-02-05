@@ -1,4 +1,4 @@
-package sidben.visiblearmorslots.handler;
+package sidben.visiblearmorslots.config;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -14,12 +14,12 @@ import sidben.visiblearmorslots.reference.Reference;
 
 public class ConfigurationHandler
 {
-    public static final String  POSITION_LEFT       = "LEFT";
-    public static final String  POSITION_RIGHT      = "RIGHT";
-    public static final String  CATEGORY_DEBUG      = "debug";
-    public static final String  MINECRAFT_NAMESPACE = "net.minecraft";
+    public static final String  POSITION_LEFT  = "LEFT";
+    public static final String  POSITION_RIGHT = "RIGHT";
+    public static final String  CATEGORY_DEBUG = "debug";
 
-    public static boolean       onDebug;                                                     // TODO: read-only accessors
+    // TODO: read-only accessors
+    public static boolean       onDebug;
     public static String        extraSlotsSide;
     public static int           extraSlotsMargin;
     public static String[]      blacklistedModIds;
@@ -27,20 +27,17 @@ public class ConfigurationHandler
 
 
 
-    // Instance
     public static Configuration config;
 
 
 
     public static void init(File configFile)
     {
-
         // Create configuration object from config file
         if (config == null) {
             config = new Configuration(configFile);
             loadConfig();
         }
-
     }
 
 
@@ -84,7 +81,7 @@ public class ConfigurationHandler
 
                 if (blacklistedModId.equalsIgnoreCase("minecraft")) {
                     LogHelper.info("  - [%s] :(", blacklistedModId);
-                    modPackages.add(MINECRAFT_NAMESPACE);
+                    modPackages.add("net.minecraft");
                 }
 
                 else {
