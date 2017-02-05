@@ -1,8 +1,5 @@
 package sidben.visiblearmorslots.handler.action;
 
-import sidben.visiblearmorslots.helper.LogHelper;
-
-
 public class SlotActionResolver_DoesNothing extends SlotActionResolver
 {
 

@@ -1,5 +1,6 @@
 package sidben.visiblearmorslots.handler.action;
 
+import java.util.EnumSet;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -47,7 +48,7 @@ public class SlotActionResolver_TrySwapMouseWithSlot extends SlotActionResolver
             player.inventory.setItemStack(targetSlot.getStack());
             targetSlot.putStack(playerMouseItem);
         }
-        
+
         // TODO: combine stacks
     }
 
@@ -63,9 +64,8 @@ public class SlotActionResolver_TrySwapMouseWithSlot extends SlotActionResolver
     @Override
     protected boolean isSatisfiedByInternal(SlotActionType action)
     {
-        // TODO: bitwise operator
-        if ((action.mouseButton.equals(MouseButton.ATTACK_BUTTON) || action.mouseButton.equals(MouseButton.PLACE_BLOCK_BUTTON))
-                && (action.playerMouseHasItemStack || action.slotHasItemStack)) { return true; }
+        final EnumSet<MouseButton> validButtons = EnumSet.of(MouseButton.ATTACK_BUTTON, MouseButton.PLACE_BLOCK_BUTTON);
+        if (validButtons.contains(action.mouseButton) && (action.playerMouseHasItemStack || action.slotHasItemStack)) { return true; }
         return false;
     }
 

@@ -2,7 +2,6 @@ package sidben.visiblearmorslots.handler;
 
 import java.util.HashMap;
 import org.lwjgl.input.Mouse;
-import com.google.common.collect.Maps;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -30,7 +29,6 @@ public class EventDelegatorGuiOverlay
 
     private static GuiExtraSlotsOverlay                         _guiOverlay;
     private static HashMap<String, InfoGuiOverlayDisplayParams> _cacheDisplayParams = new HashMap<String, InfoGuiOverlayDisplayParams>();
-    // TODO: check Maps.newIdentityHashMap()
 
 
 
@@ -143,18 +141,17 @@ public class EventDelegatorGuiOverlay
 
         this.getGuiOverlay().drawForeground(event.getMouseX(), event.getMouseY());
     }
-    
 
-    
+
+
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onPotionShiftEvent(PotionShiftEvent event)
     {
         if (!this.shouldDisplayGuiOverlay(event.getGui())) { return; }
-        
+
         // TODO: handle potion pushing player inventory to the side
     }
-
 
 
 
@@ -175,15 +172,15 @@ public class EventDelegatorGuiOverlay
         }
 
     }
-    
-    
+
+
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onKeyboardInputEvent(KeyboardInputEvent.Post event)
     {
         // TODO: for future use (manual gui overlay positioning)
     }
-    
+
 
 
     @SubscribeEvent
@@ -195,6 +192,6 @@ public class EventDelegatorGuiOverlay
         }
     }
 
-    
+
 
 }

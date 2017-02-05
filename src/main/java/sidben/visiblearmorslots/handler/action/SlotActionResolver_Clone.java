@@ -3,7 +3,6 @@ package sidben.visiblearmorslots.handler.action;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import sidben.visiblearmorslots.helper.LogHelper;
 
 
 public class SlotActionResolver_Clone extends SlotActionResolver
@@ -29,22 +28,22 @@ public class SlotActionResolver_Clone extends SlotActionResolver
      */
     private void cloneStack(Slot targetSlot, EntityPlayer player)
     {
-        if (targetSlot.getStack().isEmpty()) return;
-        
-        ItemStack clonedStack = targetSlot.getStack().copy();
+        if (targetSlot.getStack().isEmpty()) { return; }
+
+        final ItemStack clonedStack = targetSlot.getStack().copy();
         clonedStack.setCount(clonedStack.getMaxStackSize());
         player.inventory.setItemStack(clonedStack);
     }
 
-    
-    
+
+
     @Override
     public boolean requiresServerSideHandling()
     {
         return true;
     }
-    
-    
+
+
     @Override
     protected boolean isSatisfiedByInternal(SlotActionType action)
     {

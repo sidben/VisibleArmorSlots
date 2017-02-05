@@ -3,6 +3,7 @@ package sidben.visiblearmorslots.handler.action;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import sidben.visiblearmorslots.util.ItemStackHelper;
 
 
 public class SlotActionResolver_TryPlacingOneItemOnSlot extends SlotActionResolver
@@ -45,12 +46,10 @@ public class SlotActionResolver_TryPlacingOneItemOnSlot extends SlotActionResolv
         } else {
 
             // Mouse and slot have items, place one
-            final boolean stacksCompatible = ItemStack.areItemsEqual(mouseStack, slotStack) 
-                    && mouseStack.getMetadata() == slotStack.getMetadata()
-                    && ItemStack.areItemStackTagsEqual(mouseStack, slotStack);
-            final boolean canCombineStacks = slotStack.getMaxStackSize() > 1 && slotStack.getCount() < slotStack.getMaxStackSize();
+            final boolean stacksCompatible = ItemStackHelper.areStacksCompatible(mouseStack, slotStack);
+            final boolean isSlotFull = ItemStackHelper.isStackFull(slotStack);
 
-            if (stacksCompatible && canCombineStacks) {
+            if (stacksCompatible && !isSlotFull) {
                 mouseStack.shrink(1);
                 slotStack.grow(1);
                 this._needsServerSide = true;

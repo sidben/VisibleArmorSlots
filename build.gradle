@@ -23,8 +23,11 @@ configFile.withReader {
 
 
 version = config.mod_version
-group= "sidben.visiblearmorslots"
 archivesBaseName = config.mod_prefix + "["+ config.minecraft_version +"]"
+
+//jar {
+//    manifest { attributes 'FMLAT': 'visiblearmorslots_at.cfg' }
+//}
 
 minecraft {
     version = config.minecraft_version + "-" + config.forge_version

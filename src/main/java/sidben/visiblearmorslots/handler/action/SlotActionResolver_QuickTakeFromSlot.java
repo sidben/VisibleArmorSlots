@@ -4,10 +4,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
+import sidben.visiblearmorslots.util.ItemStackHelper;
 
 
 /**
- * Moves all items from the selected slot to the player inventory or hotbar. 
+ * Moves all items from the selected slot to the player inventory or hotbar.
  */
 public class SlotActionResolver_QuickTakeFromSlot extends SlotActionResolver
 {
@@ -45,10 +46,7 @@ public class SlotActionResolver_QuickTakeFromSlot extends SlotActionResolver
             final ItemStack slotStack = slot.getStack();
 
             if (slot.isItemValid(originalStack)) {
-                final boolean stacksCompatible = ItemStack.areItemsEqual(originalStack, slotStack) 
-                        && originalStack.getMetadata() == slotStack.getMetadata()
-                        && ItemStack.areItemStackTagsEqual(originalStack, slotStack);
-
+                final boolean stacksCompatible = ItemStackHelper.areStacksCompatible(originalStack, slotStack);
                 final int amountTheSlotCanTake = Math.max(slotStack.getMaxStackSize() - slotStack.getCount(), 0);
                 final int amountTheSlotWillTake = stacksCompatible ? MathHelper.clamp(originalStack.getCount(), 0, amountTheSlotCanTake) : 0;
 

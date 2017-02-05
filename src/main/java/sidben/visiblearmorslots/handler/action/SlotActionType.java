@@ -1,14 +1,16 @@
 package sidben.visiblearmorslots.handler.action;
 
+import javax.annotation.concurrent.Immutable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 
 
+@Immutable
 public class SlotActionType
 {
 
-    public enum MouseButton         // TODO: research how to make this class compatible with bitwise operations
-    {
+    @Immutable
+    public enum MouseButton {
         ATTACK_BUTTON(0),
         PLACE_BLOCK_BUTTON(1),
         PICK_BLOCK_BUTTON(2),
@@ -31,13 +33,11 @@ public class SlotActionType
     }
 
 
-    public static SlotActionType EMPTY = new SlotActionType(false, false, false, false, false, MouseButton.INVALID);
+    public static SlotActionType EMPTY = new SlotActionType(false, false, false, false, MouseButton.INVALID);
 
 
 
     public final boolean         playerMouseHasItemStack;
-    @Deprecated // TODO: remove, I can check for this on the swap action handler
-    public final boolean         playerCanTakeFromSlot;
     public final boolean         playerInCreativeMode;
     public final boolean         slotHasItemStack;
     public final boolean         isShiftPressed;
@@ -45,9 +45,8 @@ public class SlotActionType
 
 
 
-    private SlotActionType(boolean playerMouseHasItemStack, boolean playerCanTakeFromSlot, boolean playerInCreativeMode, boolean slotHasItemStack, boolean isShiftPressed, MouseButton mouseButton) {
+    private SlotActionType(boolean playerMouseHasItemStack, boolean playerInCreativeMode, boolean slotHasItemStack, boolean isShiftPressed, MouseButton mouseButton) {
         this.playerMouseHasItemStack = playerMouseHasItemStack;
-        this.playerCanTakeFromSlot = playerCanTakeFromSlot;
         this.playerInCreativeMode = playerInCreativeMode;
         this.slotHasItemStack = slotHasItemStack;
         this.isShiftPressed = isShiftPressed;
@@ -58,13 +57,13 @@ public class SlotActionType
 
     public static SlotActionType create(EntityPlayer player, Slot slot, boolean shiftPressed, MouseButton mouseButton)
     {
-        if (player != null && slot != null) { return new SlotActionType(
-                !player.inventory.getItemStack().isEmpty(), 
-                slot.canTakeStack(player), 
-                player.capabilities.isCreativeMode, 
-                slot.getHasStack(),
-                shiftPressed, 
-                mouseButton); }
+        if (player != null
+                && slot != null) { return new SlotActionType(
+                        !player.inventory.getItemStack().isEmpty(), 
+                        player.capabilities.isCreativeMode, 
+                        slot.getHasStack(), 
+                        shiftPressed, 
+                        mouseButton); }
 
         return SlotActionType.EMPTY;
     }
@@ -79,7 +78,6 @@ public class SlotActionType
 
         final SlotActionType otherConverted = (SlotActionType) other;
         if (this.isShiftPressed != otherConverted.isShiftPressed) { return false; }
-        if (this.playerCanTakeFromSlot != otherConverted.playerCanTakeFromSlot) { return false; }
         if (this.playerInCreativeMode != otherConverted.playerInCreativeMode) { return false; }
         if (this.playerMouseHasItemStack != otherConverted.playerMouseHasItemStack) { return false; }
         if (this.slotHasItemStack != otherConverted.slotHasItemStack) { return false; }
@@ -95,7 +93,6 @@ public class SlotActionType
         int hashCode = 17;
 
         hashCode = hashCode * 59 + Boolean.valueOf(this.isShiftPressed).hashCode();
-        hashCode = hashCode * 59 + Boolean.valueOf(this.playerCanTakeFromSlot).hashCode();
         hashCode = hashCode * 59 + Boolean.valueOf(this.playerInCreativeMode).hashCode();
         hashCode = hashCode * 59 + Boolean.valueOf(this.playerMouseHasItemStack).hashCode();
         hashCode = hashCode * 59 + Boolean.valueOf(this.slotHasItemStack).hashCode();
@@ -113,7 +110,6 @@ public class SlotActionType
 
         r.append("SlotActionType [Hash code: " + this.hashCode());
         r.append(" - playerMouseHasItemStack: " + this.playerMouseHasItemStack);
-        r.append(", playerCanTakeFromSlot: " + this.playerCanTakeFromSlot);
         r.append(", playerInCreativeMode: " + this.playerInCreativeMode);
         r.append(", slotHasItemStack: " + this.slotHasItemStack);
         r.append(", isShiftPressed: " + this.isShiftPressed);

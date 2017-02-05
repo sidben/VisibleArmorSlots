@@ -322,14 +322,9 @@ public class GuiExtraSlotsOverlay extends Gui
         if (slot == null) { return; }
 
 
-        // LogHelper.trace(" - slot has %s, can take: %s", slot.getStack(), slot.canTakeStack(this.mc.player));
 
-
-        // TODO: handle right-click (pick half or place one)
         // TODO: handle dragging
         // TODO: handle ClickType.SWAP
-        // TODO: handle ClickType.QUICK_MOVE
-        // TODO: handle ClickType.CLONE
         // TODO: handle ClickType.PICKUP_ALL
 
         final EntityPlayer player = this.mc.player;

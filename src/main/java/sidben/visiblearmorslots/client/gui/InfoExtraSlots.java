@@ -1,10 +1,13 @@
 package sidben.visiblearmorslots.client.gui;
 
+import javax.annotation.concurrent.Immutable;
+
 
 /**
  * Holds information about the type, position and indexes of the armor and off-hand slots.
  *
  */
+@Immutable
 public class InfoExtraSlots
 {
 
