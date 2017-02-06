@@ -28,8 +28,6 @@ import sidben.visiblearmorslots.inventory.SlotOffHand;
 import sidben.visiblearmorslots.reference.Reference;
 
 
-// TODO: fix item placing on creative inventory
-
 
 /**
  * This class simulates a simplified GuiContainer that runs only on the client,
