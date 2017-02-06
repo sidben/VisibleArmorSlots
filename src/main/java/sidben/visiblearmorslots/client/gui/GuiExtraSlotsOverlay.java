@@ -29,7 +29,6 @@ import sidben.visiblearmorslots.reference.Reference;
 
 
 // TODO: fix item placing on creative inventory
-// TODO: test spectator mode (should not display extra slots)
 
 
 /**

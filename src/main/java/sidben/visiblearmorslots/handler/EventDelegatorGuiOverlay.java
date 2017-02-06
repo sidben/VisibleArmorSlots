@@ -2,9 +2,9 @@ package sidben.visiblearmorslots.handler;
 
 import java.util.HashMap;
 import org.lwjgl.input.Mouse;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraftforge.client.event.GuiScreenEvent.BackgroundDrawnEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.DrawScreenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
@@ -49,7 +49,7 @@ public class EventDelegatorGuiOverlay
     {
         if (gui == null) { return false; }
         if (!(gui instanceof GuiContainer)) { return false; }
-        if (gui instanceof GuiInventory && gui.mc.player.isCreative()) { return false; }
+        if (Minecraft.getMinecraft().player.isSpectator()) { return false; }
 
         final InfoGuiOverlayDisplayParams displayParams = getDisplayParamsForGui(gui);
         return displayParams.getShouldDisplay();

@@ -62,7 +62,7 @@ public class SlotActionManager
      */
     public void processActionOnServer(int actionResolverIndex, Slot targetSlot, EntityPlayer player)
     {
-        if (targetSlot == null || player == null) { return; }
+        if (targetSlot == null || player == null || player.isSpectator()) { return; }
         final ISlotActionResolver actionResolver = this.getResolverByIndex(actionResolverIndex);
         if (actionResolver != null) {
             actionResolver.handleServerSide(targetSlot, player);
@@ -75,7 +75,7 @@ public class SlotActionManager
      */
     public void processActionOnClient(SlotActionType actionType, Slot targetSlot, EntityPlayer player)
     {
-        if (actionType == null || targetSlot == null || player == null || actionType == SlotActionType.EMPTY) { return; }
+        if (actionType == null || targetSlot == null || player == null || actionType == SlotActionType.EMPTY || player.isSpectator()) { return; }
 
         final Map.Entry<Integer, ISlotActionResolver> resolverEntry = this.getResolverForAction(actionType);
         if (resolverEntry != null) {
