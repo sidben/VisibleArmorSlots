@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.EntityPlayer;
@@ -136,6 +137,7 @@ public class GuiExtraSlotsOverlay extends Gui
     {
         this.theSlot = null;
 
+        RenderHelper.enableGUIStandardItemLighting();
         GlStateManager.pushMatrix();
         GlStateManager.translate(this.guiLeft, this.guiTop, 0.0F);
 
@@ -194,15 +196,6 @@ public class GuiExtraSlotsOverlay extends Gui
         final ItemStack playerItemStack = inventoryplayer.getItemStack();
 
 
-        // Redraws the mouse item stack over the hover box
-        if (!playerItemStack.isEmpty() && this.theSlot != null) {
-            this.itemRender.zLevel = 240.0F;
-            itemRender.renderItemAndEffectIntoGUI(mc.player, playerItemStack, mouseX - 8, mouseY - 8);
-            itemRender.renderItemOverlayIntoGUI(fontRendererObj, playerItemStack, mouseX - 8, mouseY - 8, null);
-            this.itemRender.zLevel = 0.0F;
-        }
-
-
         // Tooltip
         if (playerItemStack.isEmpty() && this.theSlot != null && this.theSlot.getHasStack()) {
             final ItemStack slotStack = this.theSlot.getStack();
@@ -224,8 +217,10 @@ public class GuiExtraSlotsOverlay extends Gui
             final TextureAtlasSprite textureatlassprite = slotIn.getBackgroundSprite();
 
             if (textureatlassprite != null) {
+                GlStateManager.disableLighting();
                 this.mc.getTextureManager().bindTexture(slotIn.getBackgroundLocation());
                 this.drawTexturedModalRect(x, y, textureatlassprite, 16, 16);
+                GlStateManager.enableLighting();
             }
 
         }
