@@ -2,7 +2,6 @@ package sidben.visiblearmorslots.handler;
 
 import java.util.HashMap;
 import org.lwjgl.input.Mouse;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -17,8 +16,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sidben.visiblearmorslots.client.gui.GuiExtraSlotsOverlay;
-import sidben.visiblearmorslots.helper.LogHelper;
-import sidben.visiblearmorslots.reference.Reference;
+import sidben.visiblearmorslots.main.Reference;
+import sidben.visiblearmorslots.util.LogHelper;
 
 
 /**

@@ -46,6 +46,7 @@ public class SlotActionResolver_QuickTakeFromSlot extends SlotActionResolver
             final ItemStack slotStack = slot.getStack();
 
             if (slot.isItemValid(originalStack)) {
+                // TODO: create a helper method maxTransferAmount
                 final boolean stacksCompatible = ItemStackHelper.areStacksCompatible(originalStack, slotStack);
                 final int amountTheSlotCanTake = Math.max(slotStack.getMaxStackSize() - slotStack.getCount(), 0);
                 final int amountTheSlotWillTake = stacksCompatible ? MathHelper.clamp(originalStack.getCount(), 0, amountTheSlotCanTake) : 0;

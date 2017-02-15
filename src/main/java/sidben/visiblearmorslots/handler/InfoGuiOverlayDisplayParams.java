@@ -5,8 +5,8 @@ import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiShulkerBox;
 import sidben.visiblearmorslots.client.gui.GuiExtraSlotsOverlay;
-import sidben.visiblearmorslots.config.ConfigurationHandler;
-import sidben.visiblearmorslots.helper.LogHelper;
+import sidben.visiblearmorslots.main.ModConfig;
+import sidben.visiblearmorslots.util.LogHelper;
 
 
 @Immutable
@@ -59,10 +59,10 @@ public class InfoGuiOverlayDisplayParams
         int overlayX = 0;
         int overlayY = 0;
 
-        if (ConfigurationHandler.extraSlotsSide.equals(ConfigurationHandler.POSITION_LEFT)) {
-            overlayX = gui.getGuiLeft() - GuiExtraSlotsOverlay.GUI_WIDTH - ConfigurationHandler.extraSlotsMargin;
-        } else if (ConfigurationHandler.extraSlotsSide.equals(ConfigurationHandler.POSITION_RIGHT)) {
-            overlayX = gui.getGuiLeft() + gui.getXSize() + ConfigurationHandler.extraSlotsMargin;
+        if (ModConfig.extraSlotsSide().equals(ModConfig.POSITION_LEFT)) {
+            overlayX = gui.getGuiLeft() - GuiExtraSlotsOverlay.GUI_WIDTH - ModConfig.extraSlotsMargin();
+        } else if (ModConfig.extraSlotsSide().equals(ModConfig.POSITION_RIGHT)) {
+            overlayX = gui.getGuiLeft() + gui.getXSize() + ModConfig.extraSlotsMargin();
         }
         overlayY = gui.getGuiTop() + gui.getYSize() - GuiExtraSlotsOverlay.GUI_HEIGHT - 4;
 
@@ -81,10 +81,10 @@ public class InfoGuiOverlayDisplayParams
 
     protected final static boolean isBlacklisted(GuiContainer gui)
     {
-        if (ConfigurationHandler.blacklistedModPackages.length > 0) {
+        if (ModConfig.blacklistedModPackages().length > 0) {
             final String className = gui.getClass().getName();
 
-            for (final String blacklisted : ConfigurationHandler.blacklistedModPackages) {
+            for (final String blacklisted : ModConfig.blacklistedModPackages()) {
                 if (className.startsWith(blacklisted + ".")) {
                     LogHelper.trace("  This gui is blacklisted: [%s]", className);
                     return true;

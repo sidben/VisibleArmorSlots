@@ -1,9 +1,8 @@
 package sidben.visiblearmorslots.proxy;
 
 import net.minecraftforge.common.MinecraftForge;
-import sidben.visiblearmorslots.ModVisibleArmorSlots;
-import sidben.visiblearmorslots.config.ConfigurationHandler;
 import sidben.visiblearmorslots.handler.EventHandlerPlayer;
+import sidben.visiblearmorslots.network.NetworkManager;
 
 
 /*
@@ -17,7 +16,7 @@ public abstract class ProxyCommon implements IProxy
     public void pre_initialize()
     {
         // Register network messages
-        ModVisibleArmorSlots.instance.getNetworkManager().registerMessages();
+        NetworkManager.registerMessages();
     }
 
 
@@ -32,7 +31,6 @@ public abstract class ProxyCommon implements IProxy
     @Override
     public void post_initialize()
     {
-        ConfigurationHandler.updateBlacklistedMods();
     }
 
 

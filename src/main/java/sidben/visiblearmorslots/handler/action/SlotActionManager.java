@@ -5,7 +5,8 @@ import java.util.Map;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import sidben.visiblearmorslots.ModVisibleArmorSlots;
-import sidben.visiblearmorslots.helper.LogHelper;
+import sidben.visiblearmorslots.network.NetworkManager;
+import sidben.visiblearmorslots.util.LogHelper;
 
 
 /**
@@ -88,7 +89,7 @@ public class SlotActionManager
             if (isPlayerOnCreativeInventory) {
                 player.inventoryContainer.detectAndSendChanges();
             } else if (actionResolver.requiresServerSideHandling()) {
-                ModVisibleArmorSlots.instance.getNetworkManager().sendSlotActionToServer(resolverEntry.getKey(), targetSlot);
+                NetworkManager.sendSlotActionToServer(resolverEntry.getKey(), targetSlot);
             }
         }
     }

@@ -1,62 +1,57 @@
-package sidben.visiblearmorslots.config;
+package sidben.visiblearmorslots.main;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import sidben.visiblearmorslots.helper.LogHelper;
-import sidben.visiblearmorslots.reference.Reference;
+import sidben.visiblearmorslots.util.LogHelper;
 
 
-public class ConfigurationHandler
+public class ModConfig
 {
-    public static final String  POSITION_LEFT  = "LEFT";
-    public static final String  POSITION_RIGHT = "RIGHT";
-    public static final String  CATEGORY_DEBUG = "debug";
+    public static final String   POSITION_LEFT  = "LEFT";
+    public static final String   POSITION_RIGHT = "RIGHT";
+    public static final String   CATEGORY_DEBUG = "debug";
 
-    // TODO: read-only accessors
-    public static boolean       onDebug;
-    public static String        extraSlotsSide;
-    public static int           extraSlotsMargin;
-    public static String[]      blacklistedModIds;
-    public static String[]      blacklistedModPackages;
-
-
-
-    public static Configuration config;
+    private static Configuration _config;
+    private static boolean       _onDebug;
+    private static String        _extraSlotsSide;
+    private static int           _extraSlotsMargin;
+    private static String[]      _blacklistedModIds;
+    private static String[]      _blacklistedModPackages;
 
 
 
     public static void init(File configFile)
     {
         // Create configuration object from config file
-        if (config == null) {
-            config = new Configuration(configFile);
-            loadConfig();
+        if (_config == null) {
+            _config = new Configuration(configFile);
+            refreshConfig();
         }
     }
 
 
 
-    private static void loadConfig()
+    public static void refreshConfig()
     {
         final String[] slotSidesValidEntries = new String[] { POSITION_LEFT, POSITION_RIGHT };
 
         // Load properties
-        onDebug = config.getBoolean("on_debug", CATEGORY_DEBUG, false, "");
-        extraSlotsSide = config.getString("slots_side", Configuration.CATEGORY_GENERAL, POSITION_LEFT, "", slotSidesValidEntries);
-        extraSlotsMargin = config.getInt("slots_margin", Configuration.CATEGORY_GENERAL, 2, 0, 128, "");
-        blacklistedModIds = config.getStringList("blacklisted_mod_ids", Configuration.CATEGORY_GENERAL, new String[0], "");
+        _onDebug = _config.getBoolean("on_debug", CATEGORY_DEBUG, false, "");
+        _extraSlotsSide = _config.getString("slots_side", Configuration.CATEGORY_GENERAL, POSITION_LEFT, "", slotSidesValidEntries);
+        _extraSlotsMargin = _config.getInt("slots_margin", Configuration.CATEGORY_GENERAL, 2, 0, 128, "");
+        _blacklistedModIds = _config.getStringList("blacklisted_mod_ids", Configuration.CATEGORY_GENERAL, new String[0], "");
 
         // saving the configuration to its file
-        if (config.hasChanged()) {
-            config.save();
+        if (_config.hasChanged()) {
+            _config.save();
         }
     }
+
 
 
 
@@ -66,8 +61,8 @@ public class ConfigurationHandler
      */
     public static void updateBlacklistedMods()
     {
-        blacklistedModPackages = new String[0];
-        if (blacklistedModIds.length == 0) { return; }
+        _blacklistedModPackages = new String[0];
+        if (_blacklistedModIds.length == 0) { return; }
 
 
         final List<String> modPackages = new ArrayList<String>();
@@ -75,7 +70,7 @@ public class ConfigurationHandler
         LogHelper.info("The following mods are blacklisted and will be ignored by the Visible Armor Slots mod:");
         LogHelper.info("[START]");
 
-        for (final String blacklistedModId : blacklistedModIds) {
+        for (final String blacklistedModId : _blacklistedModIds) {
             Loader.instance();
             if (Loader.isModLoaded(blacklistedModId)) {
 
@@ -110,19 +105,45 @@ public class ConfigurationHandler
         LogHelper.info("[END]");
 
 
-        blacklistedModPackages = modPackages.toArray(new String[0]);
+        _blacklistedModPackages = modPackages.toArray(new String[0]);
     }
 
 
 
-    @SubscribeEvent
-    public void onConfigurationChangedEvent(ConfigChangedEvent.OnConfigChangedEvent event)
+    public static ConfigCategory getCategory(String category)
     {
-        if (event.getModID().equalsIgnoreCase(Reference.ModID)) {
-            // Resync config
-            loadConfig();
-            updateBlacklistedMods();
-        }
+        return _config.getCategory(category);
     }
 
+
+
+    // --------------------------------------------
+    // Public config values
+    // --------------------------------------------
+
+    /**
+     * When the mod is on 'debug mode', messages with the level Trace and Debug will be added to the logs.
+     */
+    public static boolean onDebug()
+    {
+        return _onDebug;
+    }
+
+
+    public static String extraSlotsSide()
+    {
+        return _extraSlotsSide;
+    }
+
+
+    public static int extraSlotsMargin()
+    {
+        return _extraSlotsMargin;
+    }
+
+
+    public static String[] blacklistedModPackages()
+    {
+        return _blacklistedModPackages;
+    }
 }

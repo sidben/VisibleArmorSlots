@@ -1,10 +1,10 @@
-package sidben.visiblearmorslots.helper;
+package sidben.visiblearmorslots.util;
 
 import java.util.IllegalFormatException;
 import org.apache.logging.log4j.Level;
 import net.minecraftforge.fml.common.FMLLog;
-import sidben.visiblearmorslots.config.ConfigurationHandler;
-import sidben.visiblearmorslots.reference.Reference;
+import sidben.visiblearmorslots.main.ModConfig;
+import sidben.visiblearmorslots.main.Reference;
 
 
 
@@ -38,7 +38,7 @@ public class LogHelper
 
     public static void debug(String format, Object... data)
     {
-        if (ConfigurationHandler.onDebug) {
+        if (ModConfig.onDebug()) {
             log(Level.DEBUG, format, data);
         }
     }
@@ -50,7 +50,7 @@ public class LogHelper
 
     public static void trace(String format, Object... data)
     {
-        if (ConfigurationHandler.onDebug) {
+        if (ModConfig.onDebug()) {
             log(Level.TRACE, format, data);
         }
     }

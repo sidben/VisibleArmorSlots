@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import sidben.visiblearmorslots.handler.action.SlotActionManager;
-import sidben.visiblearmorslots.helper.LogHelper;
+import sidben.visiblearmorslots.util.LogHelper;
 
 
 public class MessageSlotAction implements IMessage

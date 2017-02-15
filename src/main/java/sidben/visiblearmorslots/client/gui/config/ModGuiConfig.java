@@ -9,8 +9,8 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.GuiConfigEntries;
 import net.minecraftforge.fml.client.config.IConfigElement;
-import sidben.visiblearmorslots.config.ConfigurationHandler;
-import sidben.visiblearmorslots.reference.Reference;
+import sidben.visiblearmorslots.main.ModConfig;
+import sidben.visiblearmorslots.main.Reference;
 
 
 public class ModGuiConfig extends GuiConfig
@@ -18,7 +18,7 @@ public class ModGuiConfig extends GuiConfig
 
 
     public ModGuiConfig(GuiScreen guiScreen) {
-        super(guiScreen, getConfigElements(), Reference.ModID, false, false, GuiConfig.getAbridgedConfigPath(ConfigurationHandler.config.toString()));
+        super(guiScreen, getConfigElements(), Reference.ModID, false, false, "");
     }
 
 
@@ -29,7 +29,7 @@ public class ModGuiConfig extends GuiConfig
 
         // General config
         final List<IConfigElement> generalConfigs = new ArrayList<IConfigElement>();
-        final ConfigCategory generalCat = ConfigurationHandler.config.getCategory(Configuration.CATEGORY_GENERAL);
+        final ConfigCategory generalCat = ModConfig.getCategory(Configuration.CATEGORY_GENERAL);
 
         generalConfigs.add(new ConfigElement(generalCat.get("slots_side")));
         generalConfigs.add(new ConfigElement(generalCat.get("slots_margin").setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class)));

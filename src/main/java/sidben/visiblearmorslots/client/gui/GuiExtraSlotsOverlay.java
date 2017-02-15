@@ -22,10 +22,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import sidben.visiblearmorslots.client.gui.InfoExtraSlots.EnumSlotType;
 import sidben.visiblearmorslots.handler.action.SlotActionManager;
 import sidben.visiblearmorslots.handler.action.SlotActionType;
-import sidben.visiblearmorslots.helper.LogHelper;
 import sidben.visiblearmorslots.inventory.SlotArmor;
 import sidben.visiblearmorslots.inventory.SlotOffHand;
-import sidben.visiblearmorslots.reference.Reference;
+import sidben.visiblearmorslots.main.Reference;
+import sidben.visiblearmorslots.util.LogHelper;
 
 
 

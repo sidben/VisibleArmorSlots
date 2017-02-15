@@ -1,4 +1,4 @@
-package sidben.visiblearmorslots.reference;
+package sidben.visiblearmorslots.main;
 
 public class Reference
 {

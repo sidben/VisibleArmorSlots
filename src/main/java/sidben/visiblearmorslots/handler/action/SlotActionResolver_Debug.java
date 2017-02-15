@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import sidben.visiblearmorslots.helper.LogHelper;
+import sidben.visiblearmorslots.util.LogHelper;
 
 
 public class SlotActionResolver_Debug extends SlotActionResolver
@@ -77,17 +77,12 @@ public class SlotActionResolver_Debug extends SlotActionResolver
             LogHelper.debug("*** %s", player.openContainer);
 
 
-            // TODO: check why item re-equips after I place on inventory (player inventory only) - OBS: happens on vanilla too
-
-            // Player inventory, no need for server action (?) - bug only on creative mode, check in the future
-            // if (player.openContainer instanceof ContainerPlayer) return;
-
 
             final int slotIndex = 40;
             final Slot offHandSlot = player.inventoryContainer.getSlot(45);
             LogHelper.debug("*** (s1) Slot index %d, number %d, has %s", offHandSlot.getSlotIndex(), offHandSlot.slotNumber, offHandSlot.getStack());
             LogHelper.debug("*** (s1) Inventory index %d, has %s", slotIndex, player.inventory.getStackInSlot(slotIndex));
-            LogHelper.debug("*** (s1) Player mouse has %s", player.inventory.getItemStack());       // TODO: Why getItemStack() is empty on player inventory?
+            LogHelper.debug("*** (s1) Player mouse has %s", player.inventory.getItemStack());
 
             if (targetSlot.slotNumber > 6) {
 
