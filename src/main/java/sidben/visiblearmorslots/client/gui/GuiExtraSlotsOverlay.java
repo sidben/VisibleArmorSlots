@@ -48,6 +48,7 @@ public class GuiExtraSlotsOverlay extends Gui
     private Slot                          theSlot;
     private int                           eventButton;
     private long                          lastMouseEvent;
+    private boolean                       _potionShiftActive;
 
     protected List<InfoExtraSlots>        supportedSlotsInfo;
     protected List<Slot>                  extraSlots;
@@ -122,6 +123,22 @@ public class GuiExtraSlotsOverlay extends Gui
         this.fontRendererObj = mc.fontRendererObj;
         this.screenWidth = width;
         this.screenHeight = height;
+    }
+
+    /*
+     * Informs if the potion effects pushed the original gui to the side.
+     */
+    public boolean isPotionShiftActive()
+    {
+        return this._potionShiftActive;
+    }
+
+    /*
+     * Holds the information if the potion effects pushed the original gui to the side.
+     */
+    public void setPotionShiftState(boolean active)
+    {
+        this._potionShiftActive = active;
     }
 
 
@@ -334,7 +351,6 @@ public class GuiExtraSlotsOverlay extends Gui
     protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick)
     {
         LogHelper.trace("  mouseClickMove(%d, %d, %d, %d)", mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
-        // TODO: mouseClickMove
     }
 
 
@@ -344,7 +360,6 @@ public class GuiExtraSlotsOverlay extends Gui
     protected void mouseReleased(int mouseX, int mouseY, int state)
     {
         LogHelper.trace("  mouseReleased(%d, %d, %d)", mouseX, mouseY, state);
-        // TODO: mouseReleased
     }
 
 

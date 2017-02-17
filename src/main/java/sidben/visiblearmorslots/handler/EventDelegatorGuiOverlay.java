@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sidben.visiblearmorslots.client.gui.GuiExtraSlotsOverlay;
+import sidben.visiblearmorslots.main.ModConfig;
 import sidben.visiblearmorslots.main.Reference;
 import sidben.visiblearmorslots.util.LogHelper;
 
@@ -118,6 +119,18 @@ public class EventDelegatorGuiOverlay
         this.getGuiOverlay().guiLeft = displayParams.getGuiLeft();
         this.getGuiOverlay().guiTop = displayParams.getGuiTop();
         this.getGuiOverlay().refreshExtraSlotsInfo(gui.mc.player.inventory);
+
+        // Reposition the overlay if the potion effects are taking space
+        if (this.getGuiOverlay().isPotionShiftActive()) {
+            if (ModConfig.extraSlotsSide().equals(ModConfig.POSITION_LEFT)) {
+                this.getGuiOverlay().guiLeft += ModConfig.POTION_SHIFT_MARGIN_LEFT;
+            } else if (ModConfig.extraSlotsSide().equals(ModConfig.POSITION_RIGHT)) {
+                this.getGuiOverlay().guiLeft += ModConfig.POTION_SHIFT_MARGIN_RIGHT;
+            }
+
+            // Resets the state since the overlay class is shared among all containers.
+            this.getGuiOverlay().setPotionShiftState(false);
+        }
     }
 
 
@@ -150,8 +163,7 @@ public class EventDelegatorGuiOverlay
     public void onPotionShiftEvent(PotionShiftEvent event)
     {
         if (!this.shouldDisplayGuiOverlay(event.getGui())) { return; }
-
-        // TODO: handle potion pushing player inventory to the side
+        this.getGuiOverlay().setPotionShiftState(true);
     }
 
 

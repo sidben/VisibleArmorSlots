@@ -12,9 +12,11 @@ import sidben.visiblearmorslots.util.LogHelper;
 
 public class ModConfig
 {
-    public static final String   POSITION_LEFT  = "LEFT";
-    public static final String   POSITION_RIGHT = "RIGHT";
-    public static final String   CATEGORY_DEBUG = "debug";
+    public static final String   POSITION_LEFT             = "LEFT";
+    public static final String   POSITION_RIGHT            = "RIGHT";
+    public static final int      POTION_SHIFT_MARGIN_LEFT  = -62;
+    public static final int      POTION_SHIFT_MARGIN_RIGHT = 60;
+    public static final String   CATEGORY_DEBUG            = "debug";
 
     private static Configuration _config;
     private static boolean       _onDebug;
@@ -51,7 +53,6 @@ public class ModConfig
             _config.save();
         }
     }
-
 
 
 
