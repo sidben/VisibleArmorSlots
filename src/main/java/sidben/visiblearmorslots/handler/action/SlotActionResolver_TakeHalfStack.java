@@ -54,7 +54,7 @@ public class SlotActionResolver_TakeHalfStack extends SlotActionResolver
     @Override
     protected boolean isSatisfiedByInternal(SlotActionType action)
     {
-        if (action.mouseButton.equals(SlotActionType.MouseButton.PLACE_BLOCK_BUTTON) && action.slotHasItemStack && !action.playerMouseHasItemStack) { return true; }
+        if (action.mouseButton.equals(SlotActionType.EnumMouseAction.PLACE_BLOCK_BUTTON) && action.slotHasItemStack && !action.playerMouseHasItemStack) { return true; }
         return false;
     }
 

@@ -21,7 +21,7 @@ import sidben.visiblearmorslots.util.LogHelper;
 
 
 /**
- * Delegates GuiEvents to the GuiExtraSlotsOverlay.
+ * Delegates GuiEvents to the {@link sidben.visiblearmorslots.client.gui.GuiExtraSlotsOverlay GuiExtraSlotsOverlay}.
  *
  */
 public class EventDelegatorGuiOverlay
@@ -179,7 +179,7 @@ public class EventDelegatorGuiOverlay
     @SideOnly(Side.CLIENT)
     public void onKeyboardInputEvent(KeyboardInputEvent.Post event)
     {
-        // TODO: for future use (manual gui overlay positioning)
+        this.getGuiOverlay().handleKeyboardInput();
     }
 
 

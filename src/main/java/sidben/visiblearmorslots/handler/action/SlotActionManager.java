@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
-import sidben.visiblearmorslots.ModVisibleArmorSlots;
 import sidben.visiblearmorslots.network.NetworkManager;
 import sidben.visiblearmorslots.util.LogHelper;
 
@@ -31,6 +30,9 @@ public class SlotActionManager
         _actionResolvers.put(index++, new SlotActionResolver_QuickTakeFromSlot());
         _actionResolvers.put(index++, new SlotActionResolver_TakeHalfStack());
         _actionResolvers.put(index++, new SlotActionResolver_TrySwapMouseWithSlot());
+        for (int j = 0; j < 9; j++) {
+            _actionResolvers.put(index++, new SlotActionResolver_TrySwapSlotWithHotbar(j));
+        }
         _actionResolvers.put(index++, new SlotActionResolver_DoesNothing());
     }
 
@@ -82,7 +84,7 @@ public class SlotActionManager
         if (resolverEntry != null) {
             final ISlotActionResolver actionResolver = resolverEntry.getValue();
             final boolean isPlayerOnCreativeInventory = player.openContainer.getClass().getName().contains("ContainerCreative");
-            
+
             actionResolver.handleClientSide(targetSlot, player);
 
             // NOTE: the creative mode player inventory must be client-side only

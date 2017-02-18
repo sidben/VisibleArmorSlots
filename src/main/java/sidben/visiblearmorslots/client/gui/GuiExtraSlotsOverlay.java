@@ -31,9 +31,11 @@ import sidben.visiblearmorslots.util.LogHelper;
 
 /**
  * This class simulates a simplified GuiContainer that runs only on the client,
- * since it uses the player inventory.
+ * since it uses the player inventory.<br/>
+ * <br/>
  *
- * Using Forge hooks the class simulates the regular flow of a GUI.
+ * Using Forge hooks on {@link sidben.visiblearmorslots.handler.EventDelegatorGuiOverlay EventDelegatorGuiOverlay},
+ * this class simulates the regular flow of a GUI.
  *
  */
 @SideOnly(Side.CLIENT)
@@ -316,11 +318,10 @@ public class GuiExtraSlotsOverlay extends Gui
 
 
         // TODO: handle dragging
-        // TODO: handle ClickType.SWAP
         // TODO: handle ClickType.PICKUP_ALL
 
         final EntityPlayer player = this.mc.player;
-        final SlotActionType.MouseButton slotMouseButton = SlotActionType.MouseButton.create(clickedButton, isButtonPickBlock);
+        final SlotActionType.EnumMouseAction slotMouseButton = SlotActionType.EnumMouseAction.create(clickedButton, isButtonPickBlock);
         final SlotActionType slotAction = SlotActionType.create(player, slot, GuiExtraSlotsOverlay.isShiftKeyDown(), slotMouseButton);
 
         SlotActionManager.instance.processActionOnClient(slotAction, slot, this.mc.player);
@@ -345,6 +346,60 @@ public class GuiExtraSlotsOverlay extends Gui
     {
         LogHelper.trace("  mouseReleased(%d, %d, %d)", mouseX, mouseY, state);
         // TODO: mouseReleased
+    }
+
+
+
+    // -----------------------------------------------------------
+    // Keyboard interaction
+    // -----------------------------------------------------------
+
+    /**
+     * Handles keyboard input.<br/><br/>
+     * 
+     * Reference: {@link net.minecraft.client.gui.GuiScreen#handleKeyboardInput() GuiScreen.handleKeyboardInput()}
+     */
+    public void handleKeyboardInput()
+    {
+        final char keyChar = Keyboard.getEventCharacter();
+
+        if (Keyboard.getEventKey() == 0 && keyChar >= 32 || Keyboard.getEventKeyState()) {
+            this.keyTyped(Keyboard.getEventKey());
+        }
+    }
+
+    /**
+     * Fired when a key is typed (except F11 which toggles full screen). This is the equivalent of
+     * KeyListener.keyTyped(KeyEvent e). Args : character (character on the key), keyCode (lwjgl Keyboard key code)<br/><br/>
+     * 
+     * Reference: {@link net.minecraft.client.gui.inventory.GuiContainer#keyTyped() GuiContainer.keyTyped()} and
+     * {@link net.minecraft.client.gui.inventory.GuiContainer#checkHotbarKeys() GuiContainer.checkHotbarKeys()}
+     */
+    protected void keyTyped(int keyCode)
+    {
+        final EntityPlayer player = this.mc.player;
+        Slot slot = this.theSlot;       // Slot under the mouse
+        SlotActionType.EnumKeyboardAction keyboardAction = SlotActionType.EnumKeyboardAction.INVALID;
+
+        // NOTE: KeyBinding.isActiveAndMatches() will check if the gui is active, so it would always return false here.
+        if (this.mc.gameSettings.keyBindSwapHands.getKeyCode() == keyCode) {
+            // If the player press the swap hands key, the target slot will always be the off-hand slot
+            slot = this.extraSlots.get(this.extraSlots.size() - 1);
+            keyboardAction = SlotActionType.EnumKeyboardAction.SWAP_HANDS;
+
+        } else {
+            // test hotbar swap key
+            for (int i = 0; i < 9; i++) {
+                if (this.mc.gameSettings.keyBindsHotbar[i].isActiveAndMatches(keyCode)) {
+                    keyboardAction = SlotActionType.EnumKeyboardAction.createHotbar(i);
+                    break;
+                }
+            }
+        }
+
+        final SlotActionType slotAction = SlotActionType.create(player, slot, keyboardAction);
+
+        SlotActionManager.instance.processActionOnClient(slotAction, slot, this.mc.player);
     }
 
 
