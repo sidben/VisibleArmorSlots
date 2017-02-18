@@ -9,10 +9,10 @@ import sidben.visiblearmorslots.util.LogHelper;
 
 public class SlotActionResolver_Debug extends SlotActionResolver
 {
-    
+
     private boolean _requiresServer = true;
-    
-    
+
+
 
     @Override
     public void handleClientSide(Slot targetSlot, EntityPlayer player)
@@ -23,8 +23,9 @@ public class SlotActionResolver_Debug extends SlotActionResolver
             LogHelper.debug("*** %s", player.inventory);
             LogHelper.debug("*** %s", player.openContainer);
             LogHelper.debug("*** %s", player.openContainer.getClass().getName().contains("ContainerCreative"));
-            
-            boolean unnecessarilyLongVariableToDetermineIfThePlayerIsOnCreativeModeWithPersonalContainerThatDontRequireServerSideHandling = player.openContainer.getClass().getName().contains("ContainerCreative");
+
+            final boolean unnecessarilyLongVariableToDetermineIfThePlayerIsOnCreativeModeWithPersonalContainerThatDontRequireServerSideHandling = player.openContainer.getClass().getName()
+                    .contains("ContainerCreative");
             this._requiresServer = !unnecessarilyLongVariableToDetermineIfThePlayerIsOnCreativeModeWithPersonalContainerThatDontRequireServerSideHandling;
 
 

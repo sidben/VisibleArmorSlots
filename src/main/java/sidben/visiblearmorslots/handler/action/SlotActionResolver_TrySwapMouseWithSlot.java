@@ -24,9 +24,13 @@ import sidben.visiblearmorslots.util.ItemStackHelper;
 public class SlotActionResolver_TrySwapMouseWithSlot extends SlotActionResolver
 {
 
+    private boolean _needsServerSide = false;
+
+
     @Override
     public void handleClientSide(Slot targetSlot, EntityPlayer player)
     {
+        this._needsServerSide = false;
         this.swapMouseWithSlot(targetSlot, player);
     }
 
@@ -53,11 +57,13 @@ public class SlotActionResolver_TrySwapMouseWithSlot extends SlotActionResolver
             targetSlot.getStack().grow(amountTheSlotWillTake);
             playerMouseItem.shrink(amountTheSlotWillTake);
             targetSlot.onSlotChanged();
+            this._needsServerSide = true;
 
         } else if (canPlaceOnSlot && canTakeFromSlot) {
             // Swaps the item on the player mouse with the target slot
             player.inventory.setItemStack(targetSlot.getStack());
             targetSlot.putStack(playerMouseItem);
+            this._needsServerSide = true;
 
         }
     }
@@ -67,7 +73,7 @@ public class SlotActionResolver_TrySwapMouseWithSlot extends SlotActionResolver
     @Override
     public boolean requiresServerSideHandling()
     {
-        return true;
+        return this._needsServerSide;
     }
 
 
