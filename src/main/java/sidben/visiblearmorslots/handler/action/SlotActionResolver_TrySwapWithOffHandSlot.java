@@ -13,6 +13,9 @@ import sidben.visiblearmorslots.util.LogHelper;
 public class SlotActionResolver_TrySwapWithOffHandSlot extends SlotActionResolver
 {
 
+    private final String                            CREATIVE_CONTAINER_NAME = "ContainerCreative";
+    private final String                            CREATIVE_SLOT_NAME = "CreativeSlot";
+
     private boolean _needsServerSide = false;
 
 
@@ -41,6 +44,9 @@ public class SlotActionResolver_TrySwapWithOffHandSlot extends SlotActionResolve
         LogHelper.debug("swapWithOffHandSlot()");
         LogHelper.trace("  Target slot at %d, %d, stack %s", targetSlot.xPos, targetSlot.yPos, targetSlot.getStack());
         LogHelper.trace("  Player slot at %d, %d, stack %s", offHandSlot.xPos, offHandSlot.yPos, offHandSlot.getStack());
+        
+        LogHelper.trace("  - %s", targetSlot.getClass());
+        LogHelper.trace("  - %s", player.openContainer);
 
 
         final ItemStack offHandStack = offHandSlot.getStack();
@@ -49,27 +55,44 @@ public class SlotActionResolver_TrySwapWithOffHandSlot extends SlotActionResolve
         final boolean bothSlotsEmpty = offHandStack.isEmpty() && targetSlot.getStack().isEmpty();
 
 
-        // TODO: handle creative menu (should take a full stack and place nothing)
-
         if (canPlaceOnSlot && canTakeFromSlot && !bothSlotsEmpty) {
 
-            final int maxItemsAllowed = targetSlot.getItemStackLimit(offHandStack);
+            // NOTE: When in creative mode, the player open container is {@link net.minecraft.client.gui.inventory.GuiContainerCreative$ContainerCreative}
+            //       and the slots on the player regular inventory are converted to {@link net.minecraft.client.gui.inventory.GuiContainerCreative$CreativeSlot}.
+            //
+            //       The slots on the creative tabs are basic instances of {@link net.minecraft.inventory.Slot}.
+            
+            final boolean isPlayerOnCreativeInventory = player.openContainer.getClass().getName().contains(CREATIVE_CONTAINER_NAME);
+            final boolean isTargetSlotFromCreativeTabs = isPlayerOnCreativeInventory && !targetSlot.getClass().getName().contains(CREATIVE_SLOT_NAME);
+            
+            // TODO: Fix hotbar slots being considered creative slots
 
-            if (offHandStack.getCount() <= maxItemsAllowed) {
-                // Swaps the item on the off hand slot with the target slot
-                offHandSlot.putStack(targetSlot.getStack());
-                targetSlot.putStack(offHandStack);
-                targetSlot.onTake(player, offHandSlot.getStack());
-                this._needsServerSide = true;
-
-            } else {
-                // This target slot has limited capacity, only places a few items, if the slot is empty.
-                if (targetSlot.getStack().isEmpty()) {
-                    targetSlot.putStack(offHandSlot.decrStackSize(maxItemsAllowed));
-                    targetSlot.onSlotChanged();
+            
+            if (isTargetSlotFromCreativeTabs && offHandStack.isEmpty()) {
+                // Clones a full stack from the creative menu
+                final ItemStack clonedStack = targetSlot.getStack().copy();
+                clonedStack.setCount(clonedStack.getMaxStackSize());
+                offHandSlot.putStack(clonedStack);
+                
+            } else if (!isTargetSlotFromCreativeTabs) {
+                final int maxItemsAllowed = targetSlot.getItemStackLimit(offHandStack);
+                
+                if (offHandStack.getCount() <= maxItemsAllowed) {
+                    // Swaps the item on the off hand slot with the target slot
+                    offHandSlot.putStack(targetSlot.getStack());
+                    targetSlot.putStack(offHandStack);
+                    targetSlot.onTake(player, offHandSlot.getStack());
                     this._needsServerSide = true;
-                }
 
+                } else {
+                    // This target slot has limited capacity, only places a few items, if the slot is empty.
+                    if (targetSlot.getStack().isEmpty()) {
+                        targetSlot.putStack(offHandSlot.decrStackSize(maxItemsAllowed));
+                        targetSlot.onSlotChanged();
+                        this._needsServerSide = true;
+                    }
+
+                }
             }
 
         }

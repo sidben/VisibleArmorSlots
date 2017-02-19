@@ -9,6 +9,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
@@ -21,6 +22,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import scala.tools.ant.sabbus.Break;
 import sidben.visiblearmorslots.client.gui.InfoExtraSlots.EnumSlotType;
 import sidben.visiblearmorslots.handler.action.SlotActionManager;
 import sidben.visiblearmorslots.handler.action.SlotActionType;
@@ -131,20 +133,32 @@ public class GuiExtraSlotsOverlay extends Gui
 
         // Reset values that may leak from other gui's
         this.theSlot = null;
-        this._externalGuiLeft = -1;
-        this._externalGuiTop = -1;
     }
 
 
     public void setExternalGuiPosition(GuiScreen gui)
     {
         if (gui instanceof GuiContainer) {
-            this._externalGuiLeft = ((GuiContainer) gui).getGuiLeft();
-            this._externalGuiTop = ((GuiContainer) gui).getGuiTop();
+            int candidateGuiLeft = ((GuiContainer) gui).getGuiLeft();
+            int candidateGuiTop = ((GuiContainer) gui).getGuiTop();
+
+            // NOTE: The creative inventory would cause this method to be fired twice, once for
+            //       net.minecraft.client.gui.inventory.GuiContainerCreative (with correct values)
+            //       and once for net.minecraft.client.gui.inventory.GuiInventory (with wrong values).
+            if (gui instanceof GuiInventory && candidateGuiLeft == 0 && candidateGuiTop == 0) {
+                return;
+            }
+            
+            this._externalGuiLeft = candidateGuiLeft;
+            this._externalGuiTop = candidateGuiTop;
+
         } else {
             this._externalGuiLeft = -1;
             this._externalGuiTop = -1;
+            
         }
+        
+        LogHelper.debug("External gui == %d, %d", this._externalGuiLeft, this._externalGuiTop);
     }
 
 
