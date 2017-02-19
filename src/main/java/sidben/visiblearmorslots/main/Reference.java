@@ -10,9 +10,7 @@ public class Reference
     public static final String ServerProxyClass      = "sidben.visiblearmorslots.proxy.ProxyServer";
     public static final String ClientProxyClass      = "sidben.visiblearmorslots.proxy.ProxyClient";
 
-    public static final String ServerSlotHelperClass = "sidben.visiblearmorslots.helper.ExtraSlotsHelperServer";
-    public static final String ClientSlotHelperClass = "sidben.visiblearmorslots.helper.ExtraSlotsHelperClient";
-
     public static final String GuiFactoryClass       = "sidben.visiblearmorslots.client.gui.config.GuiFactory";
 
+    public static final String UPDATE_JSON_URL       = "https://raw.githubusercontent.com/sidben/VisibleArmorSlots/master/docs/update.json"; 
 }
