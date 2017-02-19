@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import sidben.visiblearmorslots.inventory.SlotOffHand;
 import sidben.visiblearmorslots.util.LogHelper;
 
+
 /**
  * Sends/swaps the contents of the slot under the mouse to the off-hand slot.
  */
@@ -14,7 +15,7 @@ public class SlotActionResolver_TrySwapWithOffHandSlot extends SlotActionResolve
 
     private boolean _needsServerSide = false;
 
-    
+
     @Override
     public void handleClientSide(Slot targetSlot, EntityPlayer player)
     {
@@ -29,38 +30,38 @@ public class SlotActionResolver_TrySwapWithOffHandSlot extends SlotActionResolve
         this.swapWithOffHandSlot(targetSlot, player);
     }
 
-    
-    
+
+
     private void swapWithOffHandSlot(Slot targetSlot, EntityPlayer player)
     {
-        if (targetSlot instanceof SlotOffHand) return;
-        
-        Slot offHandSlot = player.inventoryContainer.getSlot(45);
+        if (targetSlot instanceof SlotOffHand) { return; }
+
+        final Slot offHandSlot = player.inventoryContainer.getSlot(45);
 
         LogHelper.debug("swapWithOffHandSlot()");
         LogHelper.trace("  Target slot at %d, %d, stack %s", targetSlot.xPos, targetSlot.yPos, targetSlot.getStack());
         LogHelper.trace("  Player slot at %d, %d, stack %s", offHandSlot.xPos, offHandSlot.yPos, offHandSlot.getStack());
-        
+
 
         final ItemStack offHandStack = offHandSlot.getStack();
         final boolean canPlaceOnSlot = offHandStack.isEmpty() || targetSlot.isItemValid(offHandStack);
         final boolean canTakeFromSlot = targetSlot.getStack().isEmpty() || targetSlot.canTakeStack(player);
         final boolean bothSlotsEmpty = offHandStack.isEmpty() && targetSlot.getStack().isEmpty();
 
-        
+
         // TODO: handle creative menu (should take a full stack and place nothing)
-        // TODO: handle crafting slots not consuming the recipes
-        
+
         if (canPlaceOnSlot && canTakeFromSlot && !bothSlotsEmpty) {
-            
-            int maxItemsAllowed = targetSlot.getItemStackLimit(offHandStack);
-            
+
+            final int maxItemsAllowed = targetSlot.getItemStackLimit(offHandStack);
+
             if (offHandStack.getCount() <= maxItemsAllowed) {
                 // Swaps the item on the off hand slot with the target slot
                 offHandSlot.putStack(targetSlot.getStack());
                 targetSlot.putStack(offHandStack);
+                targetSlot.onTake(player, offHandSlot.getStack());
                 this._needsServerSide = true;
-                
+
             } else {
                 // This target slot has limited capacity, only places a few items, if the slot is empty.
                 if (targetSlot.getStack().isEmpty()) {
@@ -68,15 +69,15 @@ public class SlotActionResolver_TrySwapWithOffHandSlot extends SlotActionResolve
                     targetSlot.onSlotChanged();
                     this._needsServerSide = true;
                 }
-                
+
             }
-            
+
         }
-        
+
     }
-    
-    
-    
+
+
+
     @Override
     public boolean requiresServerSideHandling()
     {
@@ -90,5 +91,5 @@ public class SlotActionResolver_TrySwapWithOffHandSlot extends SlotActionResolve
         return action.keyboardKey == SlotActionType.EnumKeyboardAction.SWAP_HANDS;
     }
 
-    
+
 }

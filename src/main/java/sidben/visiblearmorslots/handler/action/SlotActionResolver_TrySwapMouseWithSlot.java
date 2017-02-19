@@ -63,6 +63,7 @@ public class SlotActionResolver_TrySwapMouseWithSlot extends SlotActionResolver
             // Swaps the item on the player mouse with the target slot
             player.inventory.setItemStack(targetSlot.getStack());
             targetSlot.putStack(playerMouseItem);
+            targetSlot.onTake(player, player.inventory.getItemStack());
             this._needsServerSide = true;
 
         }

@@ -71,6 +71,7 @@ public class SlotActionResolver_TrySwapSlotWithHotbar extends SlotActionResolver
             // Swaps the item on selected hotbar slot with the (gui overlay) target slot
             hotbarSlot.putStack(targetSlot.getStack());
             targetSlot.putStack(hotbarStack);
+            targetSlot.onTake(player, hotbarSlot.getStack());
             this._needsServerSide = true;
         }
 
