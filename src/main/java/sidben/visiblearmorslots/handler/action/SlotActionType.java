@@ -10,7 +10,7 @@ public class SlotActionType
 {
 
     @Immutable
-    public enum MouseButton {
+    public enum EnumMouseAction {
         ATTACK_BUTTON(0),
         PLACE_BLOCK_BUTTON(1),
         PICK_BLOCK_BUTTON(2),
@@ -19,11 +19,12 @@ public class SlotActionType
 
         public final int buttonValue;
 
-        private MouseButton(int button) {
+        private EnumMouseAction(int button) {
             this.buttonValue = button;
         }
 
-        public static MouseButton create(int clickedButton, boolean isPickBlockClick)
+
+        public static EnumMouseAction create(int clickedButton, boolean isPickBlockClick)
         {
             if (isPickBlockClick) { return PICK_BLOCK_BUTTON; }
             if (clickedButton == 0) { return ATTACK_BUTTON; }
@@ -33,39 +34,108 @@ public class SlotActionType
     }
 
 
-    public static SlotActionType EMPTY = new SlotActionType(false, false, false, false, MouseButton.INVALID);
+    @Immutable
+    public enum EnumKeyboardAction {
+        HOTBAR_SLOT_1(0),
+        HOTBAR_SLOT_2(1),
+        HOTBAR_SLOT_3(2),
+        HOTBAR_SLOT_4(3),
+        HOTBAR_SLOT_5(4),
+        HOTBAR_SLOT_6(5),
+        HOTBAR_SLOT_7(6),
+        HOTBAR_SLOT_8(7),
+        HOTBAR_SLOT_9(8),
+        SWAP_HANDS(10),
+        INVALID(-1);
+
+        public final int keySerializingValue;
+
+        private EnumKeyboardAction(int key) {
+            this.keySerializingValue = key;
+        }
+
+
+        public static EnumKeyboardAction createHotbar(int hotbarIndex)
+        {
+            if (hotbarIndex >= 0 && hotbarIndex < 9) {
+                for (final EnumKeyboardAction item : EnumKeyboardAction.values()) {
+                    if (item.keySerializingValue == hotbarIndex) { return item; }
+                }
+            }
+
+            return INVALID;
+        }
+
+    }
 
 
 
-    public final boolean         playerMouseHasItemStack;
-    public final boolean         playerInCreativeMode;
-    public final boolean         slotHasItemStack;
-    public final boolean         isShiftPressed;
-    public final MouseButton     mouseButton;
+    public static SlotActionType    EMPTY = new SlotActionType(false, false, false, false, EnumMouseAction.INVALID, EnumKeyboardAction.INVALID);
 
 
 
-    private SlotActionType(boolean playerMouseHasItemStack, boolean playerInCreativeMode, boolean slotHasItemStack, boolean isShiftPressed, MouseButton mouseButton) {
+    public final boolean            playerMouseHasItemStack;
+    public final boolean            playerInCreativeMode;
+    public final boolean            slotHasItemStack;
+    public final boolean            isShiftPressed;
+    public final EnumMouseAction    mouseButton;
+    public final EnumKeyboardAction keyboardKey;
+
+
+
+    private SlotActionType(boolean playerMouseHasItemStack, boolean playerInCreativeMode, boolean slotHasItemStack, boolean isShiftPressed, EnumMouseAction mouseButton,
+            EnumKeyboardAction keyboardKey) {
         this.playerMouseHasItemStack = playerMouseHasItemStack;
         this.playerInCreativeMode = playerInCreativeMode;
         this.slotHasItemStack = slotHasItemStack;
         this.isShiftPressed = isShiftPressed;
         this.mouseButton = mouseButton;
+        this.keyboardKey = keyboardKey;
+    }
+
+
+    /**
+     * @param player
+     *            Player that caused the action.
+     * @param slot
+     *            The target slot in the gui overlay.
+     * @param shiftPressed
+     *            Is the SHIFT key pressed?
+     * @param mouseButton
+     *            Type of mouse click.
+     * @return
+     */
+    public static SlotActionType create(EntityPlayer player, Slot slot, boolean shiftPressed, EnumMouseAction mouseButton)
+    {
+        if (player != null && slot != null) { return new SlotActionType(!player.inventory.getItemStack().isEmpty(), player.capabilities.isCreativeMode, slot.getHasStack(), shiftPressed, mouseButton,
+                EnumKeyboardAction.INVALID); }
+
+        return SlotActionType.EMPTY;
+    }
+
+
+    /**
+     * @param player
+     *            Player that caused the action.
+     * @param slot
+     *            The target slot in the gui overlay.
+     * @param keyboardKey
+     *            Type of keyboard key press.
+     * @return
+     */
+    public static SlotActionType create(EntityPlayer player, Slot slot, EnumKeyboardAction keyboardKey)
+    {
+        if (player != null && slot != null) { return new SlotActionType(!player.inventory.getItemStack().isEmpty(), player.capabilities.isCreativeMode, slot.getHasStack(), false,
+                EnumMouseAction.INVALID, keyboardKey); }
+
+        return SlotActionType.EMPTY;
     }
 
 
 
-    public static SlotActionType create(EntityPlayer player, Slot slot, boolean shiftPressed, MouseButton mouseButton)
+    public boolean isValid()
     {
-        if (player != null
-                && slot != null) { return new SlotActionType(
-                        !player.inventory.getItemStack().isEmpty(), 
-                        player.capabilities.isCreativeMode, 
-                        slot.getHasStack(), 
-                        shiftPressed, 
-                        mouseButton); }
-
-        return SlotActionType.EMPTY;
+        return this.mouseButton != EnumMouseAction.INVALID || this.keyboardKey != EnumKeyboardAction.INVALID;
     }
 
 
@@ -82,6 +152,7 @@ public class SlotActionType
         if (this.playerMouseHasItemStack != otherConverted.playerMouseHasItemStack) { return false; }
         if (this.slotHasItemStack != otherConverted.slotHasItemStack) { return false; }
         if (this.mouseButton != otherConverted.mouseButton) { return false; }
+        if (this.keyboardKey != otherConverted.keyboardKey) { return false; }
 
         return true;
     }
@@ -97,6 +168,7 @@ public class SlotActionType
         hashCode = hashCode * 59 + Boolean.valueOf(this.playerMouseHasItemStack).hashCode();
         hashCode = hashCode * 59 + Boolean.valueOf(this.slotHasItemStack).hashCode();
         hashCode = hashCode * 59 + this.mouseButton.buttonValue;
+        hashCode = hashCode * 59 + this.keyboardKey.keySerializingValue;
 
         return hashCode;
     }
@@ -114,6 +186,7 @@ public class SlotActionType
         r.append(", slotHasItemStack: " + this.slotHasItemStack);
         r.append(", isShiftPressed: " + this.isShiftPressed);
         r.append(", mouseButton: " + this.mouseButton);
+        r.append(", keyboardKey: " + this.keyboardKey);
         r.append("]");
 
         return r.toString();

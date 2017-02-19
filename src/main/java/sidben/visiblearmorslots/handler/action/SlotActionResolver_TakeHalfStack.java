@@ -11,9 +11,13 @@ import net.minecraft.item.ItemStack;
 public class SlotActionResolver_TakeHalfStack extends SlotActionResolver
 {
 
+    private boolean _needsServerSide = false;
+
+
     @Override
     public void handleClientSide(Slot targetSlot, EntityPlayer player)
     {
+        this._needsServerSide = false;
         this.takeHalfStack(targetSlot, player);
     }
 
@@ -40,6 +44,7 @@ public class SlotActionResolver_TakeHalfStack extends SlotActionResolver
             targetSlot.putStack(ItemStack.EMPTY);
         }
         targetSlot.onTake(player, player.inventory.getItemStack());
+        this._needsServerSide = true;
     }
 
 
@@ -47,14 +52,14 @@ public class SlotActionResolver_TakeHalfStack extends SlotActionResolver
     @Override
     public boolean requiresServerSideHandling()
     {
-        return true;
+        return this._needsServerSide;
     }
 
 
     @Override
     protected boolean isSatisfiedByInternal(SlotActionType action)
     {
-        if (action.mouseButton.equals(SlotActionType.MouseButton.PLACE_BLOCK_BUTTON) && action.slotHasItemStack && !action.playerMouseHasItemStack) { return true; }
+        if (action.mouseButton.equals(SlotActionType.EnumMouseAction.PLACE_BLOCK_BUTTON) && action.slotHasItemStack && !action.playerMouseHasItemStack) { return true; }
         return false;
     }
 

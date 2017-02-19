@@ -13,9 +13,13 @@ import sidben.visiblearmorslots.util.ItemStackHelper;
 public class SlotActionResolver_QuickTakeFromSlot extends SlotActionResolver
 {
 
+    private boolean _needsServerSide = false;
+
+
     @Override
     public void handleClientSide(Slot targetSlot, EntityPlayer player)
     {
+        this._needsServerSide = false;
         this.quickTake(targetSlot, player);
     }
 
@@ -79,6 +83,7 @@ public class SlotActionResolver_QuickTakeFromSlot extends SlotActionResolver
 
 
         targetSlot.putStack(originalStack);
+        this._needsServerSide = true;
     }
 
 
@@ -86,14 +91,14 @@ public class SlotActionResolver_QuickTakeFromSlot extends SlotActionResolver
     @Override
     public boolean requiresServerSideHandling()
     {
-        return true;
+        return this._needsServerSide;
     }
 
 
     @Override
     protected boolean isSatisfiedByInternal(SlotActionType action)
     {
-        if (action.mouseButton.equals(SlotActionType.MouseButton.ATTACK_BUTTON) && action.isShiftPressed && action.slotHasItemStack) { return true; }
+        if (action.mouseButton.equals(SlotActionType.EnumMouseAction.ATTACK_BUTTON) && action.isShiftPressed && action.slotHasItemStack) { return true; }
         return false;
     }
 

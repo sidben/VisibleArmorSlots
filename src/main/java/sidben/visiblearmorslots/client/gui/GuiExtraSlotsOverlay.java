@@ -7,6 +7,9 @@ import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
@@ -19,6 +22,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import scala.tools.ant.sabbus.Break;
 import sidben.visiblearmorslots.client.gui.InfoExtraSlots.EnumSlotType;
 import sidben.visiblearmorslots.handler.action.SlotActionManager;
 import sidben.visiblearmorslots.handler.action.SlotActionType;
@@ -31,9 +35,11 @@ import sidben.visiblearmorslots.util.LogHelper;
 
 /**
  * This class simulates a simplified GuiContainer that runs only on the client,
- * since it uses the player inventory.
+ * since it uses the player inventory.<br/>
+ * <br/>
  *
- * Using Forge hooks the class simulates the regular flow of a GUI.
+ * Using Forge hooks on {@link sidben.visiblearmorslots.handler.EventDelegatorGuiOverlay EventDelegatorGuiOverlay},
+ * this class simulates the regular flow of a GUI.
  *
  */
 @SideOnly(Side.CLIENT)
@@ -49,6 +55,8 @@ public class GuiExtraSlotsOverlay extends Gui
     private int                           eventButton;
     private long                          lastMouseEvent;
     private boolean                       _potionShiftActive;
+    private int                           _externalGuiLeft;
+    private int                           _externalGuiTop;
 
     protected List<InfoExtraSlots>        supportedSlotsInfo;
     protected List<Slot>                  extraSlots;
@@ -123,6 +131,35 @@ public class GuiExtraSlotsOverlay extends Gui
         this.fontRendererObj = mc.fontRendererObj;
         this.screenWidth = width;
         this.screenHeight = height;
+
+        // Reset values that may leak from other gui's
+        this.theSlot = null;
+    }
+
+
+    public void setExternalGuiPosition(GuiScreen gui)
+    {
+        if (gui instanceof GuiContainer) {
+            int candidateGuiLeft = ((GuiContainer) gui).getGuiLeft();
+            int candidateGuiTop = ((GuiContainer) gui).getGuiTop();
+
+            // NOTE: The creative inventory would cause this method to be fired twice, once for
+            //       net.minecraft.client.gui.inventory.GuiContainerCreative (with correct values)
+            //       and once for net.minecraft.client.gui.inventory.GuiInventory (with wrong values).
+            if (gui instanceof GuiInventory && candidateGuiLeft == 0 && candidateGuiTop == 0) {
+                return;
+            }
+            
+            this._externalGuiLeft = candidateGuiLeft;
+            this._externalGuiTop = candidateGuiTop;
+
+        } else {
+            this._externalGuiLeft = -1;
+            this._externalGuiTop = -1;
+            
+        }
+        
+        LogHelper.debug("External gui == %d, %d", this._externalGuiLeft, this._externalGuiTop);
     }
 
     /*
@@ -325,7 +362,7 @@ public class GuiExtraSlotsOverlay extends Gui
 
 
         final boolean isButtonPickBlock = this.mc.gameSettings.keyBindPickBlock.isActiveAndMatches(clickedButton - 100);
-        final Slot slot = this.getSlotAtPosition(mouseX, mouseY);
+        final Slot slot = this.getSlotAtPosition(mouseX, mouseY, true, false);
 
         // NOTE: I don't need to handle the ClickType.THROW, the parent gui will take care of it.
         if (slot == null) { return; }
@@ -333,14 +370,15 @@ public class GuiExtraSlotsOverlay extends Gui
 
 
         // TODO: handle dragging
-        // TODO: handle ClickType.SWAP
         // TODO: handle ClickType.PICKUP_ALL
 
         final EntityPlayer player = this.mc.player;
-        final SlotActionType.MouseButton slotMouseButton = SlotActionType.MouseButton.create(clickedButton, isButtonPickBlock);
+        final SlotActionType.EnumMouseAction slotMouseButton = SlotActionType.EnumMouseAction.create(clickedButton, isButtonPickBlock);
         final SlotActionType slotAction = SlotActionType.create(player, slot, GuiExtraSlotsOverlay.isShiftKeyDown(), slotMouseButton);
 
-        SlotActionManager.instance.processActionOnClient(slotAction, slot, this.mc.player);
+        if (slotAction.isValid()) {
+            SlotActionManager.instance.processActionOnClient(slotAction, slot, this.mc.player);
+        }
     }
 
 
@@ -365,6 +403,75 @@ public class GuiExtraSlotsOverlay extends Gui
 
 
     // -----------------------------------------------------------
+    // Keyboard interaction
+    // -----------------------------------------------------------
+
+    /**
+     * Handles keyboard input.<br/>
+     * <br/>
+     *
+     * Reference: {@link net.minecraft.client.gui.GuiScreen#handleKeyboardInput() GuiScreen.handleKeyboardInput()}
+     */
+    public void handleKeyboardInput()
+    {
+        final char keyChar = Keyboard.getEventCharacter();
+
+        if (Keyboard.getEventKey() == 0 && keyChar >= 32 || Keyboard.getEventKeyState()) {
+            this.keyTyped(Keyboard.getEventKey());
+        }
+    }
+
+    /**
+     * Fired when a key is typed (except F11 which toggles full screen). This is the equivalent of
+     * KeyListener.keyTyped(KeyEvent e). Args : character (character on the key), keyCode (lwjgl Keyboard key code)<br/>
+     * <br/>
+     *
+     * Reference: {@link net.minecraft.client.gui.inventory.GuiContainer#keyTyped() GuiContainer.keyTyped()} and
+     * {@link net.minecraft.client.gui.inventory.GuiContainer#checkHotbarKeys() GuiContainer.checkHotbarKeys()}
+     */
+    protected void keyTyped(int keyCode)
+    {
+        final EntityPlayer player = this.mc.player;
+        Slot slot = this.theSlot;       // Slot under the mouse (if the mouse is inside the gui overlay)
+        SlotActionType.EnumKeyboardAction keyboardAction = SlotActionType.EnumKeyboardAction.INVALID;
+
+        // NOTE: KeyBinding.isActiveAndMatches() will check if the gui is active, so it would always return false here.
+        if (this.mc.gameSettings.keyBindSwapHands.getKeyCode() == keyCode) {
+            if (this.theSlot == null) {
+                // The mouse is outside the overlay gui, try to find the slot of the open container
+                final int relativeMouseX = Mouse.getEventX() * this.screenWidth / this.mc.displayWidth;
+                final int relativeMouseY = this.screenHeight - Mouse.getEventY() * this.screenHeight / this.mc.displayHeight - 1;
+
+                slot = this.getSlotAtPosition(relativeMouseX, relativeMouseY, false, true);
+
+                LogHelper.trace("Trying to find slot at %d, %d == %s", relativeMouseX, relativeMouseY, slot);
+                if (slot != null) {
+                    LogHelper.trace("  Found slot %d at %d, %d, hovered: %s, stack %s", 0, slot.xPos, slot.yPos, slot.canBeHovered(), slot.getStack());
+                }
+
+            }
+            keyboardAction = SlotActionType.EnumKeyboardAction.SWAP_HANDS;
+
+        } else {
+            // test hotbar swap key
+            for (int i = 0; i < 9; i++) {
+                if (this.mc.gameSettings.keyBindsHotbar[i].isActiveAndMatches(keyCode)) {
+                    keyboardAction = SlotActionType.EnumKeyboardAction.createHotbar(i);
+                    break;
+                }
+            }
+        }
+
+        final SlotActionType slotAction = SlotActionType.create(player, slot, keyboardAction);
+
+        if (slotAction.isValid()) {
+            SlotActionManager.instance.processActionOnClient(slotAction, slot, this.mc.player);
+        }
+    }
+
+
+
+    // -----------------------------------------------------------
     // Utility
     // -----------------------------------------------------------
 
@@ -373,16 +480,25 @@ public class GuiExtraSlotsOverlay extends Gui
      */
     private boolean isMouseOverGui(int mouseX, int mouseY)
     {
-        return this.isPointInRegion(0, 0, GUI_WIDTH, GUI_HEIGHT, mouseX, mouseY);
+        return this.isPointInRegion(0, 0, GUI_WIDTH, GUI_HEIGHT, mouseX, mouseY, false);
     }
 
 
     /**
-     * Returns whether the mouse is over the given slot.
+     * Returns whether the mouse is over the given slot (only check the gui overlay).
      */
     private boolean isMouseOverSlot(Slot slot, int mouseX, int mouseY)
     {
-        return this.isPointInRegion(slot.xPos, slot.yPos, 16, 16, mouseX, mouseY);
+        return this.isPointInRegion(slot.xPos, slot.yPos, 16, 16, mouseX, mouseY, false);
+    }
+
+
+    /**
+     * Returns whether the mouse is over the given slot (only check the external gui).
+     */
+    private boolean isMouseOverExternalSlot(Slot slot, int mouseX, int mouseY)
+    {
+        return this.isPointInRegion(slot.xPos, slot.yPos, 16, 16, mouseX, mouseY, true);
     }
 
 
@@ -390,10 +506,11 @@ public class GuiExtraSlotsOverlay extends Gui
      * Test if the 2D point is in a rectangle (relative to the GUI). Args : rectX, rectY, rectWidth, rectHeight, pointX,
      * pointY
      */
-    protected boolean isPointInRegion(int rectX, int rectY, int rectWidth, int rectHeight, int pointX, int pointY)
+    protected boolean isPointInRegion(int rectX, int rectY, int rectWidth, int rectHeight, int pointX, int pointY, boolean lookAtExternalGui)
     {
-        final int i = this.guiLeft;
-        final int j = this.guiTop;
+        if (lookAtExternalGui && this._externalGuiLeft < 0 && this._externalGuiTop < 0) { return false; }
+        final int i = lookAtExternalGui ? this._externalGuiLeft : this.guiLeft;
+        final int j = lookAtExternalGui ? this._externalGuiTop : this.guiTop;
         pointX = pointX - i;
         pointY = pointY - j;
         return pointX >= rectX - 1 && pointX < rectX + rectWidth + 1 && pointY >= rectY - 1 && pointY < rectY + rectHeight + 1;
@@ -403,10 +520,18 @@ public class GuiExtraSlotsOverlay extends Gui
     /**
      * Returns the slot at the given coordinates or null if there is none.
      */
-    private Slot getSlotAtPosition(int x, int y)
+    private Slot getSlotAtPosition(int x, int y, boolean checkGuiOverlay, boolean checkExternalGui)
     {
-        for (final Slot slot : extraSlots) {
-            if (this.isMouseOverSlot(slot, x, y) && slot.canBeHovered()) { return slot; }
+        if (checkGuiOverlay) {
+            for (final Slot internalSlot : extraSlots) {
+                if (this.isMouseOverSlot(internalSlot, x, y) && internalSlot.canBeHovered()) { return internalSlot; }
+            }
+        }
+
+        if (checkExternalGui && this.mc.player.openContainer != null && this.mc.player.openContainer.inventorySlots.size() > 0) {
+            for (final Slot externalSlot : this.mc.player.openContainer.inventorySlots) {
+                if (this.isMouseOverExternalSlot(externalSlot, x, y) && externalSlot.canBeHovered()) { return externalSlot; }
+            }
         }
 
         return null;

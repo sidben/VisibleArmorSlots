@@ -71,7 +71,7 @@ public class SlotActionResolver_TryPlacingOneItemOnSlot extends SlotActionResolv
     @Override
     protected boolean isSatisfiedByInternal(SlotActionType action)
     {
-        if (action.mouseButton.equals(SlotActionType.MouseButton.PLACE_BLOCK_BUTTON) && action.playerMouseHasItemStack) { return true; }
+        if (action.mouseButton.equals(SlotActionType.EnumMouseAction.PLACE_BLOCK_BUTTON) && action.playerMouseHasItemStack) { return true; }
         return false;
     }
 

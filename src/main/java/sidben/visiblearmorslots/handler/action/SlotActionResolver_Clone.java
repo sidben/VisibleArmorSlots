@@ -8,10 +8,13 @@ import net.minecraft.item.ItemStack;
 public class SlotActionResolver_Clone extends SlotActionResolver
 {
 
+    private boolean _needsServerSide = false;
+
 
     @Override
     public void handleClientSide(Slot targetSlot, EntityPlayer player)
     {
+        this._needsServerSide = false;
         this.cloneStack(targetSlot, player);
     }
 
@@ -33,6 +36,7 @@ public class SlotActionResolver_Clone extends SlotActionResolver
         final ItemStack clonedStack = targetSlot.getStack().copy();
         clonedStack.setCount(clonedStack.getMaxStackSize());
         player.inventory.setItemStack(clonedStack);
+        this._needsServerSide = true;
     }
 
 
@@ -40,14 +44,14 @@ public class SlotActionResolver_Clone extends SlotActionResolver
     @Override
     public boolean requiresServerSideHandling()
     {
-        return true;
+        return this._needsServerSide;
     }
 
 
     @Override
     protected boolean isSatisfiedByInternal(SlotActionType action)
     {
-        if (action.mouseButton.equals(SlotActionType.MouseButton.PICK_BLOCK_BUTTON) && action.playerInCreativeMode && action.slotHasItemStack) { return true; }
+        if (action.mouseButton.equals(SlotActionType.EnumMouseAction.PICK_BLOCK_BUTTON) && action.playerInCreativeMode && action.slotHasItemStack) { return true; }
         return false;
     }
 

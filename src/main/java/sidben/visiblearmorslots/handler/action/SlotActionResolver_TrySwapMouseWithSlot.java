@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
-import sidben.visiblearmorslots.handler.action.SlotActionType.MouseButton;
+import sidben.visiblearmorslots.handler.action.SlotActionType.EnumMouseAction;
 import sidben.visiblearmorslots.util.ItemStackHelper;
 
 
@@ -24,9 +24,13 @@ import sidben.visiblearmorslots.util.ItemStackHelper;
 public class SlotActionResolver_TrySwapMouseWithSlot extends SlotActionResolver
 {
 
+    private boolean _needsServerSide = false;
+
+
     @Override
     public void handleClientSide(Slot targetSlot, EntityPlayer player)
     {
+        this._needsServerSide = false;
         this.swapMouseWithSlot(targetSlot, player);
     }
 
@@ -53,12 +57,15 @@ public class SlotActionResolver_TrySwapMouseWithSlot extends SlotActionResolver
             targetSlot.getStack().grow(amountTheSlotWillTake);
             playerMouseItem.shrink(amountTheSlotWillTake);
             targetSlot.onSlotChanged();
-            
+            this._needsServerSide = true;
+
         } else if (canPlaceOnSlot && canTakeFromSlot) {
             // Swaps the item on the player mouse with the target slot
             player.inventory.setItemStack(targetSlot.getStack());
             targetSlot.putStack(playerMouseItem);
-            
+            targetSlot.onTake(player, player.inventory.getItemStack());
+            this._needsServerSide = true;
+
         }
     }
 
@@ -67,14 +74,14 @@ public class SlotActionResolver_TrySwapMouseWithSlot extends SlotActionResolver
     @Override
     public boolean requiresServerSideHandling()
     {
-        return true;
+        return this._needsServerSide;
     }
 
 
     @Override
     protected boolean isSatisfiedByInternal(SlotActionType action)
     {
-        final EnumSet<MouseButton> validButtons = EnumSet.of(MouseButton.ATTACK_BUTTON, MouseButton.PLACE_BLOCK_BUTTON);
+        final EnumSet<EnumMouseAction> validButtons = EnumSet.of(EnumMouseAction.ATTACK_BUTTON, EnumMouseAction.PLACE_BLOCK_BUTTON);
         if (validButtons.contains(action.mouseButton) && (action.playerMouseHasItemStack || action.slotHasItemStack)) { return true; }
         return false;
     }
