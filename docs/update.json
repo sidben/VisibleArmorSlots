@@ -1,0 +1,28 @@
+{
+	"homepage": "https://minecraft.curseforge.com/projects/visible-armor-slots/files",
+	"1.9": {
+		"1.0": "https://github.com/sidben/VisibleArmorSlots/releases/tag/v1.0", 
+		"1.1": "https://github.com/sidben/VisibleArmorSlots/releases/tag/v1.1"
+	},
+	"1.9.4": {
+		"1.2": "https://github.com/sidben/VisibleArmorSlots/releases/tag/v1.2", 
+		"1.3-legacy": "https://github.com/sidben/VisibleArmorSlots/releases/tag/v1.3-legacy"
+	},
+	"1.10.2": {
+		"2.0": "https://github.com/sidben/VisibleArmorSlots/releases/tag/v2.0", 
+		"2.1-legacy": "https://github.com/sidben/VisibleArmorSlots/releases/tag/v2.1-legacy"
+	},
+	"1.11.2": {
+		"3.0": "https://github.com/sidben/VisibleArmorSlots/releases/tag/v3.0"
+	},
+	"promos": {
+		"1.9-latest": "1.1",
+		"1.9-recommended": "1.1",
+		"1.9.4-latest": "1.3-legacy",
+		"1.9.4-recommended": "1.3-legacy",
+		"1.10.2-latest": "2.1-legacy",
+		"1.10.2-recommended": "2.1-legacy",
+		"1.11.2-latest": "3.0",
+		"1.11.2-recommended": "3.0"
+	}
+}
