@@ -25,9 +25,8 @@ configFile.withReader {
 version = config.mod_version
 archivesBaseName = config.mod_prefix + "["+ config.minecraft_version +"]"
 
-//jar {
-//    manifest { attributes 'FMLAT': 'visiblearmorslots_at.cfg' }
-//}
+srcCompat = JavaVersion.VERSION_1_8
+targetCompat = JavaVersion.VERSION_1_8
 
 minecraft {
     version = config.minecraft_version + "-" + config.forge_version
