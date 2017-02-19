@@ -84,15 +84,13 @@ public class EventDelegatorGuiOverlay
 
 
 
-        // LogHelper.trace("* Looking for info with key [%s]", guiClassName);
         if (EventDelegatorGuiOverlay._cacheDisplayParams.containsKey(guiClassKey)) {
             displayParams = _cacheDisplayParams.get(guiClassKey);
-            // LogHelper.trace("* Found: [%s]", displayParams);
 
         } else {
             displayParams = InfoGuiOverlayDisplayParams.create(guiContainer, guiClassKey);
             _cacheDisplayParams.put(guiClassKey, displayParams);
-            LogHelper.trace("  Cached display parameters for [%s], key [%s], value [%s]", gui, guiClassKey, displayParams);
+            LogHelper.trace("EventDelegatorGuiOverlay: Cached display parameters for [%s], key [%s], value [%s]", gui, guiClassKey, displayParams);
         }
 
 
@@ -119,7 +117,6 @@ public class EventDelegatorGuiOverlay
         if (!this.shouldDisplayGuiOverlay(gui)) { return; }
 
 
-        LogHelper.trace("EventDelegatorGuiOverlay.onInitGuiEvent.Post(%s)", event.getGui());
         final InfoGuiOverlayDisplayParams displayParams = getDisplayParamsForGui(gui);
 
         this.getGuiOverlay().guiLeft = displayParams.getGuiLeft();
@@ -205,7 +202,7 @@ public class EventDelegatorGuiOverlay
     @SubscribeEvent
     public void onConfigurationChangedEvent(ConfigChangedEvent.OnConfigChangedEvent event)
     {
-        if (event.getModID().equalsIgnoreCase(Reference.ModID)) {
+        if (event.getModID().equalsIgnoreCase(Reference.MOD_ID)) {
             // Refresh the display parameters when the config changes
             _cacheDisplayParams = new HashMap<String, InfoGuiOverlayDisplayParams>();
         }

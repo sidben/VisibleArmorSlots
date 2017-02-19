@@ -1,7 +1,5 @@
 package sidben.visiblearmorslots.proxy;
 
-import net.minecraftforge.common.MinecraftForge;
-import sidben.visiblearmorslots.handler.EventHandlerPlayer;
 import sidben.visiblearmorslots.network.NetworkManager;
 
 
@@ -24,7 +22,6 @@ public abstract class ProxyCommon implements IProxy
     public void initialize()
     {
         // Event Handlers
-        MinecraftForge.EVENT_BUS.register(new EventHandlerPlayer());
     }
 
 

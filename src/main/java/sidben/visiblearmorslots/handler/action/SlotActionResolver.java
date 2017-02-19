@@ -31,7 +31,6 @@ public abstract class SlotActionResolver implements ISlotActionResolver
     public final boolean isSatisfiedBy(SlotActionType action)
     {
         final boolean result = this.isSatisfiedByInternal(action);
-        // LogHelper.trace("%s.isSatisfiedBy() == %s", this.getClass().getSimpleName(), result);
         return result;
     }
 

@@ -22,14 +22,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import scala.tools.ant.sabbus.Break;
 import sidben.visiblearmorslots.client.gui.InfoExtraSlots.EnumSlotType;
 import sidben.visiblearmorslots.handler.action.SlotActionManager;
 import sidben.visiblearmorslots.handler.action.SlotActionType;
 import sidben.visiblearmorslots.inventory.SlotArmor;
 import sidben.visiblearmorslots.inventory.SlotOffHand;
 import sidben.visiblearmorslots.main.Reference;
-import sidben.visiblearmorslots.util.LogHelper;
 
 
 
@@ -46,7 +44,7 @@ import sidben.visiblearmorslots.util.LogHelper;
 public class GuiExtraSlotsOverlay extends Gui
 {
 
-    private static final ResourceLocation GUI_EXTRA_SLOTS = new ResourceLocation(Reference.ModID + ":textures/gui/extra-slots.png");
+    private static final ResourceLocation GUI_EXTRA_SLOTS = new ResourceLocation(Reference.MOD_ID + ":textures/gui/extra-slots.png");
     public static final int               GUI_WIDTH       = 24;
     public static final int               GUI_HEIGHT      = 100;
 
@@ -140,26 +138,25 @@ public class GuiExtraSlotsOverlay extends Gui
     public void setExternalGuiPosition(GuiScreen gui)
     {
         if (gui instanceof GuiContainer) {
-            int candidateGuiLeft = ((GuiContainer) gui).getGuiLeft();
-            int candidateGuiTop = ((GuiContainer) gui).getGuiTop();
+            final int candidateGuiLeft = ((GuiContainer) gui).getGuiLeft();
+            final int candidateGuiTop = ((GuiContainer) gui).getGuiTop();
 
-            // NOTE: The creative inventory would cause this method to be fired twice, once for
-            //       net.minecraft.client.gui.inventory.GuiContainerCreative (with correct values)
-            //       and once for net.minecraft.client.gui.inventory.GuiInventory (with wrong values).
-            if (gui instanceof GuiInventory && candidateGuiLeft == 0 && candidateGuiTop == 0) {
-                return;
-            }
-            
+            // -- NOTE --
+            // The creative inventory would cause this method to be fired twice, once for
+            // net.minecraft.client.gui.inventory.GuiContainerCreative (with correct values)
+            // and once for net.minecraft.client.gui.inventory.GuiInventory (with wrong values).
+            //
+            // I ignore the second call so the gui overlay preserves the correct values.
+            if (gui instanceof GuiInventory && candidateGuiLeft == 0 && candidateGuiTop == 0) { return; }
+
             this._externalGuiLeft = candidateGuiLeft;
             this._externalGuiTop = candidateGuiTop;
 
         } else {
             this._externalGuiLeft = -1;
             this._externalGuiTop = -1;
-            
+
         }
-        
-        LogHelper.debug("External gui == %d, %d", this._externalGuiLeft, this._externalGuiTop);
     }
 
     /*
@@ -184,6 +181,9 @@ public class GuiExtraSlotsOverlay extends Gui
     // Gui drawing
     // -----------------------------------------------------------
 
+    /**
+     * Draws the extra slots overlay slots and their contents.
+     */
     public void drawScreen(int mouseX, int mouseY)
     {
         this.theSlot = null;
@@ -225,6 +225,9 @@ public class GuiExtraSlotsOverlay extends Gui
 
 
 
+    /**
+     * Draws the extra slots overlay background.
+     */
     public void drawBackground()
     {
         final int textureStartX = 0;
@@ -241,6 +244,9 @@ public class GuiExtraSlotsOverlay extends Gui
 
 
 
+    /**
+     * Draws the extra slots overlay tooltips.
+     */
     public void drawForeground(int mouseX, int mouseY)
     {
         final InventoryPlayer inventoryplayer = this.mc.player.inventory;
@@ -336,7 +342,8 @@ public class GuiExtraSlotsOverlay extends Gui
             this.mouseClickMove(relativeMouseX, relativeMouseY, this.eventButton, l);
         }
 
-
+        // Needed to avoid clicks on the gui overlay being interpreted as clicks outside the open gui,
+        // causing the items on the mouse to drop.
         return true;
     }
 
@@ -358,7 +365,7 @@ public class GuiExtraSlotsOverlay extends Gui
          *
          */
 
-        LogHelper.trace("  mouseClicked(%d, %d, %d)", mouseX, mouseY, clickedButton);
+        // LogHelper.trace(" mouseClicked(%d, %d, %d)", mouseX, mouseY, clickedButton);
 
 
         final boolean isButtonPickBlock = this.mc.gameSettings.keyBindPickBlock.isActiveAndMatches(clickedButton - 100);
@@ -369,8 +376,8 @@ public class GuiExtraSlotsOverlay extends Gui
 
 
 
-        // TODO: handle dragging
-        // TODO: handle ClickType.PICKUP_ALL
+        // TODO: handle dragging (?)
+        // TODO: handle ClickType.PICKUP_ALL (?)
 
         final EntityPlayer player = this.mc.player;
         final SlotActionType.EnumMouseAction slotMouseButton = SlotActionType.EnumMouseAction.create(clickedButton, isButtonPickBlock);
@@ -388,7 +395,7 @@ public class GuiExtraSlotsOverlay extends Gui
      */
     protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick)
     {
-        LogHelper.trace("  mouseClickMove(%d, %d, %d, %d)", mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
+        // LogHelper.trace(" mouseClickMove(%d, %d, %d, %d)", mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
     }
 
 
@@ -397,7 +404,7 @@ public class GuiExtraSlotsOverlay extends Gui
      */
     protected void mouseReleased(int mouseX, int mouseY, int state)
     {
-        LogHelper.trace("  mouseReleased(%d, %d, %d)", mouseX, mouseY, state);
+        // LogHelper.trace(" mouseReleased(%d, %d, %d)", mouseX, mouseY, state);
     }
 
 
@@ -443,12 +450,6 @@ public class GuiExtraSlotsOverlay extends Gui
                 final int relativeMouseY = this.screenHeight - Mouse.getEventY() * this.screenHeight / this.mc.displayHeight - 1;
 
                 slot = this.getSlotAtPosition(relativeMouseX, relativeMouseY, false, true);
-
-                LogHelper.trace("Trying to find slot at %d, %d == %s", relativeMouseX, relativeMouseY, slot);
-                if (slot != null) {
-                    LogHelper.trace("  Found slot %d at %d, %d, hovered: %s, stack %s", 0, slot.xPos, slot.yPos, slot.canBeHovered(), slot.getStack());
-                }
-
             }
             keyboardAction = SlotActionType.EnumKeyboardAction.SWAP_HANDS;
 

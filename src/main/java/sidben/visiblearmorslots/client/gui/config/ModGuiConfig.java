@@ -18,7 +18,7 @@ public class ModGuiConfig extends GuiConfig
 
 
     public ModGuiConfig(GuiScreen guiScreen) {
-        super(guiScreen, getConfigElements(), Reference.ModID, false, false, "");
+        super(guiScreen, getConfigElements(), Reference.MOD_ID, false, false, "");
     }
 
 

@@ -36,8 +36,6 @@ public class MessageSlotAction implements IMessage
         this._playerContainerSlotIndex = targetSlot.slotNumber;
         this._actionResolverIndex = resolverIndex;
         this._usePlayerInventory = targetSlot instanceof SlotArmor || targetSlot instanceof SlotOffHand;
-
-        LogHelper.debug("MessageSlotAction() - number: %d, index: %d, inventory: %s", targetSlot.slotNumber, targetSlot.getSlotIndex(), targetSlot.inventory);
     }
 
 

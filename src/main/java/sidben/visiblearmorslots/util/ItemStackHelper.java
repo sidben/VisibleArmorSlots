@@ -6,8 +6,7 @@ import net.minecraft.item.ItemStack;
 public class ItemStackHelper
 {
 
-    private ItemStackHelper() 
-    {
+    private ItemStackHelper() {
     }
 
 
@@ -21,11 +20,11 @@ public class ItemStackHelper
         return stacksCompatible;
     }
 
-    
+
     public static boolean isStackFull(ItemStack targetStack)
     {
         final boolean stackFull = !(targetStack.isStackable() && targetStack.getCount() < targetStack.getMaxStackSize());
         return stackFull;
     }
-    
+
 }

@@ -86,7 +86,7 @@ public class InfoGuiOverlayDisplayParams
 
             for (final String blacklisted : ModConfig.blacklistedModPackages()) {
                 if (className.startsWith(blacklisted + ".")) {
-                    LogHelper.trace("  This gui is blacklisted: [%s]", className);
+                    LogHelper.trace("InfoGuiOverlayDisplayParams: This gui is blacklisted: [%s]", className);
                     return true;
                 }
             }
@@ -100,6 +100,6 @@ public class InfoGuiOverlayDisplayParams
     @Override
     public String toString()
     {
-        return String.format("x: %d, y: %d, visible: %s", this.getGuiLeft(), this.getGuiTop(), this.getShouldDisplay());
+        return String.format("InfoGuiOverlayDisplayParams: [x = %d, y = %d, visible = %s]", this.getGuiLeft(), this.getGuiTop(), this.getShouldDisplay());
     }
 }

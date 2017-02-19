@@ -5,7 +5,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import sidben.visiblearmorslots.inventory.SlotOffHand;
-import sidben.visiblearmorslots.util.LogHelper;
 
 
 /**
@@ -40,12 +39,6 @@ public class SlotActionResolver_TrySwapWithOffHandSlot extends SlotActionResolve
         if (targetSlot instanceof SlotOffHand) { return; }
 
         final Slot offHandSlot = player.inventoryContainer.getSlot(45);
-
-        LogHelper.debug("swapWithOffHandSlot()");
-        LogHelper.trace("  Target slot at %d, %d, stack %s", targetSlot.xPos, targetSlot.yPos, targetSlot.getStack());
-        LogHelper.trace("  Player slot at %d, %d, stack %s", offHandSlot.xPos, offHandSlot.yPos, offHandSlot.getStack());
-
-
         final ItemStack offHandStack = offHandSlot.getStack();
         final boolean canPlaceOnSlot = offHandStack.isEmpty() || targetSlot.isItemValid(offHandStack);
         final boolean canTakeFromSlot = targetSlot.getStack().isEmpty() || targetSlot.canTakeStack(player);
@@ -54,7 +47,8 @@ public class SlotActionResolver_TrySwapWithOffHandSlot extends SlotActionResolve
 
         if (canPlaceOnSlot && canTakeFromSlot && !bothSlotsEmpty) {
 
-            // NOTE: When in creative mode, the player open container is {@link net.minecraft.client.gui.inventory.GuiContainerCreative$ContainerCreative}
+            // -- NOTE --
+            // When in creative mode, the player open container is {@link net.minecraft.client.gui.inventory.GuiContainerCreative$ContainerCreative}
             // and the slots on the player regular inventory are converted to {@link net.minecraft.client.gui.inventory.GuiContainerCreative$CreativeSlot}.
             //
             // The slots on the creative tabs are basic instances of {@link net.minecraft.inventory.Slot}.

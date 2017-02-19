@@ -14,7 +14,7 @@ public class LogHelper
     private static void log(Level logLevel, String format, Object... data)
     {
         try {
-            FMLLog.log(Reference.ModID, logLevel, format, data);
+            FMLLog.log(Reference.MOD_ID, logLevel, format, data);
         } catch (final IllegalFormatException e) {
             System.out.println(e);
             System.out.println(format);

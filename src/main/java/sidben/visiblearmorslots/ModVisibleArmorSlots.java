@@ -12,15 +12,15 @@ import sidben.visiblearmorslots.main.Reference;
 import sidben.visiblearmorslots.proxy.IProxy;
 
 
-@Mod(modid = Reference.ModID, name = Reference.ModName, version = Reference.ModVersion, guiFactory = Reference.GuiFactoryClass, updateJSON = Reference.UPDATE_JSON_URL)
+@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.MOD_VERSION, guiFactory = Reference.GUI_FACTORY_CLASS, updateJSON = Reference.UPDATE_JSON_URL)
 public class ModVisibleArmorSlots
 {
 
-    @Mod.Instance(Reference.ModID)
-    public static ModVisibleArmorSlots instance;
+    @Mod.Instance(Reference.MOD_ID)
+    public static ModVisibleArmorSlots INSTANCE;
 
-    @SidedProxy(clientSide = Reference.ClientProxyClass, serverSide = Reference.ServerProxyClass)
-    public static IProxy               proxy;
+    @SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS, serverSide = Reference.SERVER_PROXY_CLASS)
+    public static IProxy               PROXY;
 
 
 
@@ -32,7 +32,7 @@ public class ModVisibleArmorSlots
         MinecraftForge.EVENT_BUS.register(EventHandlerConfig.class);
 
         // Sided pre-initialization
-        proxy.pre_initialize();
+        PROXY.pre_initialize();
     }
 
 
@@ -40,7 +40,7 @@ public class ModVisibleArmorSlots
     public void load(FMLInitializationEvent event)
     {
         // Sided initializations
-        proxy.initialize();
+        PROXY.initialize();
     }
 
 
@@ -48,7 +48,7 @@ public class ModVisibleArmorSlots
     public void postInit(FMLPostInitializationEvent event)
     {
         // Sided post-initialization
-        proxy.post_initialize();
+        PROXY.post_initialize();
 
         ModConfig.updateBlacklistedMods();
     }
