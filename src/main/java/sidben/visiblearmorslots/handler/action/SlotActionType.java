@@ -23,6 +23,7 @@ public class SlotActionType
             this.buttonValue = button;
         }
 
+
         public static EnumMouseAction create(int clickedButton, boolean isPickBlockClick)
         {
             if (isPickBlockClick) { return PICK_BLOCK_BUTTON; }
@@ -128,6 +129,13 @@ public class SlotActionType
                 EnumMouseAction.INVALID, keyboardKey); }
 
         return SlotActionType.EMPTY;
+    }
+
+
+
+    public boolean isValid()
+    {
+        return this.mouseButton != EnumMouseAction.INVALID || this.keyboardKey != EnumKeyboardAction.INVALID;
     }
 
 

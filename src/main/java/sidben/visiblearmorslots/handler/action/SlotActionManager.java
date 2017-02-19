@@ -14,10 +14,11 @@ import sidben.visiblearmorslots.util.LogHelper;
 public class SlotActionManager
 {
 
-    private final Map<Integer, ISlotActionResolver> _actionResolvers = new HashMap<Integer, ISlotActionResolver>();
+    private final String                            CREATIVE_CONTAINER_NAME = "ContainerCreative";
+    private final Map<Integer, ISlotActionResolver> _actionResolvers        = new HashMap<Integer, ISlotActionResolver>();
 
 
-    public static SlotActionManager                 instance         = new SlotActionManager();
+    public static SlotActionManager                 instance                = new SlotActionManager();
 
 
     private SlotActionManager() {
@@ -33,6 +34,7 @@ public class SlotActionManager
         for (int j = 0; j < 9; j++) {
             _actionResolvers.put(index++, new SlotActionResolver_TrySwapSlotWithHotbar(j));
         }
+        _actionResolvers.put(index++, new SlotActionResolver_TrySwapWithOffHandSlot());
         _actionResolvers.put(index++, new SlotActionResolver_DoesNothing());
     }
 
@@ -83,7 +85,7 @@ public class SlotActionManager
         final Map.Entry<Integer, ISlotActionResolver> resolverEntry = this.getResolverForAction(actionType);
         if (resolverEntry != null) {
             final ISlotActionResolver actionResolver = resolverEntry.getValue();
-            final boolean isPlayerOnCreativeInventory = player.openContainer.getClass().getName().contains("ContainerCreative");
+            final boolean isPlayerOnCreativeInventory = player.openContainer.getClass().getName().contains(CREATIVE_CONTAINER_NAME);
 
             actionResolver.handleClientSide(targetSlot, player);
 

@@ -108,13 +108,19 @@ public class EventDelegatorGuiOverlay
     @SideOnly(Side.CLIENT)
     public void onInitGuiEvent(InitGuiEvent.Post event)
     {
-        if (!this.shouldDisplayGuiOverlay(event.getGui())) { return; }
-        LogHelper.trace("EventDelegatorGuiOverlay.onInitGuiEvent.Post(%s)", event.getGui());
-
         final GuiScreen gui = event.getGui();
+
+        // NOTE: even if the gui overlay is not visible, it still get the basic config to avoid crashes and leaks
+        if (gui != null) {
+            this.getGuiOverlay().setWorldAndResolution(gui.mc, gui.width, gui.height);
+            this.getGuiOverlay().setExternalGuiPosition(gui);
+        }
+        if (!this.shouldDisplayGuiOverlay(gui)) { return; }
+
+
+        LogHelper.trace("EventDelegatorGuiOverlay.onInitGuiEvent.Post(%s)", event.getGui());
         final InfoGuiOverlayDisplayParams displayParams = getDisplayParamsForGui(gui);
 
-        this.getGuiOverlay().setWorldAndResolution(gui.mc, gui.width, gui.height);
         this.getGuiOverlay().guiLeft = displayParams.getGuiLeft();
         this.getGuiOverlay().guiTop = displayParams.getGuiTop();
         this.getGuiOverlay().refreshExtraSlotsInfo(gui.mc.player.inventory);
