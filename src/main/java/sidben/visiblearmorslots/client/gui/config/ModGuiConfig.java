@@ -33,6 +33,7 @@ public class ModGuiConfig extends GuiConfig
 
         generalConfigs.add(new ConfigElement(generalCat.get("slots_side")));
         generalConfigs.add(new ConfigElement(generalCat.get("slots_margin").setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class)));
+        generalConfigs.add(new ConfigElement(generalCat.get("swap_hands")));
 
         list.addAll(generalConfigs);
 

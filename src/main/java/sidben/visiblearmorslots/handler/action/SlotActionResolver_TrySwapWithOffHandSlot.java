@@ -5,6 +5,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import sidben.visiblearmorslots.inventory.SlotOffHand;
+import sidben.visiblearmorslots.main.ModConfig;
 
 
 /**
@@ -101,7 +102,7 @@ public class SlotActionResolver_TrySwapWithOffHandSlot extends SlotActionResolve
     @Override
     protected boolean isSatisfiedByInternal(SlotActionType action)
     {
-        return action.keyboardKey == SlotActionType.EnumKeyboardAction.SWAP_HANDS;
+        return ModConfig.swapKeyEnabled() && action.keyboardKey == SlotActionType.EnumKeyboardAction.SWAP_HANDS;
     }
 
 

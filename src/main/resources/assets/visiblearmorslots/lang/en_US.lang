@@ -2,3 +2,5 @@
 slots_side=Extra slots position
 slots_margin=Extra slots margin
 slots_margin.tooltip=Space between the extra armor/off-hand slots and the container inventory.
+swap_hands=Enable swap hands on inventory
+swap_hands.tooltip=Press the Swap Hands key when hovering over any slot to equip it on the off-hand slot.

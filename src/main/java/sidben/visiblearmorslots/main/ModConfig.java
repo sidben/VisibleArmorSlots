@@ -23,6 +23,7 @@ public class ModConfig
     private static boolean       _debugAsInfo;
     private static String        _extraSlotsSide;
     private static int           _extraSlotsMargin;
+    private static boolean       _swapKeyEnabled;
     private static String[]      _blacklistedModIds;
     private static String[]      _blacklistedModPackages;
 
@@ -48,6 +49,7 @@ public class ModConfig
         _debugAsInfo = _config.getBoolean("debug_as_level_info", CATEGORY_DEBUG, false, "");
         _extraSlotsSide = _config.getString("slots_side", Configuration.CATEGORY_GENERAL, POSITION_LEFT, "", slotSidesValidEntries);
         _extraSlotsMargin = _config.getInt("slots_margin", Configuration.CATEGORY_GENERAL, 2, 0, 128, "");
+        _swapKeyEnabled = _config.getBoolean("swap_hands", Configuration.CATEGORY_GENERAL, true, "");
         _blacklistedModIds = _config.getStringList("blacklisted_mod_ids", Configuration.CATEGORY_GENERAL, new String[0], "");
 
         // saving the configuration to its file
@@ -151,6 +153,15 @@ public class ModConfig
     public static int extraSlotsMargin()
     {
         return _extraSlotsMargin;
+    }
+
+
+    /**
+     * Enabled swapping items of the off-hand slot by pressing the swap hands key when hovering over any slot.   
+     */
+    public static boolean swapKeyEnabled()
+    {
+        return _swapKeyEnabled;
     }
 
 
