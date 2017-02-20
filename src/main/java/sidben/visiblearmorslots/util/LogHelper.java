@@ -14,7 +14,7 @@ public class LogHelper
     private static void log(Level logLevel, String format, Object... data)
     {
         try {
-            FMLLog.log(Reference.MOD_ID, logLevel, format, data);
+            FMLLog.log("sidben." + Reference.MOD_ID, logLevel, format, data);
         } catch (final IllegalFormatException e) {
             System.out.println(e);
             System.out.println(format);
@@ -39,7 +39,7 @@ public class LogHelper
     public static void debug(String format, Object... data)
     {
         if (ModConfig.onDebug()) {
-            log(Level.DEBUG, format, data);
+            log(ModConfig.debugAsInfo() ? Level.INFO : Level.DEBUG, format, data);
         }
     }
 
@@ -51,7 +51,7 @@ public class LogHelper
     public static void trace(String format, Object... data)
     {
         if (ModConfig.onDebug()) {
-            log(Level.TRACE, format, data);
+            log(ModConfig.debugAsInfo() ? Level.INFO : Level.TRACE, format, data);
         }
     }
 

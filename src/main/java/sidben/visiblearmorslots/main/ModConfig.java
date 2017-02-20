@@ -20,6 +20,7 @@ public class ModConfig
 
     private static Configuration _config;
     private static boolean       _onDebug;
+    private static boolean       _debugAsInfo;
     private static String        _extraSlotsSide;
     private static int           _extraSlotsMargin;
     private static String[]      _blacklistedModIds;
@@ -44,6 +45,7 @@ public class ModConfig
 
         // Load properties
         _onDebug = _config.getBoolean("on_debug", CATEGORY_DEBUG, false, "");
+        _debugAsInfo = _config.getBoolean("debug_as_level_info", CATEGORY_DEBUG, false, "");
         _extraSlotsSide = _config.getString("slots_side", Configuration.CATEGORY_GENERAL, POSITION_LEFT, "", slotSidesValidEntries);
         _extraSlotsMargin = _config.getInt("slots_margin", Configuration.CATEGORY_GENERAL, 2, 0, 128, "");
         _blacklistedModIds = _config.getStringList("blacklisted_mod_ids", Configuration.CATEGORY_GENERAL, new String[0], "");
@@ -128,6 +130,15 @@ public class ModConfig
     public static boolean onDebug()
     {
         return _onDebug;
+    }
+
+    
+    /**
+     * DEBUG and TRACE messages are logged with the level INFO. Requires onDebug set to true. 
+     */
+    public static boolean debugAsInfo()
+    {
+        return _debugAsInfo;
     }
 
 

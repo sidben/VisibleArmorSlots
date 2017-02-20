@@ -107,10 +107,21 @@ public class EventDelegatorGuiOverlay
     @SideOnly(Side.CLIENT)
     public void onInitGuiEvent(InitGuiEvent.Post event)
     {
+        // TODO: only fire if world is loaded
         final GuiScreen gui = event.getGui();
 
         // NOTE: even if the gui overlay is not visible, it still get the basic config to avoid crashes and leaks
         if (gui != null) {
+            LogHelper.trace("EventDelegatorGuiOverlay.onInitGuiEvent.Post() - %s", gui);
+            LogHelper.trace("    is GuiContainer: %s, is GuiInventory: %s", (gui instanceof GuiContainer), (gui instanceof GuiInventory));
+            if (gui instanceof GuiContainer) {
+                LogHelper.trace("    inventory: %s", ((GuiContainer)gui).inventorySlots);
+                if (((GuiContainer)gui).inventorySlots != null) {
+                    LogHelper.trace("    inventory size: %s", ((GuiContainer)gui).inventorySlots.inventorySlots.size());                    
+                }
+            }
+
+            
             this.getGuiOverlay().setWorldAndResolution(gui.mc, gui.width, gui.height);
             this.getGuiOverlay().setExternalGuiPosition(gui);
         }

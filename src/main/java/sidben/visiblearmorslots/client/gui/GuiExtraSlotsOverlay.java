@@ -28,6 +28,7 @@ import sidben.visiblearmorslots.handler.action.SlotActionType;
 import sidben.visiblearmorslots.inventory.SlotArmor;
 import sidben.visiblearmorslots.inventory.SlotOffHand;
 import sidben.visiblearmorslots.main.Reference;
+import sidben.visiblearmorslots.util.LogHelper;
 
 
 
@@ -157,6 +158,8 @@ public class GuiExtraSlotsOverlay extends Gui
             this._externalGuiTop = -1;
 
         }
+        
+        LogHelper.trace("GuiExtraSlotsOverlay.setExternalGuiPosition() - left: %d, top: %d", this._externalGuiLeft, this._externalGuiTop);
     }
 
     /*
@@ -529,6 +532,7 @@ public class GuiExtraSlotsOverlay extends Gui
             }
         }
 
+        // TODO: try refactor to use getSlotUnderMouse() of the external gui
         if (checkExternalGui && this.mc.player.openContainer != null && this.mc.player.openContainer.inventorySlots.size() > 0) {
             for (final Slot externalSlot : this.mc.player.openContainer.inventorySlots) {
                 if (this.isMouseOverExternalSlot(externalSlot, x, y) && externalSlot.canBeHovered()) { return externalSlot; }

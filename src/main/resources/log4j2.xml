@@ -50,8 +50,10 @@
             <AppenderRef ref="File" />
             <AppenderRef ref="ServerGuiConsole" level="INFO" />
         </Logger>
-        <Logger level="trace" name="visiblearmorslots" additivity="false">
+        <Logger level="trace" name="sidben.visiblearmorslots" additivity="false">
             <AppenderRef ref="FmlSysOut" level="TRACE" />
+            <AppenderRef ref="File" />
+            <AppenderRef ref="FmlFile"/>
         </Logger>
         <Root level="all">
             <AppenderRef ref="FmlSysOut" level="INFO" />
