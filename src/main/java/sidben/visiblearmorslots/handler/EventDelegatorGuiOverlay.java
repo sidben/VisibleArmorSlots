@@ -2,6 +2,7 @@ package sidben.visiblearmorslots.handler;
 
 import java.util.HashMap;
 import org.lwjgl.input.Mouse;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -79,9 +80,14 @@ public class EventDelegatorGuiOverlay
         // is different. Example: Chests and Double Chests.
         //
         // If this causes problems in the future I'll append the gui size to the key.
+        //
+        // Also adds the current screen size, to avoid misplacing the slots when the
+        // window resizes.
         String guiClassKey = gui.getClass().getName();
-        guiClassKey += "|" + containerSize;
+        guiClassKey += "|" + containerSize + "|" + gui.width + "|" + gui.height;
 
+        // TODO: The reference point for the displayparams should be the middle of the screen, 
+        // not 0,0. This will allow the removal of width/height on the class key. 
 
 
         if (EventDelegatorGuiOverlay._cacheDisplayParams.containsKey(guiClassKey)) {
@@ -103,11 +109,15 @@ public class EventDelegatorGuiOverlay
     // Event handlers
     // -----------------------------------------------------------
 
+    /**
+     * Called when the GUI is displayed and when the window resizes.
+     */
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onInitGuiEvent(InitGuiEvent.Post event)
     {
-        // TODO: only fire if world is loaded
+        // Only process if the world is loaded
+        if (Minecraft.getMinecraft().world == null) { return; }
         final GuiScreen gui = event.getGui();
 
         // NOTE: even if the gui overlay is not visible, it still get the basic config to avoid crashes and leaks
@@ -115,12 +125,11 @@ public class EventDelegatorGuiOverlay
             LogHelper.trace("EventDelegatorGuiOverlay.onInitGuiEvent.Post() - %s", gui);
             LogHelper.trace("    is GuiContainer: %s, is GuiInventory: %s", (gui instanceof GuiContainer), (gui instanceof GuiInventory));
             if (gui instanceof GuiContainer) {
-                LogHelper.trace("    inventory: %s", ((GuiContainer)gui).inventorySlots);
+                LogHelper.trace("    guiLeft: %d, guiTop: %d, xSize: %d, ySize: %d, inventory: %s", ((GuiContainer)gui).getGuiLeft(), ((GuiContainer)gui).getGuiTop(), ((GuiContainer)gui).getXSize(), ((GuiContainer)gui).getYSize(), ((GuiContainer)gui).inventorySlots);
                 if (((GuiContainer)gui).inventorySlots != null) {
                     LogHelper.trace("    inventory size: %s", ((GuiContainer)gui).inventorySlots.inventorySlots.size());                    
                 }
             }
-
             
             this.getGuiOverlay().setWorldAndResolution(gui.mc, gui.width, gui.height);
             this.getGuiOverlay().setExternalGuiPosition(gui);
