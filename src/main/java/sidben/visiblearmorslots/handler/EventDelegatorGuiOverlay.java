@@ -53,6 +53,10 @@ public class EventDelegatorGuiOverlay
         if (!(gui instanceof GuiContainer)) { return false; }
         if (gui instanceof GuiInventory) { return false; }
         if (gui.mc.player.isSpectator()) { return false; }
+        
+        // Edge case for modders that use GuiContainer with no inventory (Y U do dis?)
+        GuiContainer guiWithStuff = (GuiContainer)gui;
+        if (guiWithStuff.inventorySlots == null || guiWithStuff.inventorySlots.inventorySlots == null || guiWithStuff.inventorySlots.inventorySlots.size() == 0) { return false; }        
 
         final InfoGuiOverlayDisplayParams displayParams = getDisplayParamsForGui(gui);
         return displayParams.getShouldDisplay();
