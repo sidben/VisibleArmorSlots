@@ -53,10 +53,10 @@ public class EventDelegatorGuiOverlay
         if (!(gui instanceof GuiContainer)) { return false; }
         if (gui instanceof GuiInventory) { return false; }
         if (gui.mc.player.isSpectator()) { return false; }
-        
+
         // Edge case for modders that use GuiContainer with no inventory (Y U do dis?)
-        GuiContainer guiWithStuff = (GuiContainer)gui;
-        if (guiWithStuff.inventorySlots == null || guiWithStuff.inventorySlots.inventorySlots == null || guiWithStuff.inventorySlots.inventorySlots.size() == 0) { return false; }        
+        final GuiContainer guiWithStuff = (GuiContainer) gui;
+        if (guiWithStuff.inventorySlots == null || guiWithStuff.inventorySlots.inventorySlots == null || guiWithStuff.inventorySlots.inventorySlots.size() == 0) { return false; }
 
         final InfoGuiOverlayDisplayParams displayParams = getDisplayParamsForGui(gui);
         return displayParams.getShouldDisplay();
@@ -90,8 +90,8 @@ public class EventDelegatorGuiOverlay
         String guiClassKey = gui.getClass().getName();
         guiClassKey += "|" + containerSize + "|" + gui.width + "|" + gui.height;
 
-        // TODO: The reference point for the displayparams should be the middle of the screen, 
-        // not 0,0. This will allow the removal of width/height on the class key. 
+        // TODO: The reference point for the displayparams should be the middle of the screen,
+        // not 0,0. This will allow the removal of width/height on the class key.
 
 
         if (EventDelegatorGuiOverlay._cacheDisplayParams.containsKey(guiClassKey)) {
@@ -126,15 +126,18 @@ public class EventDelegatorGuiOverlay
 
         // NOTE: even if the gui overlay is not visible, it still get the basic config to avoid crashes and leaks
         if (gui != null) {
+            /*
             LogHelper.trace("EventDelegatorGuiOverlay.onInitGuiEvent.Post() - %s", gui);
             LogHelper.trace("    is GuiContainer: %s, is GuiInventory: %s", (gui instanceof GuiContainer), (gui instanceof GuiInventory));
             if (gui instanceof GuiContainer) {
-                LogHelper.trace("    guiLeft: %d, guiTop: %d, xSize: %d, ySize: %d, inventory: %s", ((GuiContainer)gui).getGuiLeft(), ((GuiContainer)gui).getGuiTop(), ((GuiContainer)gui).getXSize(), ((GuiContainer)gui).getYSize(), ((GuiContainer)gui).inventorySlots);
-                if (((GuiContainer)gui).inventorySlots != null) {
-                    LogHelper.trace("    inventory size: %s", ((GuiContainer)gui).inventorySlots.inventorySlots.size());                    
+                LogHelper.trace("    guiLeft: %d, guiTop: %d, xSize: %d, ySize: %d, inventory: %s", ((GuiContainer) gui).getGuiLeft(), ((GuiContainer) gui).getGuiTop(),
+                        ((GuiContainer) gui).getXSize(), ((GuiContainer) gui).getYSize(), ((GuiContainer) gui).inventorySlots);
+                if (((GuiContainer) gui).inventorySlots != null) {
+                    LogHelper.trace("    inventory size: %s", ((GuiContainer) gui).inventorySlots.inventorySlots.size());
                 }
             }
-            
+            */
+
             this.getGuiOverlay().setWorldAndResolution(gui.mc, gui.width, gui.height);
             this.getGuiOverlay().setExternalGuiPosition(gui);
         }

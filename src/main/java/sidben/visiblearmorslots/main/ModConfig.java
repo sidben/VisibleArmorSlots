@@ -134,9 +134,9 @@ public class ModConfig
         return _onDebug;
     }
 
-    
+
     /**
-     * DEBUG and TRACE messages are logged with the level INFO. Requires onDebug set to true. 
+     * DEBUG and TRACE messages are logged with the level INFO. Requires onDebug set to true.
      */
     public static boolean debugAsInfo()
     {
@@ -157,7 +157,7 @@ public class ModConfig
 
 
     /**
-     * Enabled swapping items of the off-hand slot by pressing the swap hands key when hovering over any slot.   
+     * Enabled swapping items of the off-hand slot by pressing the swap hands key when hovering over any slot.
      */
     public static boolean swapKeyEnabled()
     {

@@ -81,6 +81,8 @@ public class SlotActionResolver_QuickTakeFromSlot extends SlotActionResolver
             }
         }
 
+        // TODO: refactor to use player.inventory.getFirstEmptyStack(), if possible
+
 
         targetSlot.putStack(originalStack);
         this._needsServerSide = true;

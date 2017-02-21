@@ -158,7 +158,7 @@ public class GuiExtraSlotsOverlay extends Gui
             this._externalGuiTop = -1;
 
         }
-        
+
         LogHelper.trace("GuiExtraSlotsOverlay.setExternalGuiPosition() - left: %d, top: %d", this._externalGuiLeft, this._externalGuiTop);
     }
 
