@@ -75,6 +75,10 @@ public class GuiExtraSlotsOverlay extends Gui
         loadSupportedSlotsInfo(supportedSlotsInfo);
 
         extraSlots = Lists.<Slot> newArrayList();
+
+        this.mc = Minecraft.getMinecraft();
+        this.itemRender = mc.getRenderItem();
+        this.fontRendererObj = mc.fontRendererObj;
     }
 
 
@@ -123,11 +127,8 @@ public class GuiExtraSlotsOverlay extends Gui
     // Gui parameters
     // -----------------------------------------------------------
 
-    public void setWorldAndResolution(Minecraft mc, int width, int height)
+    public void setWorldAndResolution(int width, int height)
     {
-        this.mc = mc;
-        this.itemRender = mc.getRenderItem();
-        this.fontRendererObj = mc.fontRendererObj;
         this.screenWidth = width;
         this.screenHeight = height;
 

@@ -50,6 +50,7 @@ public class EventDelegatorGuiOverlay
     boolean shouldDisplayGuiOverlay(GuiScreen gui)
     {
         if (gui == null) { return false; }
+        if (Minecraft.getMinecraft().world == null) { return false; }
         if (!(gui instanceof GuiContainer)) { return false; }
         if (gui instanceof GuiInventory) { return false; }
         if (gui.mc.player.isSpectator()) { return false; }
@@ -138,7 +139,7 @@ public class EventDelegatorGuiOverlay
             }
             */
 
-            this.getGuiOverlay().setWorldAndResolution(gui.mc, gui.width, gui.height);
+            this.getGuiOverlay().setWorldAndResolution(gui.width, gui.height);
             this.getGuiOverlay().setExternalGuiPosition(gui);
         }
         if (!this.shouldDisplayGuiOverlay(gui)) { return; }
@@ -221,6 +222,7 @@ public class EventDelegatorGuiOverlay
     @SideOnly(Side.CLIENT)
     public void onKeyboardInputEvent(KeyboardInputEvent.Post event)
     {
+        if (!this.shouldDisplayGuiOverlay(event.getGui())) { return; }
         this.getGuiOverlay().handleKeyboardInput();
     }
 
