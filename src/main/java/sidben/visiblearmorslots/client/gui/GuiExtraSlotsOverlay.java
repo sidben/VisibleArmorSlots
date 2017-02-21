@@ -426,6 +426,8 @@ public class GuiExtraSlotsOverlay extends Gui
     public void handleKeyboardInput()
     {
         final char keyChar = Keyboard.getEventCharacter();
+        
+        // TODO: Ignore this event on the anvil renaming (need to make nameField visible)
 
         if (Keyboard.getEventKey() == 0 && keyChar >= 32 || Keyboard.getEventKeyState()) {
             this.keyTyped(Keyboard.getEventKey());

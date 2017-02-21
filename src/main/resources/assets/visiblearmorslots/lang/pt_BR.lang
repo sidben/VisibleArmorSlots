@@ -2,3 +2,5 @@
 slots_side=Posição dos slots extras
 slots_margin=Margem dos slots extras
 slots_margin.tooltip=Espaço entre os slots extras de armadura/mão secundária e o inventário aberto.
+swap_hands=Habilita trocar itens de mão no inventário
+swap_hands.tooltip=Pressione a tecla Trocar Itens de Mão com o mouse sobre algum slot para equipar o item na mão secundária.
